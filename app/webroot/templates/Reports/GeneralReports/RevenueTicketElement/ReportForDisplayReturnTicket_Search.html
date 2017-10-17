@@ -1,0 +1,102 @@
+<div class="col-md-12 filter no-padding margin-bottom-20" ng-if="reportType.RevenueTicket == 'ReportForReturnTicket' && conditionReport.ReportType == 'ReportForDisplayReturnTicket_Search' && globalVariable.isShowReport">
+    <div class="col-md-5">
+        <strong class="col-md-2">ค้นหา : </strong>
+         <div class="col-md-10 no-padding-left">
+            <input type="text" class="form-control" ng-model="filterReport.searchValue"/>
+         </div>
+    </div>
+    <div class="col-md-5">
+        <strong class="col-md-3">เรียงลำดับ : </strong>
+        <div class="col-md-3 no-padding-left">
+            <select class="form-control" ng-model="filterReport.sortParam1">
+                <option value="">ลำดับที่1</option>
+                <option value="VehicleNumber">เบอร์รถ</option>
+                <option value="StopPointEnd">ปลายทาง</option>
+                <option value="VehicleOperationDateSort">วันเดินทาง</option>
+                <option value="FullName">พนักงานขาย</option>
+                <option value="StopPointName_TH">สาขาที่ขาย</option>
+            </select>
+        </div>
+        <div class="col-md-3 no-padding-left">
+            <select class="form-control" ng-model="filterReport.sortParam2">
+                <option value="">ลำดับที่2</option>
+                <option value="VehicleNumber">เบอร์รถ</option>
+                <option value="StopPointEnd">ปลายทาง</option>
+                <option value="VehicleOperationDateSort">วันเดินทาง</option>
+                <option value="FullName">พนักงานขาย</option>
+                <option value="StopPointName_TH">สาขาที่ขาย</option>
+            </select>
+        </div>
+        <div class="col-md-3 no-padding-left">
+            <select class="form-control" ng-model="filterReport.sortParam3">
+                <option value="">ลำดับที่3</option>
+                <option value="VehicleNumber">เบอร์รถ</option>
+                <option value="StopPointEnd">ปลายทาง</option>
+                <option value="VehicleOperationDateSort">วันเดินทาง</option>
+                <option value="FullName">พนักงานขาย</option>
+                <option value="StopPointName_TH">สาขาที่ขาย</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-2 no-padding">
+        <button class="btn btn-primary btn-block" ng-click="resetFilter()">รีเซ็ต</button>
+    </div>
+</div>
+<table id="ReportForReturnTicket" width="100%" ng-if="reportType.RevenueTicket == 'ReportForReturnTicket' && conditionReport.ReportType == 'ReportForDisplayReturnTicket_Search' && globalVariable.isShowReport">
+	<tr>
+        <th class="text-center">
+            รายงานการคืนที่นั่งขายตามวัน{{conditionReport.TypeSearch == 'Transaction'?'วันทำรายการ':'วันเดินทาง'}}<br/>
+            ระหว่างวันที่ {{conditionReport.DateStart | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} - ถึงวันที่ {{conditionReport.DateEnd | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}}
+        </th>
+    </tr>
+    <tr>
+        <td>ผู้ออก : {{SellingName}} วันที่ : {{dateTimeNow | date:'dd/MM/yyyy เวลา HH:mm:ss น.'}}</td>
+    </tr>
+    <tr>
+    	<td>
+    		<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+                <tr>
+                    <th rowspan="2">เลขรถ</th>
+                    <th rowspan="2">ที่นั่ง</th>
+                    <th rowspan="2">ปลายทาง</th>
+                    <th rowspan="2">วันเวลาเดินทาง</th>
+                    <th rowspan="2">ผู้โดยสาร</th>
+                    <th rowspan="2" class="text-right">จำนวนเงิน</th>
+                    <th rowspan="2" class="text-right">ค่าปรับ</th>
+                    <th colspan="4" class="text-center">ดำเนินการ</th>
+                </tr>
+                <tr>
+                    <th>สาขา</th>
+                    <th>พนักงาน</th>
+                    <th>วันที่</th>
+                    <th>เวลา</th>
+                </tr>
+                <tr ng-repeat="item in dataReport.ReturnTicketList | filter:filterReport.searchValue | orderBy:[filterReport.sortParam1,filterReport.sortParam2,filterReport.sortParam3]">
+                    <td>{{item.VehicleNumber}}</td>
+                    <td>{{item.VehicleSeatName}}</td>
+                    <td>{{item.StopPointEnd}}</td>
+                    <td>{{item.VehicleOperationDate | jsonDate:'dd/MM/yyyy HH:mm'}}</td>
+                    <td>{{item.PassengerFirstName + ' ' + item.PassengerLastName}}</td>
+                    <td align="right">{{item.TotalPrices | number:2}}</td>
+                    <td align="right">{{item.TicketReturnFee | number:2}}</td>
+                    <td>{{item.StopPointName_TH}}</td>
+                    <td>{{item.ReturnedBy}}</td>
+                    <td>{{item.ReturnedDate | jsonDate:'dd/MM/yyyy'}}</td>
+                    <td>{{item.ReturnedDate | jsonDate:'HH:mm'}}</td>
+                </tr>
+                <tr ng-if="dataReport.ReturnTicketList.length == 0">
+                    <td colspan="11" align="center">ไม่มีข้อมูล</td>
+                </tr>
+                <tr>
+                    <td colspan="5" align="right"><strong>รวม</strong></td>
+                    <td align="right">{{((dataReport.ReturnTicketList | filter:filterReport.searchValue) | total:'TotalPrices') | number:2}}</td>
+                    <td align="right">{{((dataReport.ReturnTicketList | filter:filterReport.searchValue) | total:'TicketReturnFee') | number:2}}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>

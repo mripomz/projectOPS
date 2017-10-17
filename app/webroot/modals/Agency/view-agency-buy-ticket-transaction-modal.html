@@ -1,0 +1,35 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 750px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><strong>รายละเอียดการซื้อบัตรโดยสาร</strong></h3>
+            </div>
+            <div class="modal-body" style="max-height:650px;overflow-y:auto;">
+                <table class="table table-hover table-condensed">
+                	<tr>
+                		<th class="col-md-3">ที่นั่ง</th>
+                		<th class="col-md-2">รหัสอ้างอิง</th>
+                		<th class="col-md-4 text-right">ราคาบัตรโดยสาร</th>
+                		<th class="col-md-3">เวลาซื้อบัตร</th>
+                	</tr>
+                	<tr ng-repeat="item in transactionDetail">
+                		<td>{{item.VehicleSeatName}}</td>
+                		<td>{{item.ReferenceCode}}</td>
+                		<td align="right">{{item.TicketPrice + item.AdminPriceDiff | number:2}}</td>
+                		<td>{{item.CreatedDate | jsonDate:'dd/MM/yyyy'}}</td>
+                	</tr>
+                	<tr>
+                		<td align="right" colspan="2"><strong>รวมสุทธิ : </strong></td>
+                		<td align="right">
+                			<strong>{{(transactionDetail | total:'TicketPrice') + (transactionDetail | total:'AdminPriceDiff') | number:2}}</strong>
+                		</td>
+                		<td></td>
+                	</tr>
+                </table>
+            </div>
+             <div class="modal-footer" style="background-color:#fff !important;text-align: center !important">
+                <button class="btn btn-default" ng-click="$hide();">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>

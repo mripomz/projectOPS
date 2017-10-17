@@ -1,0 +1,74 @@
+<div class="modal" tabindex="-1" role="dialog" style="display: block; overflow: auto;">
+    <div class="modal-dialog" style="width: 700px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">เพิ่มจุดจอดรถ</h3>
+            </div>
+            <div class="modal-body" style="overflow-y:auto;">
+            	<div class="alert alert-danger" ng-show="errorMsg.isError">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <div ng-bind-html="errorMsg.message | sanitize"></div>
+                </div>
+	            <form class="form-horizontal" role="form" name="StopPointForm" novalidate>
+                    <div class="form-group">
+                        <label for="Province" class="col-sm-4 control-label">จังหวัด<span class="error" ng-show="StopPointForm.Province.$error.required || StopPointForm.Province.$invalid">*</span></label>
+                        <div class="col-sm-8">
+                            <select ng-options="o.ProvinceId as o.ProvinceName_TH for o in ProvicesList.Provinces" ng-model="StopPointDetail.ProvinceId" class="form-control" name="Province" required ng-change="searchCoordinatesLocation()">
+                                <option value="">--โปรดเลือกจังหวัด--</option>
+                            </select>
+                        </div>
+                    </div>
+	                <div class="form-group">
+	                	<label for="StopPointName_TH" class="col-sm-4 control-label">ชื่อจุดจอด (ภาษาไทย) <span class="error" ng-show="StopPointForm.StopPointName_TH.$error.required || StopPointForm.StopPointName_TH.$invalid">*</span></label>
+	                	<div class="col-sm-8">
+	                		<input autocomplete="off"  type="text" class="form-control" name="StopPointName_TH" ng-model="StopPointDetail.StopPointName_TH" placeholder="โปรดระบุชื่อจุดจอดเป็นภาษาไทย" required>
+	                	</div>
+	                </div>
+                    <div class="form-group">
+                        <label for="StopPointName_EN" class="col-sm-4 control-label">ชื่อจุดจอด (ภาษาอังกฤษ)<span class="error" ng-show="StopPointForm.StopPointName_EN.$error.required || StopPointForm.StopPointName_EN.$invalid">*</span></label>
+                        <div class="col-sm-8">
+                            <input autocomplete="off"  type="text" class="form-control" name="StopPointName_EN" ng-model="StopPointDetail.StopPointName_EN" placeholder="โปรดระบุชื่อจุดจอดเป็นภาษาอังกฤษ" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="DistrictId" class="col-sm-4 control-label">พิกัดจุดจอด</label>
+                        <div class="col-sm-8">
+                            <div class="col-md-6 no-padding-left">
+                                <input autocomplete="off"  type="text" class="form-control" name="Latitude" ng-model="StopPointDetail.Latitude" placeholder="โปรดระบุละติจูด (ถ้ามี)" ng-change="updateGoogleMaps()">
+                            </div>
+                            <div class="col-md-6 no-padding-right">
+                                <input autocomplete="off"  type="text" class="form-control" name="Longitude" ng-model="StopPointDetail.Longitude" placeholder="โปรดระบุลองจิจูด (ถ้ามี)" ng-change="updateGoogleMaps()">
+                            </div>
+                            <div class="clearfix"></div>
+                            <ui-gmap-google-map style="height:300px"
+                                center='StopPointDetail.maps.center' 
+                                zoom='StopPointDetail.maps.zoom'
+                                events='StopPointDetail.maps.events'>
+                                <ui-gmap-marker 
+                                    coords="StopPointDetail.maps.marker.coords" 
+                                    options="StopPointDetail.maps.marker.options"
+                                    idkey="StopPointDetail.maps.marker.id"
+                                    events='StopPointDetail.maps.marker.events'>
+                                </ui-gmap-marker>
+                            </ui-gmap-google-map>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsTransit" class="col-sm-4 control-label">เปลี่ยนเที่ยวรถ</label>
+                        <div class="col-sm-8 margin-top-5">
+                            <input autocomplete="off" type="checkbox" name="IsTransit" ng-model="StopPointDetail.IsTransit" placeholder="โปรดระบุจังหวัดที่จดทะเบียน">
+                        </div>
+                    </div>
+	                <div class="form-group margin-none">
+						<div class="col-sm-offset-4 col-sm-6">
+							<button ng-click="updateStopPoint()" class="btn btn-primary">บันทึก</button>
+							<button ng-click="$hide()" class="btn btn-default">ปิด</button>
+						</div>
+					</div>
+	            </form>
+            </div>
+        </div>
+    </div>
+</div>

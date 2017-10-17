@@ -1,0 +1,442 @@
+<div class="col-md-12 no-padding">
+    <div class="col-md-6">
+        <div class="panel-body province-stoppoint">
+            <div class="col-xs-12 tabbable tabs-blocks tabs-primary no-padding">
+                <ul class="nav nav-tabs" tabindex="7" style="overflow: hidden; outline: none;">
+                    <li  ng-repeat="floor in VehicleSeatFloorDetail track by $index" ng-class="{'active' : globalVariable.IsFloorManageActive == $index}">
+                        <a ng-click="globalVariable.IsFloorManageActive = $index"><i class="fa fa-gavel"></i> ชั้นที่ {{floor.VehicleSeatFloorLevel}}</a>
+                    </li>
+                </ul>
+                <div class="tab-content" style="padding:0px;">
+                    <div class="tab-pane" ng-class="{'active' : globalVariable.IsFloorManageActive == $index}" ng-repeat="floor in VehicleSeatFloorDetail track by $index">
+                        <div class="panel panel-primary text-center" style="border-radius:0px;border-top-right-radius:4px;">
+                            <div class="panel-heading t
+                            xt-left" style="border-top-left-radius:0px;padding:10px">
+                                <h3 style="color:#FFF;font-size:30px;"> ชั้นที่ {{floor.VehicleSeatFloorLevel}} / {{VehicleSeatPlan.VehicleSeatPlanName + ' - ' + VehicleTypeList[(VehicleTypeList | lswIndexOf: { VehicleTypeId: VehicleSeatPlan.VehicleTypeId } : 'VehicleTypeId')].VehicleTypeName}}</h3>
+                            </div>
+                            <div class="table-seat">
+                                <table style="margin:25px auto; border: 1px #ccc solid">
+                                    <tr ng-repeat="seatEachLine in floor.NewList track by $index">
+                                        <td ng-repeat="seat in seatEachLine track by $index">
+                                            <!--Available-->
+                                            <div 
+                                                class="cursor-point seat-ticket-booking"
+                                                ng-if="seat.IsAvailable && checkTypeShow(seat.VehicleSeatTypeId)"
+                                                ng-class="{'seat-select':showSelectBooking(seat.VehicleSeatId)}"
+                                                ng-click="selectSeat(seat);" 
+                                                style="width:70px;position: relative;">
+                                                <div style="font-size:25px;margin-top: 15px;">
+                                                    <span ng-style="{'color':(showSelectBooking(seat.VehicleSeatId)?'#FFF':'#CCC')}">
+                                                        <i class="avia avia-seat"></i>
+                                                        <span ng-if="seat.Gender != null && showSelectBooking(seat.VehicleSeatId)">
+                                                            <i ng-class="{'avia avia-male':(seat.Gender == 0),'avia avia-female':(seat.Gender == 1),'avia avia-boy':(seat.Gender == 2),'avia avia-girl':(seat.Gender == 3), 'avia avia-monk':(seat.Gender == 4), 'avia avia-soldier':(seat.Gender == 5)}"></i>
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                                <div class="seat-passenger-name">
+                                                    <strong>{{seat.VehicleSeatName}}</strong>
+                                                </div>
+                                            </div>
+
+                                            <div ng-if="!seat.IsAvailable && checkTypeShow(seat.VehicleSeatTypeId)">
+                                                <div 
+                                                    class="cursor-point seat-ticket-booking" 
+                                                    ng-repeat="eachPassenger in seat.vehicleOperationSeatList"
+                                                    ng-if="seat.VehicleOperationInLength == eachPassenger.VehicleOperationSeatId || seat.vehicleOperationSeatList.length == 1"
+                                                    ng-class="{'full-trip':(eachPassenger.StopPointStartId == RouteProviceList[0].StopPointId && eachPassenger.StopPointEndId == RouteProviceList[RouteProviceList.length - 1].StopPointId),'half-trip':(eachPassenger.StopPointStartId != RouteProviceList[0].StopPointId || eachPassenger.StopPointEndId != RouteProviceList[RouteProviceList.length - 1].StopPointId)}"
+                                                    data-title="{{showDataTooltip(eachPassenger)}}"
+                                                    data-html="true"
+                                                    bs-tooltip
+                                                    ng-click="eachPassenger.IsAgencyBooking||editSeatSelect(eachPassenger,seat);" 
+                                                    style="width: 70px;position: relative;">
+                                                    <div style="font-size:25px;margin-top: 15px;">
+                                                        <span ng-style="{'color':((eachPassenger.TicketStatus == 1)?'#e74c3c':'#81b53e')}">
+                                                            <i class="avia avia-seat"></i>
+                                                        </span>
+                                                        <span>
+                                                            <i ng-class="{
+                                                                'avia avia-male':(eachPassenger.Gender == 0),
+                                                                'avia avia-female':(eachPassenger.Gender == 1),
+                                                                'avia avia-boy':(eachPassenger.Gender == 2),
+                                                                'avia avia-girl':(eachPassenger.Gender == 3),
+                                                                'avia avia-monk':(eachPassenger.Gender == 4),
+                                                                'avia avia-soldier':(eachPassenger.Gender == 5),
+                                                            }"></i>
+                                                        </span>
+                                                    </div>
+                                                    <div class="seat-passenger-name">
+                                                        <strong>{{eachPassenger.Passenger.PassengerFirstName}}</strong>
+                                                    </div>
+                                                    <div style="font-size:14px; position: absolute;top: 0px;left: 2px;">
+                                                        <strong>{{seat.VehicleSeatName}}</strong>
+                                                    </div>
+                                                    <div ng-if="eachPassenger.IsAgencyBooking" style="font-size:14px; position: absolute;top: 0px;right: 2px;">
+                                                        <strong>Agency</strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div ng-if="!checkTypeShow(seat.VehicleSeatTypeId)" style="padding: 5px 10px 5px 10px;margin: 5px;border-radius: 5px;width:70px;">
+                                                <div style="width:25px;font-size:20px;margin-top: 15px;"></div><br/>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-12 margin-top-20">
+                                <div class="col-md-12">
+                                    <span style="color:#cccccc">
+                                        <i class="avia avia-seat"></i>
+                                    </span> ว่าง &nbsp;&nbsp;&nbsp;
+
+                                    <span style="color:#e74c3c">
+                                        <i class="avia avia-seat"></i>
+                                    </span> จอง &nbsp;&nbsp;&nbsp;
+
+                                    <span style="color:#81b53e">
+                                        <i class="avia avia-seat"></i>
+                                    </span> ขาย &nbsp;&nbsp;&nbsp;
+                                </div>
+                                <div class="col-md-12 margin-top-20">
+                                    <span style="color: green;">
+                                        <i class="fa fa-circle" aria-hidden="true"></i>
+                                    </span> เปิดขายออนไลน์ &nbsp;&nbsp;&nbsp;
+                                    <span style="color: red;">
+                                        <i class="fa fa-circle" aria-hidden="true"></i>
+                                    </span> ไม่เปิดขายออนไลน์ &nbsp;&nbsp;&nbsp;
+                                </div>
+                                <div class="col-md-12 margin-top-20">
+                                    <span style="color: #3498DB;">
+                                        <i class="fa fa-square" aria-hidden="true"></i> 
+                                    </span> กำลังเลือกอยู่ &nbsp;&nbsp;&nbsp;
+                                    <span style="color: #EBFFE7;">
+                                        <i class="fa fa-square" aria-hidden="true"></i> 
+                                    </span> เต็มเส้นทาง &nbsp;&nbsp;&nbsp;
+                                    <span style="color: #FFE1C6;">
+                                        <i class="fa fa-square" aria-hidden="true"></i> 
+                                    </span> ไม่เต็มเส้นทาง &nbsp;&nbsp;&nbsp;
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6" style="padding-top: 25px;" ng-form="BookingVehicleTrip">
+        <div class="panel panel-primary" style="border-radius:0px;border-top-right-radius:4px;">
+            <div class="panel-heading text-center" style="border-top-left-radius:0px;padding:10px">
+                <h3 style="color:#FFF;font-size:30px;">{{dateSearchValue | date:'dd MMMM yyyy'}} - {{globalVariable.currentVehicleOpreDetail.VehicleOperationDate | jsonDate:'HH:mm'}} น.</h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-4 text-right">เส้นทางเดินรถ : </label>
+                        <div class="col-sm-8">
+                            {{globalVariable.currentRouteDetail.RouteName_TH}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 text-right">พนักงาน : </label>
+                        <div class="col-sm-8">
+                            {{SellingName}}
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-bordered">
+                    <tr class="primary">
+                        <th class="text-center"><span style="color:#FFF">เดินทางจาก</span></th>
+                        <th class="text-center"><span style="color:#FFF">ถึง</span></th>
+                    </tr>
+                    <tr>
+                        <td class="col-md-6">
+                            <table class="table table-bordered" style="margin-bottom: 0px;">
+                                    <thead>
+                                        <tr class="info">
+                                            <th class="col-md-8 text-center">ชื่อจุดจอด</span></th>
+                                            <th class="col-md-4 text-right">เวลาออก</th>
+                                        </tr>
+                                    </thead>
+                            </table>
+                            <div class="table-scroll">
+                                <table class="table table-bordered">
+                                    <tr class="cursor-point"
+                                        ng-repeat="stopPoint in sliceStopPoint(0,RouteProviceList.length-1,RouteProviceList)" 
+                                        ng-click="selectStartStopPoint(stopPoint.StopPointId)"
+                                        ng-class="{'primary':(VehicleOperationSeats.StopPointStartId==stopPoint.StopPointId)}">
+                                        <td class="col-md-8">
+                                        {{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: stopPoint.StopPointId } : 'StopPointId')].StopPointName_TH}}
+                                        </td>
+                                        <td class="col-md-4 text-right">{{stopPoint.Time | date:'HH:mm'}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                        <td class="col-md-6">
+                            <table class="table table-bordered" style="margin-bottom: 0px;">
+                                <thead>
+                                    <tr class="info">
+                                        <th class="col-md-8 text-center">ชื่อจุดจอด</span></th>
+                                        <th class="col-md-4 text-right">เวลาถึง</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div class="table-scroll">
+                                <table class="table table-bordered">
+                                    <tr ng-repeat="stopPoint in sliceStopPoint(1,RouteProviceList.length,RouteProviceList)" 
+                                        ng-click="stopPoint.IsActive?selectEndStopPoint(stopPoint.StopPointId):''"
+                                        ng-class="{'primary':(VehicleOperationSeats.StopPointEndId==stopPoint.StopPointId),'disable-stoppoint':(!stopPoint.IsActive),'cursor-point':(stopPoint.IsActive)}">
+                                        <td class="col-md-8">{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: stopPoint.StopPointId } : 'StopPointId')].StopPointName_TH}}</td>
+                                        <td class="col-md-4 text-right">{{stopPoint.Time | date:'HH:mm'}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="col-md-5 text-center" ng-if="VehicleOperationSeats.StopPointStartId != null">
+                        <button class="btn btn-success circle-button">&nbsp;</button><br/>
+                        <strong>{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: VehicleOperationSeats.StopPointStartId } : 'StopPointId')].StopPointName_TH}}
+                        <br/>
+                        {{(stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: VehicleOperationSeats.StopPointStartId } : 'StopPointId')].ProvinceName_TH)}}</strong>
+                    </div>
+                    <div class="col-md-2 text-center" ng-if="VehicleOperationSeats.StopPointStartId != null&& VehicleOperationSeats.StopPointEndId != null">
+                        <a class="arrow-button"><i class="glyphicon glyphicon-arrow-right"></i></a>
+                    </div>
+                    <div class="col-md-5 text-center" ng-if="VehicleOperationSeats.StopPointEndId != null">
+                        <button class="btn btn-danger circle-button">&nbsp;</button><br/>
+                        <strong>{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: VehicleOperationSeats.StopPointEndId } : 'StopPointId')].StopPointName_TH}}
+                        <br/>
+                        {{(stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: VehicleOperationSeats.StopPointEndId } : 'StopPointId')].ProvinceName_TH)}}</strong>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <h4 style="color:#3498DB"><strong>ข้อมูลคนจอง/ซื้อ</strong></h4><hr/>
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 text-right">ค้นหา : </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" ng-model="globalVariable.PassengerSelect" data-animation="am-flip-x" bs-options="o as o.PassengerFirstName + ' ' + o.PassengerLastName for o in PassengerList" placeholder="ค้นหาข้อมูลที่มีอยู่ในระบบ" data-placement="bottom" bs-typeahead ng-change="searchPassenger()"/>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="form-group">
+                            <label class="col-sm-3 text-right">ชื่อ : <span class="error" ng-show="!PassengerDetail.PassengerFirstName.length || PassengerDetail.PassengerFirstName.length <=1">*</span></label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" ng-model="PassengerDetail.PassengerFirstName" name="PassengerFirstName" required placeholder="ชื่อจริง" />
+                            </div>
+                            <label class="col-sm-2 text-right no-padding">นามสกุล : </label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" ng-model="PassengerDetail.PassengerLastName" name="PassengerLastName" placeholder="นามสกุล"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 text-right">โทร : <span class="error" ng-show="BookingVehicleTrip.PassengerPhone.$error.required">*</span></label>
+                            <div class="col-sm-9"> 
+                                <input type="text" class="form-control" ng-model="PassengerDetail.PassengerPhone" name="PassengerPhone" required placeholder="ตัวอย่าง 0812345678"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 text-right">ปชช/P : </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" ng-model="PassengerDetail.PassengerIdentification" name="PassengerIdentification" placeholder="เลขบัตรประชาชน 13 หลัก หรือ พาสปอร์ต"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 text-right">หมายเหตุ : </label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" ng-model="VehicleOperationSeats.Notes" placeholder="หมายเหตุ เช่น ขึ้น - ลงรถกลางทาง"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col-md-12">
+                    <h4><strong>ราคาสมาชิก</strong></h4><hr/>
+                    <div class="form-horizontal">
+                        <label class="col-sm-3 text-right">รหัสสมาชิก : </label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="รหัสสมาชิก">
+                            </div>
+                        </div>
+                        <div class="col-sm-3 no-padding">
+                            <button class="btn btn-primary btn-block">ค้นหา</button>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="col-md-12">
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <th colspan="7"><h4 style="color:#3498DB"><strong>ราคาและส่วนลด</strong></h4></th>
+                        </tr>
+                        <tr>
+                            <!-- <td class="col-md-3">
+                                <strong>เกรดลูกค้า</strong><span class="error" ng-show="BookingVehicleTrip.GradeCustomer.$error.required">*</span>
+                            </td>
+                            <td colspan="6">
+                                <select 
+                                    class="form-control" 
+                                    ng-model="VehicleOperationSeats.GradeId" 
+                                    ng-options="o.GradeId as o.GradeName for o in GradeList"
+                                    ng-change="calculatePrice()" 
+                                    name="GradeCustomer"
+                                    required disabled>
+                                </select>
+                            </td> -->
+                        </tr>
+                        <tr>
+                            <td width="150">
+                                <strong>ส่วนลด</strong>
+                            </td>
+                            <td colspan="6">
+                                <div class="col-xs-8 no-padding">
+                                    <input type="text" ng-model="globalVariable.DiscountCode" placeholder="รหัสส่วนลด" class="form-control" placeholder="กรอกรหัสส่วนลด" ng-disabled="globalVariable.currentVehicleOpreDetail.DiscountAllowNumber == 0 || (globalVariable.currentVehicleOpreDetail.DiscountAllowNumber - seatSelect.length) < 0">
+                                </div>
+                                <div class="col-xs-4 no-padding-right">
+                                    <button class="btn btn-primary btn-block" ng-click="searchDiscountCode()" ng-disabled="globalVariable.currentVehicleOpreDetail.DiscountAllowNumber == 0 || (globalVariable.currentVehicleOpreDetail.DiscountAllowNumber - seatSelect.length) < 0">ค้นหา</button>
+                                </div>
+                                <div class="col-xs-12 no-padding margin-top-10">
+                                    <select 
+                                        class="form-control" 
+                                        ng-model="VehicleOperationSeats.DiscountTypeId" 
+                                        ng-options="o.DiscountTypeId as o.DiscountTypeName for o in DiscountTypeList"
+                                        ng-change="calculatePrice()"
+                                        ng-disabled="globalVariable.currentVehicleOpreDetail.DiscountAllowNumber == 0 || (globalVariable.currentVehicleOpreDetail.DiscountAllowNumber - seatSelect.length) < 0">
+                                        <option value="">ไม่มีส่วนลด</option>
+                                    </select>
+                                    <span class="danger">
+                                        เหลือโควต้าส่วนลดจำนวน <strong>{{globalVariable.currentVehicleOpreDetail.DiscountAllowNumber}}</strong> ที่นั่ง
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr ng-repeat="(key,value) in seatSelect | orderBy: 'VehicleStandardId' | groupBy: 'StandardName'">
+                            <td>
+                                <strong>
+                                    ราคาเกรด {{key}} :
+                                </strong>
+                            </td>
+                            <td align="right">{{(value[0].TicketPrice || 0) | number:2}}</td>
+                            <td>บาท</td>
+                            <td align="right">{{value.length}}</td>
+                            <td>ที่นั่ง</td>
+                            <td align="right">{{(value[0].TicketPrice * value.length) | number:2}}</td>
+                            <td>บาท</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ส่วนลด :</strong></td>
+                            <td align="right">{{(globalVariable.currentDiscount || 0) | number:2}}</td>
+                            <td>บาท</td>
+                            <td align="right">{{seatSelect.length}}</td>
+                            <td>ที่นั่ง</td>
+                            <td align="right">
+                                - {{(globalVariable.currentDiscount) | number:2}}</td>
+                            <td>บาท</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ค่าดำเนินการ :</strong></td>
+                            <td align="right" colspan="5">
+                                + {{(globalVariable.TicketPaymentTypePrice || 0) | number:2}}
+                            </td>
+                            <td>บาท</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ยอดชำระสุทธิ :</strong></td>
+                            <td align="right" colspan="5">
+                                <span style="font-size: 40px;color: #3498DB; text-decoration: underline;">
+                                    {{calculateLastPrice() - (globalVariable.currentDiscount) | number:2}}
+                                </span>
+                            </td>
+                            <td>บาท</td>
+                        </tr>
+                    </table>
+                </div>
+
+
+
+
+
+                <div class="col-md-12"  ng-if="seatSelect.length > 0" >
+                    <h4 style="color:#3498DB"><strong>ช่องทางการชำระเงิน</strong></h4><hr/>
+                    <div class="col-md-12 text-center">
+                        <table class="col-md-12">
+                            <tr>
+                                <td width="25%">
+                                    <div class="payment-method cursor-point" ng-click="calculateFee('Money')" ng-class="{'payment-select':(globalVariable.currentPaymentKey == 'Money')}">
+                                        <div style="font-size: 40px" ng-style="{'color':(globalVariable.currentPaymentKey == 'Money'?'#FFF':'')}">
+                                            <i class="fa fa-money" aria-hidden="true"></i>
+                                        </div>
+                                        <strong>เงินสด</strong>
+                                    </div>
+                                </td>
+                                <td width="25%">
+                                    <div class="payment-method cursor-point" ng-click="calculateFee('Booking')" ng-class="{'payment-select':(globalVariable.currentPaymentKey == 'Booking')}">
+                                        <div style="font-size: 40px" ng-style="{'color':(globalVariable.currentPaymentKey == 'Booking'?'#FFF':'')}">
+                                            <i class="fa fa-book" aria-hidden="true"></i>
+                                        </div>
+                                        <strong>จอง</strong>
+                                    </div>
+                                </td>
+                                <td width="25%">
+                                    <div class="payment-method cursor-point" ng-click="calculateFee('CreditCard')" ng-class="{'payment-select':(globalVariable.currentPaymentKey == 'CreditCard')}">
+                                        <div style="font-size: 40px" ng-style="{'color':(globalVariable.currentPaymentKey == 'CreditCard'?'#FFF':'')}">
+                                            <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                        </div>
+                                        <strong>บัตรเครดิต</strong>
+                                    </div>
+                                </td>
+                                <td width="25%">
+                                    <div class="payment-method cursor-point" ng-click="calculateFee('711')" ng-class="{'payment-select':(globalVariable.currentPaymentKey == '711')}">
+                                        <div style="font-size: 40px;" ng-style="{'color':(globalVariable.currentPaymentKey == '711'?'#FFF':'')}">
+                                            <i class="avia avia-eleven-brand"></i>
+                                        </div>
+                                        <strong>7-11</strong>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-12 margin-top-20">
+                        <div class="form-horizontal">
+                            <div class="form-group" ng-if="globalVariable.currentPaymentKey == '711' || globalVariable.currentPaymentKey == 'Booking'">
+                                <label class="col-sm-3 text-right">กำหนดชำระ : </label>
+                                <div class="col-sm-7">
+                                    <input type="text no-padding" class="form-control" name="dateStart" id="dateStart" placeholder="วันกำหนดชำระเงิน" ng-model="VehicleOperationSeats.TicketRentExpiredDate" bs-datepicker data-model-date-format="MM/dd/yyyy" data-placement="top" data-date-format="dd/MM/yyyy" autoclose="true" required>
+                                </div>
+                                <div class="col-sm-2 no-padding">
+                                    <input type="text" ng-model="VehicleOperationSeats.TicketRentExpiredDate" name="timeStart" id="timeStart" class="form-control" placeholder="เวลาชำระเงิน" data-time-format="HH:mm" data-placement="top" data-minute-step="1" bs-timepicker data-autoclose="true" required>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-if="globalVariable.currentPaymentKey != '711' && globalVariable.currentPaymentKey != 'Booking'">
+                                <label class="col-sm-3 text-right">รับเงิน : </label>
+                                <div class="col-sm-7">
+                                    <input type="text" style="color:green; font-size:30px" ng-model="globalVariable.MoneyRecived" class="form-control text-right" placeholder="จำนวนเงิน(บาท)" lsw-only-digits>
+                                </div>
+                                <label class="col-sm-2 text-left">บาท</label>
+                            </div>
+                            <div class="form-group" ng-if="globalVariable.currentPaymentKey != '711' && globalVariable.currentPaymentKey != 'Booking'">
+                                <label class="col-sm-3 text-right">เงินทอน : </label>
+                                <div class="col-sm-7">
+                                    <div class="text-right">
+                                        <span style="color:red; font-size:40px" ng-if="(globalVariable.MoneyRecived - (calculateLastPrice() - (globalVariable.currentDiscount))) > 0">
+                                        {{(globalVariable.MoneyRecived - (calculateLastPrice() - (globalVariable.currentDiscount))) | number:2}}
+                                        </span>
+                                        <span style="color:red; font-size:40px"  ng-if="(globalVariable.MoneyRecived - (calculateLastPrice() - (globalVariable.currentDiscount))) <= 0">0.00</span>
+                                    </div>
+                                </div>
+                                <label class="col-sm-2 text-left">บาท</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-md-offset-3">
+        <button 
+            class="btn btn-primary btn-block" 
+            ng-disabled="BookingVehicleTrip.GradeCustomer.$error.required || seatSelect.length == 0 || BookingVehicleTrip.PassengerPhone.$error.required  || PassengerDetail.PassengerFirstName.length <= 1
+            "
+            ng-click="confirmSellBoxTicket()">ยืนยันทำรายการ</button>
+    </div>
+</div>

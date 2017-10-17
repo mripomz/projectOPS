@@ -1,0 +1,93 @@
+<div class="col-md-12 no-padding">
+    <div class="col-md-5 no-padding">
+        <div class="col-md-10">
+            <label class="col-md-3 no-padding">วันที่ : </label>
+            <div class="input-group">
+                <input type="text" class="form-control" ng-model="searchFilter.dateStart" id="dateStart" placeholder="วันที่เริ่มต้น" bs-datepicker="" data-date-type="string" data-model-date-format="MM/dd/yyyy" data-date-format="dd/MM/yyyy" data-autoclose="true">
+                <label style="background-color: #eb9316;border-color: #eb9316;" for="dateStart" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+            </div>
+            <div class="clearfix"></div>
+            <label class="col-md-3 no-padding">ถึง : </label>
+            <div class="input-group">
+                <input type="text" class="form-control" ng-model="searchFilter.dateEnd" id="dateEnd" placeholder="วันที่สิ้นสุด" bs-datepicker="" data-date-type="string" data-model-date-format="MM/dd/yyyy" data-date-format="dd/MM/yyyy" data-autoclose="true">
+                <label style="background-color: #eb9316;border-color: #eb9316;" for="dateEnd" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+            </div>
+        </div>
+        <div class="col-md-2 no-padding"><button style="height:70px" class="btn btn-primary btn-lg btn-block" ng-click="setDateFilter(searchFilter.dateStart, searchFilter.dateEnd)">ค้นหา</button></div>
+    </div>
+    <div class="col-md-7 text-right">
+        <div class="col-md-10 no-padding pull-right">
+            <div class="input-group" style="top: 2px;">
+                <div class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </div>
+                <input type="search" placeholder="ค้นหา..." class="form-control input-sm" ng-model="lswFilterOptions.lswFilter">
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <button class="btn" ng-class="{'btn-primary active':(globalVariable.currentSearchDateFilter=='today')}" ng-click="searchDateFilter('today')">วันนี้</button>
+        <button class="btn" ng-class="{'btn-primary active':(globalVariable.currentSearchDateFilter=='yesterday')}" ng-click="searchDateFilter('yesterday')">เมื่อวานนี้</button>
+        <button class="btn" ng-class="{'btn-primary active':(globalVariable.currentSearchDateFilter=='thismonth')}" ng-click="searchDateFilter('thismonth')">เดือนนี้</button>
+        <button class="btn" ng-class="{'btn-primary active':(globalVariable.currentSearchDateFilter=='lastmonth')}" ng-click="searchDateFilter('lastmonth')">เดือนที่ผ่านมา</button>
+        <button class="btn" ng-class="{'btn-primary active':(globalVariable.currentSearchDateFilter=='all')}" ng-click="searchDateFilter('all')">ทั้งหมด</button>
+    </div>
+</div>
+<div class="navbar-form navbar-left">
+    <div lsw-paginate="lswPaginateOptions" class="lsw-paginate-position" small="true" ng-model="WithdrawalCreditList">
+    </div>    
+</div>
+<div lsw-table="lswTableOptions" ng-model="WithdrawalCreditList">
+    <script type="text/ng-template" id="theadTemplate.html">
+        <th class="col-md-1 cursor-point" ng-click="sort('WithdrawalCreditTransactionId');">เลขที่แจ้ง</th>
+        <th class="col-md-1 cursor-point text-center" ng-click="sort('AccountBankId');">ธนาคาร</th>
+        <th class="col-md-2 cursor-point" ng-click="sort('CreatedDate');">วัน เวลา ที่แจ้ง</th>
+        <th class="col-md-2 cursor-point" ng-click="sort('InformMoneyTransferDate');">วัน เวลา ที่โอนเงิน</th>
+        <th class="col-md-1 cursor-point" ng-click="sort('CreatedBy');">ชื่อผู้ขอ</th>
+        <th class="col-md-1 cursor-point text-right" ng-click="sort('InformMoneyTransferAmount');">จำนวนเงิน</th>
+        <th class="col-md-2 cursor-point" ng-click="sort('AccountingUserId');">สถานะ</th>
+        <th class="col-md-1 cursor-point text-center" ng-click="sort('InformMoneyTransferProofUploadId');">หลักฐาน<br/>การโอนเงิน</th>
+        <th class="col-md-1"></th>
+    </script>
+    <script type="text/ng-template" id="tbodyTemplate.html">
+        <td>{{row.WithdrawalCreditTransactionIdNumber}}</td>
+        <td align="center">
+            <div class="text-center" style="margin-right:5px; width:30px; background: {{parent.AccountBankList[(parent.AccountBankList | lswIndexOf: { AccountBankTypeId: row.AgencyAccountBank.AccountBankTypeId } : 'AccountBankTypeId')].AccountBankTypeColor}};border-radius: 5px;">
+                <span style="color:#FFFFFF" data-title="{{parent.AccountBankList[(parent.AccountBankList | lswIndexOf: { AccountBankTypeId: row.AgencyAccountBank.AccountBankTypeId } : 'AccountBankTypeId')].AccountBankTypeName}}" bs-tooltip>
+                    <i class="bank bank-{{parent.AccountBankList[(parent.AccountBankList | lswIndexOf: { AccountBankTypeId: row.AgencyAccountBank.AccountBankTypeId } : 'AccountBankTypeId')].AccountBankTypeLogo}}"></i>
+                </span>
+            </div>
+        </td>
+        <td><strong>{{(row.CreatedDate | jsonDate:'dd/MM/yyyy HH:mm น.') || '-'}}</strong></td>
+        <td>{{(row.WithdrawalTransferDate | jsonDate:'dd/MM/yyyy HH:mm น.') || '-'}}</td>
+        <td>{{row.CreatedBy || '-'}}</td>
+        <td align="right">
+            <span style="color:red">
+                <strong>{{(row.WithdrawalCreditAmount | number:2) || '-'}}</strong>
+            </span>
+        </td>
+        <td>
+            <div lsw-display-status transaction="row" typedisplay="withdrawal"></div>
+        </td>
+        <td align="center">
+            <a href="#" ng-if="row.WithdrawalCreditContentType == 'image/jpeg' || row.WithdrawalCreditContentType == 'image/png' || row.WithdrawalCreditContentType == 'image/gif'"  ng-click="parent.openLightboxModal(row.WithdrawalCreditFileUploadUrl)">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>{{row.WithdrawalCreditFileUploadId==null?'-':''}}
+        </td>
+        <td align="right">
+            <button
+                ng-if="row.WithdrawalCreditStatus == 1"  
+                class="btn btn-primary" 
+                ng-click="parent.editWithdrawalCreditById(row.WithdrawalCreditId)"
+                ng-disabled="(row.AccountingUserId != null && parent.userId != row.AccountingUserId) && (row.WithdrawalCreditStatus == 1) || row.WithdrawalCreditStatus == 0">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> ตรวจสอบ
+            </button>
+            <button
+                ng-if="row.WithdrawalCreditStatus == 2"  
+                class="btn btn-primary" 
+                ng-click="parent.editWithdrawalCreditByIdStep2(row.WithdrawalCreditId)"
+                ng-disabled="(row.AccountingUserId != null && parent.userId != row.AccountingUserId) && (row.WithdrawalCreditStatus == 3 || row.WithdrawalCreditStatus == 4 || row.WithdrawalCreditStatus == 0)">
+                    <i class="fa fa-paperclip" aria-hidden="true"></i> แนบหลักฐาน
+            </button>
+        </td>
+    </script>
+</div>

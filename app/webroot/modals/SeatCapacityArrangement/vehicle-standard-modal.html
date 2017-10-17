@@ -1,0 +1,27 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 480px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">มาตรฐาน</h3>
+            </div>
+            <div class="modal-body" style="max-height:650px;overflow-y:auto;">
+            	<table class="table table-condensed">
+        			<tr>
+        				<th class="col-md-8">ชื่อมาตรฐาน</th>
+        				<th class="col-md-4"></th>
+        			</tr>
+        			<tr ng-repeat="item in StandardTypeList.StandardList track by $index">
+        				<td>{{item.VehicleStandardName}}</td>
+        				<td align="right"><button class="btn btn-primary btn-xs" ng-click="addStandard(item)"><i class="fa fa-plus"></i> เพิ่ม</td>
+        			</tr>
+        			<tr>
+        				<td ng-if="StandardTypeList.StandardList.length == 0" colspan="5" align="center">ไม่มีข้อมูล</td>
+        			</tr>
+        			<tr>
+        				<td align="center" colspan="5"><button ng-click="$hide()" class="btn btn-default">ปิด</button></td>
+        			</tr>
+        		</table>
+            </div>
+        </div>
+    </div>
+</div>

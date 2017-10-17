@@ -1,0 +1,21 @@
+<button class="btn btn-warning" ng-click="DataSetting_UploadAgencyBackground()" ng-if="DataSetting_Agency_Ticket_Setting.AgencyBackgroundFileUploadId == null || DataSetting_Agency_Ticket_Setting.AgencyBackgroundFileUploadId == '00000000-0000-0000-0000-000000000000'">อัพโหลดพื้นหลัง</button>
+<div class="col-sm-12 no-padding" ng-show="!!DataSetting_Agency_Ticket_Setting.AgencyBackgroundFileUploadUrl">
+    <table class="table table-striped files ng-cloak">
+        <tr>
+            <th class="col-xs-3">รูปภาพ</th>
+            <th class="col-xs-6">ชื่อรูปภาพ</th>
+            <th class="col-xs-5 text-right"></th>
+        </tr>
+        <tr>
+            <td class="col-xs-3">
+                <a ng-if="DataSetting_Agency_Ticket_Setting.AgencyBackgroundContentType == 'image/jpeg' || DataSetting_Agency_Ticket_Setting.AgencyBackgroundContentType == 'image/png' || DataSetting_Agency_Ticket_Setting.AgencyBackgroundContentType == 'image/gif'"  ng-click="openLightboxModal(DataSetting_Agency_Ticket_Setting.AgencyBackgroundFileUploadUrl)" target="_blank" class="thumbnail thumbnail-show">
+                    <img ng-src="{{DataSetting_Agency_Ticket_Setting.AgencyBackgroundFileUploadUrl}}">
+                </a>
+            </td>
+            <td class="col-xs-6">{{DataSetting_Agency_Ticket_Setting.AgencyBackgroundFileName}}</td>
+            <td class="col-xs-5 text-right">
+                <a class="btn btn-danger btn-xs" message-en="Are you sure to delete this image?" message-th="ต้องการที่จะลบโลโก้นี้ ใช่หรือไม่?" lsw-confirm-modal="removeAgencyBackground()">ลบ</a>
+            </td>
+        </tr>
+    </table>
+</div>

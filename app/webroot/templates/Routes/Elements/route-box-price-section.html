@@ -1,0 +1,107 @@
+<div class="col-xs-12 tabbable tabs-blocks tabs-primary text-left">
+	<ul class="nav nav-tabs" tabindex="3" style="overflow: hidden; outline: none;">
+		<li ng-class="{'active' : globalStatus.IsRoutePriceViewActive == 0}">
+			<a ng-click="globalStatus.IsRoutePriceViewActive = 0"><i class="fa fa-table"></i> มุมมองแบบตาราง
+			</a>
+		</li>
+		<li ng-class="{'active' : globalStatus.IsRoutePriceViewActive == 1}">
+			<a ng-click="globalStatus.IsRoutePriceViewActive = 1"><i class="fa fa-signal"></i> มุมมองแบบพีระมิด
+			</a>
+		</li>
+	</ul>
+	<div class="tab-content" style="padding:0px;">
+	<div class="tab-pane" ng-class="{'active' : globalStatus.IsRoutePriceViewActive == 0}">
+			<div class="panel panel-primary text-center" style="border-radius:0px;border-top-right-radius:4px;">
+				<div class="panel-heading text-right" style="border-top-left-radius:0px;padding:10px">
+					<h3 class="pull-left" style="color:#FFF;font-size:30px;">มุมมองแบบตาราง</h3>
+					<button class="btn btn btn-warning" style="visibility:hidden;">แก้ไข</button>
+				</div>
+				<div class="panel-body province-stoppoint">
+					<div class="form-inline text-center">
+						<div class="form-group">
+							<label for="filterSearchStopPoint">ค้นหา</label>
+							<input type="text" class="form-control" id="filterSearchStopPoint" placeholder="ค้นหา" ng-model="filter.filterSearchStopPoint">
+						</div>
+						&nbsp;&nbsp;
+						<button class="btn btn-primary" ng-click="resetFilter()">รีเซ็ต</button>
+					</div>
+					<div class="clearfix"><br/></div>
+					<div class="outer-table">
+						<div class="inner-table">
+							<table class="table table-bordered table-custom-layout">
+						    	<tr class="active">
+						    		<td class="fix col-md-3" style="padding: 8px;" align="center" valign="middle">&nbsp;&nbsp;&nbsp;</td>
+						    		<td colspan="{{RoutePriceList.VehicleStandardList.length}}" align="center">
+						    			<strong>ค่าโดยสารและค่าธรรมเนียม</strong>
+						    		</td>
+						    	</tr>
+						    	<tr class="active">
+						    		<td class="fix col-md-3" style="padding: 8px;" align="center">
+						    			<strong>เส้นทางระหว่างจุดรับผู้โดยสาร</strong>
+						    		</td>
+					    			<td colspan="{{RoutePriceList.VehicleStandardList.length/RoutePriceList.VehicleTypeList.length}}" align="center" ng-repeat="item in RoutePriceList.VehicleTypeList">
+					    				<strong>{{item.VehicleTypeName}}</strong>
+					    			</td>
+						    	</tr>
+						    	<tr class="active">
+						    		<td class="fix col-md-3" style="padding: 8px;" align="center" valign="middle">&nbsp;&nbsp;&nbsp;</td>
+						    		<td align="center" ng-repeat="item in RoutePriceList.VehicleStandardList">
+						    			<strong>{{item.VehicleStandardName}}</strong>
+						    		</td>
+						    	</tr>
+						    	<tr ng-repeat="item in RoutePriceList.RoutePrice | filter:{StopPointStart:filter.filterStartStopPoint,StopPointEnd:filter.filterEndStopPoint} | filter:filter.filterSearchStopPoint" ng-class="{'active':($index+1)%2!=0}"
+						    	style="height:75px;">
+						    		<td class="fix" style="padding: 8px;height:75px;" align="left">{{item.RouteName}}</td>
+						    		<td ng-repeat="price in item.RoutePriceList track by $index">
+						    			<input  ng-change="addEditPriceBox(price)" data-ng-model="price.RouteTotalPrice"
+						    			style="width:70px;height:70px;text-align: center" class="form-control text-right"> 
+						    		</td>
+						    	</tr>
+						    	<tr ng-show="RoutePriceList.RoutePrice.length == 0">
+						    		<td>กำลังโหลดข้อมูล</td>
+						    	</tr>
+						    </table>
+						</div>
+					</div>
+	    		</div>
+			</div>
+		</div>
+		<div class="tab-pane" ng-class="{'active' : globalStatus.IsRoutePriceViewActive == 1}">
+			<div class="panel panel-primary text-center" style="border-radius:0px;border-top-right-radius:4px;">
+				<div class="panel-heading text-right" style="border-top-left-radius:0px;padding:10px">
+					<h3 class="pull-left" style="color:#FFF;font-size:30px;">มุมมองแบบพีระมิด</h3>
+					<button class="btn btn btn-warning" style="visibility:hidden;">แก้ไข</button>
+				</div>
+				<div class="panel-body province-stoppoint">
+					<table>
+						<tr>
+							<td align="left" colspan="{{RoutePriceList.Pyramid.length}}">
+								<strong>&nbsp;{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: RoutePriceList.Pyramid[0] } : 'StopPointId')].StopPointName_TH}}</strong>
+							</td>
+						</tr>
+						<tr ng-repeat="(parentIndex,item1) in getArrayNumber(RoutePriceList.Pyramid.length-1) track by $index">
+							<td ng-repeat="(childIndex,item2) in getArrayNumber(parentIndex+1) track by $index">
+								<button 
+								class="btn btn-default" 
+								ng-class="{'btn-primary': ((globalStatus.startIndex != null && globalStatus.endIndex != null) && (globalStatus.startIndex == childIndex && globalStatus.endIndex == (parentIndex+1))),'btn-info': ((globalStatus.startIndex != null && globalStatus.endIndex != null) && ((globalStatus.endIndex == (parentIndex+1) && globalStatus.startIndex < childIndex) || (globalStatus.startIndex == childIndex && globalStatus.endIndex > (parentIndex+1))))}" 
+								ng-click="showRoutePrice(childIndex,parentIndex+1, true, 'box')" 
+								ng-mouseover="hilightButton(childIndex,parentIndex+1)" 
+								ng-mouseleave="unHilightButton()" 
+								data-trigger="hover" 
+								data-placement="rightpyramid" 
+								data-html="true" 
+								data-title="{{getDataTitle(childIndex,parentIndex+1,'box')}}" 
+								bs-tooltip>
+									&nbsp;
+								</button>
+							</td>
+							<td align="left" colspan="{{RoutePriceList.Pyramid.length - (parentIndex+1)}}">
+								<strong>&nbsp;{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: RoutePriceList.Pyramid[(parentIndex+1)] } : 'StopPointId')].StopPointName_TH}}</strong>
+							</td>
+						</tr>
+					</table>
+	    		</div>
+			</div>
+		</div>
+	</div>
+</div>

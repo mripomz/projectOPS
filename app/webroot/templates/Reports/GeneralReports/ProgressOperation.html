@@ -1,0 +1,117 @@
+<div class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">ประเภทรายงาน : </label>
+        <div class="col-sm-8">
+            <select ng-model="reportType.ProgressOperation" class="form-control" ng-change="resetReport();((reportType.ProgressOperation == 'ReportForVehicleDetail' || reportType.ProgressOperation == 'ReportForNumberOfVehicle')?(conditionReport.TypeSearch = 'Trip'):(conditionReport.TypeSearch = 'Transaction'))">
+                <option value="ReportForOperationIndividual">แสดงการดำเนินการส่วนบุคคล</option>
+                <option value="ReportForOperationIndividualByTicketNumber">แสดงการดำเนินการส่วนบุคคล เรียงตามพนักงาน และ หมายเลขตั๋ว</option>
+                <option value="ReportForLoginLogOut">แสดงเวลาล็อกอิน-ล็อกเอ้าท์ของพนักงาน</option>
+                <option value="ReportForVehicleDetail">แสดงข้อมูลประจำรถแต่ละเที่ยว</option>
+                <option value="ReportForNumberOfVehicle">รายงานแสดงจำนวนเที่ยววิ่ง</option>
+            </select>
+        </div>
+        <div class="col-sm-1 text-right no-padding">
+            <button class="btn btn-primary btn-block" ng-disabled="globalVariable.currentReports == ''" ng-click="printDiv()"><i class="fa fa-print" aria-hidden="true"></i> พิมพ์</button>
+        </div>
+        <div class="col-sm-1 text-right no-padding-right">
+            <button class="btn btn-primary btn-block" ng-disabled="globalVariable.currentReports == ''" ng-click="generateExcel()"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel</button>
+        </div>
+    </div>
+    <hr/>
+    <div class="form-group" ng-if="reportType.ProgressOperation == 'ReportForOperationIndividual'">
+        <label class="col-sm-2 control-label">ประเภท : </label>
+        <div class="col-sm-10">
+            <select ng-model="conditionReport.ReportType" class="form-control" ng-change="resetReport();conditionReport.TypeSearch = 'Transaction';((conditionReport.ReportType == 'OperationIndividual_Thermal')?(loadEmployeeList()):'');">
+                <option value="OperationIndividual">รายงานแสดงรายละเอียดการดำเนินการส่วนบุคคล</option>
+                <option value="OperationIndividual_Thermal">รายงานสรุปยอดการดำเนินการส่วนบุคคล(Thermal)</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">ค้นหาจาก : </label>
+        <div class="col-sm-10">
+            <select ng-model="conditionReport.TypeSearch" class="form-control" ng-change="resetReport()">
+                <option value="Transaction" ng-if="reportType.ProgressOperation != 'ReportForVehicleDetail' && reportType.ProgressOperation != 'ReportForNumberOfVehicle'">วันทำรายการ</option>
+                <option value="Trip" ng-if="conditionReport.ReportType == 'OperationIndividual' && reportType.ProgressOperation == 'ReportForOperationIndividual' || reportType.ProgressOperation == 'ReportForVehicleDetail' || reportType.ProgressOperation == 'ReportForNumberOfVehicle'">วันเดินทาง</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">จากวันที่ : </label>
+        <div class="col-sm-4">
+            <div class="input-group">
+                <input type="text" name="dateStart" class="form-control" ng-model="conditionReport.DateStart" placeholder="จากวันที่" bs-datepicker data-date-type="string" data-model-date-format="MM/dd/yyyy" data-date-format="dd/MM/yyyy" data-autoclose="true" data-placement="bottom" ng-change="resetReport()">
+                <label for="dateStart" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+            </div>
+        </div>
+        <label class="col-sm-2 control-label" ng-if="reportType.ProgressOperation != 'ReportForLoginLogOut' && reportType.ProgressOperation != 'ReportForVehicleDetail'">จนถึงวันที่ : </label>
+        <div class="col-sm-4" ng-if="reportType.ProgressOperation != 'ReportForLoginLogOut' && reportType.ProgressOperation != 'ReportForVehicleDetail'">
+            <div class="input-group">
+                <input type="text" name="dateEnd" class="form-control" ng-model="conditionReport.DateEnd" placeholder="จากวันที่" bs-datepicker data-date-type="string" data-model-date-format="MM/dd/yyyy" data-date-format="dd/MM/yyyy" data-autoclose="true" data-placement="bottom" ng-change="resetReport()">
+                <label for="dateEnd" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group" ng-if="conditionReport.TypeSearch != 'Trip' && reportType.ProgressOperation != 'ReportForLoginLogOut' && reportType.ProgressOperation != 'ReportForVehicleDetail' && reportType.ProgressOperation != 'ReportForNumberOfVehicle'">
+        <label class="col-sm-2 control-label">เวลา : </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" ng-model="conditionReport.TimeStart" id="timeStart" placeholder="เวลาเริ่มต้น" data-time-type="string" data-minute-step="1" bs-timepicker data-autoclose="true" ng-change="resetReport()">
+        </div>
+        <label class="col-sm-2 control-label">เวลา : </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" ng-model="conditionReport.TimeEnd" id="timeEnd" placeholder="เวลาเริ่มต้น" data-time-type="string" data-minute-step="1" bs-timepicker data-autoclose="true" ng-change="resetReport()">
+        </div>
+    </div>
+
+    <div class="form-group" ng-if="reportType.ProgressOperation != 'ReportForVehicleDetail' && reportType.ProgressOperation != 'ReportForNumberOfVehicle'">
+        <label class="col-sm-2 control-label">จุดขาย : </label>
+        <div class="col-sm-10">
+            <select ng-model="conditionReport.StopPoint" ng-options="o.StopPointId as o.StopPointName_TH for o in stopPointData.StopPointList" class="form-control" ng-change="loadEmployeeList();">
+                <option value="">ทั้งหมด</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group" ng-if="reportType.ProgressOperation != 'ReportForVehicleDetail' && reportType.ProgressOperation != 'ReportForNumberOfVehicle'">
+        <label class="col-sm-2 control-label">พนักงาน : </label>
+        <div class="col-sm-10">
+            <input class="form-control" readonly value="ไม่มีพนักงานขาย ณ จุดขายนี้" ng-if="salesList.length == 0">
+            <select ng-model="conditionReport.UserId" ng-options="o.UserId as o.FullName for o in salesList" ng-if="salesList.length > 0" class="form-control" ng-change="resetReport();">
+                <option value="">ทั้งหมด</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group" ng-if="conditionReport.ReportType == 'OperationIndividual' && reportType.ProgressOperation != 'ReportForLoginLogOut' && reportType.ProgressOperation != 'ReportForVehicleDetail' && reportType.ProgressOperation != 'ReportForNumberOfVehicle'">
+        <label class="col-sm-2 control-label">มาตรฐานรถ : </label>
+        <div class="col-sm-10">
+            <select ng-model="conditionReport.VehicleSeatPlanId" ng-options="o.VehicleSeatPlanId as o.VehicleSeatPlanName for o in vehicleSeatPlanList" class="form-control" ng-change="resetReport();">
+                <option value="">ทั้งหมด</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group margin-top-20">
+        <div class="col-md-4 col-md-offset-4">
+            <button class="btn btn-block btn-primary" ng-click="generateReport(reportType.ProgressOperation)">แสดงรายงาน</button>
+        </div>
+    </div>
+</div>
+<hr/>
+<div class="col-md-12 no-padding reportZone margin-top-20">
+	<!--OperationIndividual Section-->
+	<div ng-include="rootUrl + '../templates/Reports/GeneralReports/ProgressOperationElement/OperationIndividual.html'"></div>
+	<div ng-include="rootUrl + '../templates/Reports/GeneralReports/ProgressOperationElement/OperationIndividual_Thermal.html'"></div>
+
+	<!--OperationIndividualByTicketNumber-->
+	<div ng-include="rootUrl + '../templates/Reports/GeneralReports/ProgressOperationElement/OperationIndividualByTicketNumber.html'"></div>
+
+    <!--Login/Logout-->
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/ProgressOperationElement/LoginLogout.html'"></div>
+
+    <!--VehicleDetail-->
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/ProgressOperationElement/VehicleDetail.html'"></div>
+
+    <!--NumberOfVehicle-->
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/ProgressOperationElement/NumberOfVehicle.html'"></div>
+</div>

@@ -1,0 +1,51 @@
+<table id="ReportForCancelTicket" width="100%" ng-if="reportType.RevenueTicket == 'ReportForCancelTicket' && globalVariable.isShowReport">
+	<tr>
+        <th class="text-center">
+            รายงานยกเลิกการขายบัตรโดนสารตาม{{conditionReport.TypeSearch == 'Transaction'?'วันทำรายการ':'วันเดินทาง'}}<br/>
+            ระหว่างวันที่ {{conditionReport.DateStart | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} - ถึงวันที่ {{conditionReport.DateEnd | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}}
+        </th>
+    </tr>
+    <tr>
+        <td>ผู้ออก : {{SellingName}} วันที่ : {{dateTimeNow | date:'dd/MM/yyyy เวลา HH:mm:ss น.'}}</td>
+    </tr>
+    <tr>
+    	<td>
+    		<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+                <tr>
+                    <th class="text-center">ลำดับ</th>
+                    <th>รหัสการจอง</th>
+                    <th>เลขรถ</th>
+                    <th>ต้นทาง - ปลายทาง</th>
+                    <th>วันเวลาเดินทาง</th>
+                    <th>ชื่อผู้โดยสาร</th>
+                    <th>ที่นั่ง</th>
+                    <th>วันทำรายการ</th>
+                    <th>กำหนดชำระเงิน</th>
+                    <th>วันที่ถูกยกเลิก</th>
+                    <th>ผู้ยกเลิก</th>
+                </tr>
+                <tbody ng-repeat="(key,value) in dataReport.CancelTicketList | groupBy:(conditionReport.TypeSearch=='Trip'?'VehicleOperationDateDays':'ReturnedDateDays')">
+                    <tr class="active">
+                        <td colspan="11">{{key}}</td>
+                    </tr>
+                    <tr ng-repeat="item in value">
+                        <td align="center">{{$index+1}}</td>
+                        <td>{{item.ReferenceCode}}</td>
+                        <td>{{item.VehicleNumber}}</td>
+                        <td>{{item.StopPointStart + ' ' + item.StopPointEnd}}</td>
+                        <td>{{item.VehicleOperationDate | jsonDate:'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{item.PassengerFirstName + ' ' + item.PassengerLastName}}</td>
+                        <td>{{item.VehicleSeatName}}</td>
+                        <td>{{item.CreatedDate | jsonDate:'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{item.TicketRentExpiredDate | jsonDate:'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{item.ReturnedDate | jsonDate:'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{item.ReturnedBy}}</td>
+                    </tr>
+                </tbody>
+                <tr ng-if="dataReport.CancelTicketList.length == 0">
+                    <td colspan="11" align="center">ไม่มีข้อมูล</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>

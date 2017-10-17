@@ -1,0 +1,150 @@
+<div class="search-vehicle-trip">
+    <div class="search-vehicle-trip-btn" ng-click="globalVariable.isShowFilter = !globalVariable.isShowFilter">
+            <span style="font-size:16px;color:#3397DA"><i ng-class="{'fa fa-minus-circle':globalVariable.isShowFilter,'fa fa-plus-circle':!globalVariable.isShowFilter}"></i></span> ซ่อน / แสดง
+    </div>
+    <div class="col-xs-12 filter-layout" ng-class="{'fadeIn animated' : globalVariable.isShowFilter, 'fadeOut animated hide' : !globalVariable.isShowFilter}">
+        <h4 class="mouse-pointer" style="color:#FFF">
+            <strong>ค้นหาเส้นทางเดินรถ</strong>
+        </h4>
+        <hr/>
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">วันที่เริ่ม</label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="searchFilter.dateStart" id="dateStart" placeholder="วันที่เริ่มต้น" bs-datepicker data-date-type="string" data-model-date-format="MM/dd/yyyy" data-date-format="dd/MM/yyyy" data-autoclose="true" data-placement="left">
+                        <label style="background-color: #eb9316;border-color: #eb9316;" for="dateStart" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">วันที่สิ้นสุด</label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="searchFilter.dateEnd" id="dateEnd" placeholder="วันที่สิ้นสุด" bs-datepicker data-date-type="string" data-model-date-format="MM/dd/yyyy" data-date-format="dd/MM/yyyy" data-autoclose="true" data-placement="left">
+                        <label style="background-color: #eb9316;border-color: #eb9316;" for="dateEnd" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="timeStart" class="col-sm-4 control-label">เวลา</label>
+                <div class="col-sm-8">
+                    <div class="col-sm-5 no-padding">
+                            <input type="text" class="form-control" ng-model="searchFilter.timeStart" id="timeStart" placeholder="เวลาเริ่มต้น" data-time-type="string" data-placement="left" data-minute-step="1" bs-timepicker data-autoclose="true">
+                    </div>
+                    <label for="timeEnd" class="col-sm-2 text-center no-padding"> - </label>
+                    <div class="col-sm-5 no-padding">
+                        <input type="text" class="form-control" ng-model="searchFilter.timeEnd" id="timeEnd" placeholder="เวลาสิ้นสุด" data-time-type="string" data-placement="left" data-minute-step="1" bs-timepicker data-autoclose="true">
+                    </div>
+                </div>
+                
+            </div>
+            <div class="form-group">
+                <label for="vehicleRoute" class="col-sm-12 text-center">เส้นทางเดินรถ</label>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                        <select class="form-control" ng-model="searchFilter.RouteId" id="vehicleRoute" ng-options="o.RouteId as o.RouteName_TH for o in VehicleRoute">
+                            <option value="">ทั้งหมด</option>
+                        </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <button class="btn btn-primary btn-block" ng-click="searchRouteTrip();globalVariable.isShowFilter = !globalVariable.isShowFilter">ค้นหาเที่ยวรถ</button>
+                </div>
+            </div>    
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12 text-center">
+    <h3>
+        <strong>ค้นหาเส้นทาง : </strong>
+        วันที่ {{searchFilter.dateStart | lswDate:'MM/dd/yyyy':'dd/MM/yyyy'}}{{(((searchFilter.dateStart | date:'dd MM yyyy') == (searchFilter.dateEnd | date:'dd MM yyyy'))?'':(' - ' + (searchFilter.dateEnd | lswDate:'MM/dd/yyyy':'dd/MM/yyyy')))}}</h3>
+    <h4>
+        <strong>เวลา : </strong>
+        <span>{{searchFilter.timeStart || 'ไม่ได้ระบุ'}}{{!!searchFilter.timeEnd?(' - ' + searchFilter.timeEnd):''}}</span>
+    </h4>
+</div>
+
+<h4 class="mouse-pointer"><strong class="pull-left">เส้นทางเดินรถ</strong> 
+
+ <button type="button" style="float:right;margin-right:5px;" ng-class="!IsAllDelete? 'btn btn-danger' : 'btn btn-success'"
+  ng-show = "VehicleOperationListForDeleteAll.length == 0" ng-click = "IsMultipleRoute()" >{{!IsAllDelete?"ปิดหลายเที่ยวรถ":"ยกเลิก"}}</button> 
+ <button type="button" style="float:right;margin-right:5px;" ng-show = "IsAllDelete&&VehicleOperationListForDeleteAll.length == 0" class="btn btn-info " ng-click = "SelectAllRoute()">เลือกทั้งหมด</button>  
+</h4>
+
+</br>
+
+<h4>
+<button type="button" style="float:right;margin-right:5px;" ng-show = "VehicleOperationListForDeleteAll.length > 0" 
+ message-en="Are you sure to delete this stop point?" message-th="หากมีการจองในระบบแล้ว การจองนั้นจะถูกยกเลิก ท่านต้องการที่จะลบเที่ยวรถนี้ ใช่หรือไม่?" lsw-confirm-modal="RemoveMultipleRoute()"  class="btn btn-danger pull-right" >ปิดเที่ยวรถที่ถูกเลือก</button> 
+ <button type="button"  style="float:right;margin-right:5px;" ng-show = "IsAllDelete&&VehicleOperationListForDeleteAll.length > 0" class="btn btn-info  pull-right" ng-click = "ClearSelectAllRoute()">ยกเลิกเลือกทั้งหมด</button>
+ </h4>
+
+<hr/>
+<div class="col-xs-12">
+    <div class="navbar-form navbar-left">
+        <div lsw-paginate="lswPaginateOptions" class="lsw-paginate-position" small="true" ng-model="VehicleOperationList">
+        </div>    
+    </div>
+    <div lsw-table="lswTableOptions" ng-model="VehicleOperationList">
+        <script type="text/ng-template" id="theadTemplate.html">
+            <th class="col-md-2 cursor-point" ng-click="sort('VehicleOperationDate');">วันเดือนปี</th>
+            <th class="col-md-2 cursor-point" ng-click="sort('RouteId');">ชื่อเส้นทางรถ</th>
+            <th class="col-md-1 cursor-point" ng-click="sort('VehicleOperationDate');">เวลา</th>
+            <th class="col-md-1 cursor-point" ng-click="sort('VehicleNumber');">เบอร์รถ</th>
+            <th class="col-md-1 cursor-point" ng-click="sort('VehicleOperationNo');">คันที่</th>
+            <th class="col-md-1 cursor-point" ng-click="sort('VehicleOperationOrder');">เรียง</th>
+            <th class="col-md-1 cursor-point" ng-click="sort('VehicleSeatPlanName');">ชื่อผังรถ</th>
+            <th class="col-md-2 cursor-point" ng-click="sort('NumberPassenger');">จำนวนผู้โดยสารซื้อ/จอง</th>
+            <th class="col-md-1 cursor-point text-center" ng-click="sort('');">เที่ยวรถเสริม</th>
+            <th class="col-md-2"></th>
+        </script>
+        <script type="text/ng-template" id="tbodyTemplate.html">
+            <td>{{row.VehicleOperationDate | jsonDate:'dd MMMM yyyy'}}</td>
+            <td>{{parent.VehicleRoute[(parent.VehicleRoute | lswIndexOf: { RouteId: row.RouteId } : 'RouteId')].RouteName_TH}}</td>
+
+            <td>{{(row.VehicleOperationDate | jsonDate:'HH:mm') || '-'}} น.</td>
+            <td>{{row.VehicleNumber || '-'}}</td>
+            <td>{{row.VehicleOperationNo || '-'}}</td>
+            <td>{{row.VehicleOperationOrder || '-'}}</td>
+            <td>{{row.VehicleSeatPlanName || '-'}}</td>
+            <td align="center">{{row.NumberPassenger}}</td>
+            <td align="center">
+                <strong ng-style="{'color':(row.IsSupplement?'green':'grey')}">
+                    <i ng-class="{'fa fa-check-circle':row.IsSupplement, 'fa fa-minus-circle':!row.IsSupplement}"></i>
+                </strong>
+            </td>
+
+            <td align="right">
+                <button  ng-show = "!parent.IsAllDelete" class="btn btn-primary btn-xs"  ng-click="parent.editVehicleTrip(row.VehicleOperationId, true);">
+                    <i class="fa fa-eye"></i> รายละเอียด
+                </button>
+                <button ng-show = "!parent.IsAllDelete&&parent.IsDate(row.VehicleOperationDate)" class="btn btn-warning btn-xs" ng-click="parent.editVehicleTrip(row.VehicleOperationId, false);">
+                    <i class="glyphicon glyphicon-pencil"></i> แก้ไข
+                </button>
+                <button ng-show = "!parent.IsAllDelete" class="btn btn-danger btn-xs" message-en="Are you sure to delete this stop point?" message-th="หากมีการจองในระบบแล้ว การจองนั้นจะถูกยกเลิก ท่านต้องการที่จะลบเที่ยวรถนี้ ใช่หรือไม่?" lsw-confirm-modal="parent.beforeRemoveVehicleOperation(row.VehicleOperationId)">
+                    <i class="glyphicon glyphicon-trash"></i> ปิดเที่ยวรถ
+                </button>
+                <input type="checkbox"  ng-model = "row.selected" ng-click = "parent.beforeRemoveVehicleOperationAll(row.VehicleOperationId)" 
+                 ng-show = "parent.IsAllDelete&&row.NumberPassenger<=0"  >
+
+                <!--
+                <div class="ondisplay">
+                  <section title=".squaredOne">
+                    
+                    <div class="squaredOne">
+                        <input type="checkbox" value="None" id="squaredOne" name="check" checked />
+                        <label for="squaredOne"></label>
+                    </div>
+                    
+                </section> 
+                /</div> -->
+            </td>
+        </script>
+    </div>
+</div>

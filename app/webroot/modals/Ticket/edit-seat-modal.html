@@ -1,0 +1,345 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 500px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">{{globalVariable.currentEditSeatSelect.TicketStatus==1?'แก้ไขสถานะการจอง':'แก้ไขสถานะการขาย'}}</h3>
+            </div>
+            <div class="modal-body" style="max-height:650px;overflow-y:auto;">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-4 text-right">ชื่อผู้โดยสาร : </label>
+                        <div class="col-sm-8">
+                            <strong>{{globalVariable.currentEditSeatSelect.Passenger.PassengerFirstName + ' ' + globalVariable.currentEditSeatSelect.Passenger.PassengerLastName}}</strong>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 text-right">ตำแหน่งที่นั่ง : </label>
+                        <div class="col-sm-8">
+                            <strong>{{globalVariable.currentSeatSelect.VehicleSeatName}}</strong>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 text-right">สถานะปัจจุบัน : </label>
+                        <div class="col-sm-8">
+                            <strong ng-style="{'color':(globalVariable.currentEditSeatSelect.TicketStatus==1?'#e74c3c':'#81b53e')}">{{globalVariable.currentEditSeatSelect.TicketStatus==1?'จอง':'ขาย'}}</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 no-padding" ng-init="globalVariable.isShowState = 0">
+                    <ol class="breadcrumb" ng-show="globalVariable.isShowState == 0">
+                        <li class="active">การดำเนินการ</li>
+                    </ol>
+                    <ol class="breadcrumb" ng-show="globalVariable.isShowState > 0">
+                        <li><a ng-click="globalVariable.isShowState = 0">การดำเนินการ</a></li>
+                        <li class="active">ยืนยันทำรายการ</li>
+                    </ol>
+                </div>
+            	<table class="table table-condensed">
+        			<tr>
+        				<th class="col-md-8">การดำเนินการ</th>
+        				<th class="col-md-4"></th>
+        			</tr>
+                    <tr ng-show="globalVariable.isShowState == 0" ng-if="globalVariable.currentEditSeatSelect.TicketStatus==1 && ((TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: '711' } : 'TicketPaymentKey')].TicketPaymentTypeId) != globalVariable.currentEditSeatSelect.TicketPaymentTypeId)">
+                        <td><i class="fa fa-money" aria-hidden="true"></i> ชำระเงิน</td>
+                        <td align="right">
+                            <button class="btn btn-primary btn-xs" ng-click="globalVariable.isShowState = 2">
+                                <i class="fa fa-times-circle" aria-hidden="true"></i> เลือก
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-show="globalVariable.isShowState == 2">
+                        <td colspan="2">
+                            <div class="form-horizontal">
+                                <div class="form-group" ng-init="globalVariable.confirmExchange = false">
+                                    <div class="col-md-12 text-center" ng-show="!globalVariable.confirmExchange">
+                                        <strong>คุณต้องการจะชำระเงินที่นั่ง {{globalVariable.currentSeatSelect.VehicleSeatName}}</strong>
+                                        <table class="table">
+                                            <tr>
+                                                <td class="col-md-5" align="right"><strong>ค่าตั๋วโดยสาร: </strong></td>
+                                                <td align="right">{{globalVariable.currentEditSeatSelect.TicketPrice | number:2}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-5" align="right"><strong>ส่วนลด: </strong></td>
+                                                <td align="right">- {{(globalVariable.currentEditSeatSelect.DiscountPrice || 0) | number:2}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-5" align="right"><strong>ค่าธรรมเนียม: </strong></td>
+                                                <td align="right">+ {{globalVariable.currentEditSeatSelect.TicketPaymentFee}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-5" align="right"><strong>รวมเป็นเงิน: </strong></td>
+                                                <td align="right"><span style="font-size: 28px;color: #3498DB; text-decoration: underline;">{{(globalVariable.currentEditSeatSelect.TicketPrice - globalVariable.currentEditSeatSelect.DiscountPrice) + (globalVariable.currentEditSeatSelect.TicketPaymentFee) | number:2}}</span></td>
+                                            </tr>
+                                        </table>
+                                        <button ng-click="globalVariable.confirmExchange = true" class="btn btn-primary">ยืนยัน</button>    
+                                    </div>
+                                    <div class="col-md-12 text-center" ng-show="globalVariable.confirmExchange" ng-init="globalVariable.MoneyRecivedModal = 0">
+                                        <strong>กดตกลงเพื่อทำการชำระเงิน</strong>
+                                        <br/><br/>
+                                        <div class="form-horizontal">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 text-right">รับเงิน : </label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" style="color:green; font-size:24px" ng-model="globalVariable.MoneyRecivedModal" class="form-control text-right ng-pristine ng-untouched ng-valid" placeholder="จำนวนเงิน(บาท)" lsw-only-digits="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 text-right">ทอนเงิน : </label>
+                                                <div class="col-sm-9">
+                                                    <div class="text-right">
+                                                        <span style="color:red; font-size:28px" ng-if="(globalVariable.MoneyRecivedModal - ((globalVariable.currentEditSeatSelect.TicketPrice - globalVariable.currentEditSeatSelect.DiscountPrice) + (globalVariable.currentEditSeatSelect.TicketPaymentFee))) >= 0">{{(globalVariable.MoneyRecivedModal - ((globalVariable.currentEditSeatSelect.TicketPrice - globalVariable.currentEditSeatSelect.DiscountPrice) + (globalVariable.currentEditSeatSelect.TicketPaymentFee))) | number:2}}</span>
+
+                                                        <span style="color:red; font-size:28px" ng-if="(globalVariable.MoneyRecivedModal - ((globalVariable.currentEditSeatSelect.TicketPrice - globalVariable.currentEditSeatSelect.DiscountPrice) + (globalVariable.currentEditSeatSelect.TicketPaymentFee))) < 0">0.00</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button ng-click="seatPay(globalVariable.currentEditSeatSelect.VehicleOperationSeatId, globalVariable.currentSeatSelect.VehicleSeatId);$hide()" class="btn btn-primary">ตกลง</button>
+                                        <button ng-click="globalVariable.confirmExchange = false" class="btn btn-danger">ยกเลิก</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-show="globalVariable.isShowState == 0" ng-if="globalVariable.currentEditSeatSelect.TicketStatus==2">
+                        <td><i class="fa fa-print" aria-hidden="true"></i> พิมพ์ตั๋วโดยสาร</td>
+                        <td align="right">
+                            <button class="btn btn-primary btn-xs" ng-click="globalVariable.isShowState = 5">
+                                <i class="fa fa-hand-o-up" aria-hidden="true"></i> พิมพ์
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-show="globalVariable.isShowState == 5">
+                        <td colspan="2">
+                            <strong>พิมพ์เหตุผลในการพิมพ์ตั๋วซ้ำ</strong>
+                            <textarea class="form-control" ng-model="globalVariable.resonForRePrint" rows="3"></textarea>
+                            <button class="btn btn-primary btn-block" ng-disabled="globalVariable.resonForRePrint == ''" ng-click="rePrintTicket(globalVariable.resonForRePrint, globalVariable.currentEditSeatSelect, null, 'RePrint')">
+                                <i class="fa fa-print" aria-hidden="true"></i> พิมพ์บัตรโดยสาร
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr ng-show="globalVariable.isShowState == 0">
+                        <td><i class="fa fa-user" aria-hidden="true"></i> เปลี่ยนหมายเหตุ</td>
+                        <td align="right">
+                            <button class="btn btn-primary btn-xs" ng-click="globalVariable.isShowState = 6">
+                                <i class="fa fa-hand-o-up" aria-hidden="true"></i> เลือก
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-show="globalVariable.isShowState == 6">
+                        <td colspan="2">
+                            <strong>หมายเหตุ</strong>
+                            <textarea class="form-control" ng-model="globalVariable.currentEditSeatSelect.Notes" rows="3"></textarea>
+                            <button class="btn btn-primary btn-block" ng-click="changedNotesForBookingSeat(globalVariable.currentEditSeatSelect);">
+                                <i class="fa fa-retweet" aria-hidden="true"></i> เปลี่ยนหมายเหตุ
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr ng-show="globalVariable.isShowState == 0">
+                        <td><i class="fa fa-exchange" aria-hidden="true"></i> ย้ายที่นั่ง</td>
+                        <td align="right">
+                            <button class="btn btn-primary btn-xs" ng-click="globalVariable.isShowState = 1;loadListExchangeSeat(globalVariable.currentEditSeatSelect.StopPointStartId,globalVariable.currentEditSeatSelect.StopPointEndId,globalVariable.currentSeatSelect.VehicleStandardId)">
+                                <i class="fa fa-hand-o-up" aria-hidden="true"></i> เลือก
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-show="globalVariable.isShowState == 1">
+                        <td colspan="2">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="col-xs-3 text-right">
+                                        <strong>เส้นทาง: </strong>
+                                    </div>
+                                    <div class="col-xs-9">
+                                        <strong>{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: globalVariable.currentEditSeatSelect.StopPointStartId } : 'StopPointId')].StopPointName_TH}} -> {{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: globalVariable.currentEditSeatSelect.StopPointEndId } : 'StopPointId')].StopPointName_TH}}</strong>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-xs-3 text-right">
+                                        <strong>ตำแหน่งเดิม: </strong>
+                                    </div>
+                                    <div class="col-xs-9">
+                                        {{globalVariable.currentSeatSelect.VehicleSeatName}}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-xs-3 text-right">
+                                        <strong>ตำแหน่งใหม่: </strong>
+                                    </div>
+                                    <div class="col-xs-9">
+                                        <select class="form-control" ng-model="globalVariable.selectSeatExchange" ng-options="o as o.VehicleSeatName for o in VehicleSeatExchangeFloorDetail">
+                                            <option value="">เลือกตำแหน่งที่นั่ง</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-3 text-right"></div>
+                                    <div class="col-xs-9"><span class="danger">สามารถย้ายไปยังที่นั่งเกรดเดียวกันเท่านั้น</span></div>
+                                </div>
+                                <div class="form-group" ng-init="globalVariable.confirmExchange = false">
+                                    <div class="col-md-12 text-center" ng-show="!globalVariable.confirmExchange">
+                                        <button ng-click="globalVariable.confirmExchange = true" class="btn btn-primary" ng-disabled="globalVariable.selectSeatExchange == '' || globalVariable.selectSeatExchange == null">ยืนยัน</button>    
+                                    </div>
+                                    <div class="col-md-12 text-center" ng-show="globalVariable.confirmExchange">
+                                        <strong>ต้องการเปลี่ยนที่นั่งจาก {{globalVariable.currentSeatSelect.VehicleSeatName}} -> {{globalVariable.selectSeatExchange.VehicleSeatName}} ใช่หรือไม่?</strong>
+                                        <br/><br/>
+                                        <button ng-click="seatExchange(globalVariable.currentEditSeatSelect.VehicleOperationSeatId, globalVariable.currentSeatSelect.VehicleSeatId, globalVariable.selectSeatExchange.VehicleSeatId);$hide()" class="btn btn-primary">บันทึก</button>
+                                        <button ng-click="globalVariable.confirmExchange = false" class="btn btn-danger">ยกเลิก</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-show="globalVariable.isShowState == 0" ng-if="globalVariable.currentEditSeatSelect.TicketStatus==1">
+                        <td><i class="fa fa-power-off" aria-hidden="true"></i> สละลิทธิ์</td>
+                        <td align="right">
+                            <button class="btn btn-primary btn-xs" ng-click="globalVariable.isShowState = 3">
+                                <i class="fa fa-hand-o-up" aria-hidden="true"></i> เลือก
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-show="globalVariable.isShowState == 3">
+                        <td colspan="2">
+                            <div class="form-horizontal">
+                                <div class="form-group" ng-init="globalVariable.confirmExchange = false">
+                                    <div class="col-md-12 text-center" ng-show="!globalVariable.confirmExchange">
+                                        <strong>คุณต้องการที่จะสละสิทธิ์ที่นั่ง {{globalVariable.currentSeatSelect.VehicleSeatName}}</strong>
+                                        <br/><br/>
+                                        <button ng-click="globalVariable.confirmExchange = true" class="btn btn-primary">ยืนยัน</button>    
+                                    </div>
+                                    <div class="col-md-12 text-center" ng-show="globalVariable.confirmExchange">
+                                        <strong>กดตกลงเพื่อทำการสละสิทธิ์ที่นั่ง</strong>
+                                        <br/><br/>
+                                        <button ng-click="seatDisclaim(globalVariable.currentEditSeatSelect.VehicleOperationSeatId, globalVariable.currentSeatSelect.VehicleSeatId);$hide()" class="btn btn-primary">ตกลง</button>
+                                        <button ng-click="globalVariable.confirmExchange = false" class="btn btn-danger">ยกเลิก</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-show="globalVariable.isShowState == 0" ng-if="globalVariable.currentEditSeatSelect.TicketStatus==2">
+                        <td><i class="fa fa-reply" aria-hidden="true"></i> คืนตั๋วโดยสาร</td>
+                        <td align="right">
+                            <button class="btn btn-primary btn-xs" ng-click="globalVariable.isShowState = 4">
+                                <i class="fa fa-hand-o-up" aria-hidden="true"></i> เลือก
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-show="globalVariable.isShowState == 4">
+                        <td colspan="2">
+                            <div class="form-horizontal">
+                                <div class="form-group" ng-init="globalVariable.confirmExchange = false">
+                                    <div class="col-md-12 text-center" ng-show="!globalVariable.confirmExchange">
+                                        <strong>คุณต้องการที่จะทำการคืนตั๋วโดยสารที่นั่ง {{globalVariable.currentSeatSelect.VehicleSeatName}}
+                                        </strong>
+                                        <table class="table">
+                                            <tr>
+                                                <td class="col-md-5" align="right"><strong>ค่าตั๋วโดยสาร: </strong></td>
+                                                <td align="right">{{globalVariable.currentEditSeatSelect.TicketPrice - globalVariable.currentEditSeatSelect.DiscountPrice | number:2}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-5" align="right">
+                                                    <strong ng-if ="!(TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].IsPercentage)">ค่าธรรมเนียมคืนตั๋ว: 
+                                                    </strong>
+                                                    <strong ng-if ="(TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].IsPercentage)">ค่าธรรมเนียมคืนตั๋ว({{
+                                                    TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].TicketPaymentTypeFee}}%): 
+                                                    </strong>
+                                                </td>
+                                                <td ng-if ="!(TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].IsPercentage)" align="right">{{TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].TicketPaymentTypeFee | number:2}}</td>
+                                                <td ng-if ="TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].IsPercentage" align="right">
+                                                    {{
+                                                 ( 
+                                                    (((globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice)) * (TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].TicketPaymentTypeFee))/100) | number:2 
+                                                    }}
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-md-5" align="right"><strong>เงินที่ได้รับคืน: </strong></td>
+                                                <td ng-if ="(TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].IsPercentage)" align="right">
+                                                    <span style="font-size:25px;color: red" ng-if="((globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice) - 
+                                                    (((globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice)) * (TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].TicketPaymentTypeFee))/100) > 0">
+                                                    {{
+                                                    ((globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice) - 
+                                                    (((globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice)) * (TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].TicketPaymentTypeFee))/100) | number:2 
+
+                                                    }}</span>
+                                                    <span style="font-size:25px;color: red" ng-if="((globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice) - 
+                                                    (((globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice)) * (TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].TicketPaymentTypeFee))/100) <= 0">0.00
+                                                    </span>
+                                                </td>
+                                                <td ng-if ="!(TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].IsPercentage)" align="right">
+                                                    <span style="font-size:25px;color: red" ng-if="
+                                                    (
+                                                    (globalVariable.currentEditSeatSelect.TicketPrice) - 
+                                                    (globalVariable.currentEditSeatSelect.DiscountPrice)
+                                                    ) - 
+                                                    (
+                                                    TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].TicketPaymentTypeFee
+                                                    )>0">
+                                                    {{(globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice) - (TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].TicketPaymentTypeFee) | number:2}}</span>
+                                                    <span style="font-size:25px;color: red" ng-if="
+                                                    (
+                                                    (globalVariable.currentEditSeatSelect.TicketPrice) - 
+                                                    (globalVariable.currentEditSeatSelect.DiscountPrice)
+                                                    ) - 
+                                                    (
+                                                    TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].TicketPaymentTypeFee
+                                                    ) <=0">0.00
+                                                    </span>
+                                                </td> 
+                                            </tr>
+                                        </table>
+                                        <button ng-click="globalVariable.confirmExchange = true" class="btn btn-primary">ยืนยัน</button>    
+                                    </div>
+
+
+                                    <div class="col-md-12 text-center" ng-show="globalVariable.confirmExchange&&(TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].IsPercentage)">
+                                        <strong>เงินที่ได้รับคืน : <span style="font-size:26px;color: red" ng-if="(TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].IsPercentage)&&((globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice) - 
+                                        (((globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice)) * (TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].TicketPaymentTypeFee))/100) > 0">{{((globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice) - 
+                                        (((globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice)) * (TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].TicketPaymentTypeFee))/100)
+                                        }}
+                                        </span>
+                                         <span style="font-size:26px;color: red" ng-if="(TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].IsPercentage)&&((globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice) - 
+                                        (((globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice)) * (TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].TicketPaymentTypeFee))/100) <= 0">
+                                            0.00
+                                        </span>
+                                        <span style="font-size:26px;color: red" ng-if="!(TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].IsPercentage)&&(globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice) - (TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].TicketPaymentTypeFee) > 0">
+                                        {{
+                                            (globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice) - (TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].TicketPaymentTypeFee)
+
+                                        }} %
+                                        </span>
+
+                                        <span style="font-size:26px;color: red" ng-if="!(TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].IsPercentage)&&(globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice) - (TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].TicketPaymentTypeFee) <= 0">0.00</span>
+                                        </strong>
+                                        <br/>
+                                        <strong>กดตกลงเพื่อทำการคืนตั๋วโดยสาร</strong>
+                                        <br/><br/>
+                                        <button ng-click="returnTicket(globalVariable.currentEditSeatSelect.VehicleOperationSeatId, globalVariable.currentSeatSelect.VehicleSeatId);$hide()" class="btn btn-primary">ตกลง</button>
+                                        <button ng-click="globalVariable.confirmExchange = false" class="btn btn-danger">ยกเลิก</button>
+                                    </div>
+
+
+                                    <div class="col-md-12 text-center" ng-show="globalVariable.confirmExchange&&!(TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].IsPercentage)">
+                                        <strong>เงินที่ได้รับคืน : <span style="font-size:26px;color: red" ng-if="(globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice) - (TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].TicketPaymentTypeFee) > 0">{{(globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice) - (TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].TicketPaymentTypeFee) | number:2}}</span><span style="font-size:26px;color: red" ng-if="(globalVariable.currentEditSeatSelect.TicketPrice) - (globalVariable.currentEditSeatSelect.DiscountPrice) - (TicketPaymentTypeList[(TicketPaymentTypeList | lswIndexOf: { TicketPaymentKey: 'ReturnTicket' } : 'TicketPaymentKey')].TicketPaymentTypeFee) <= 0">0.00</span></strong>
+                                        <br/>
+                                        <strong>กดตกลงเพื่อทำการคืนตั๋วโดยสาร</strong>
+                                        <br/><br/>
+                                        <button ng-click="returnTicket(globalVariable.currentEditSeatSelect.VehicleOperationSeatId, globalVariable.currentSeatSelect.VehicleSeatId);$hide()" class="btn btn-primary">ตกลง</button>
+                                        <button ng-click="globalVariable.confirmExchange = false" class="btn btn-danger">ยกเลิก</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+        		</table>
+                <div class="col-md-12">
+                    <div class="text-center">
+                        <button ng-click="$hide()" class="btn btn-default">ปิด</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

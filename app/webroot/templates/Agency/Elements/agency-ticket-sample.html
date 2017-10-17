@@ -1,0 +1,138 @@
+<table border="0" cellspacing="0" cellpadding="0" style="width:10.4cm;height:7.4cm;margin-left:1px;background-size:100%;background-image:{{('url(' + DataSetting_Agency_Ticket_Setting.AgencyBackgroundFileUploadUrl + ')' || 'none')}}" ng-style="{'color':(DataSetting_Agency_Ticket_Setting.AgencyFontColor || '#000000')}">
+    <tbody>
+        <tr>
+            <td colspan="3" style="height:1.5cm;border-bottom: 1px #000 solid;" align="{{DataSetting_Agency_Ticket_Setting.AgencyTitlePosition == 0?'left':(DataSetting_Agency_Ticket_Setting.AgencyTitlePosition == 1?'center':'right')}}">
+            	<img ng-if="DataSetting_Agency_Ticket_Setting.AgencyTitleDisplay == 0" ng-src="{{DataSetting_Agency_Ticket_Setting.AgencyLogoFileUploadUrl || (rootUrl + '../img/default-ticket-logo.png')}}" style="height: 1.5cm;"/>
+            	<span ng-if="DataSetting_Agency_Ticket_Setting.AgencyTitleDisplay == 1" ng-style="{'font-size':DataSetting_Agency_Ticket_Setting.AgencyTitleFontSize}">
+            		<strong>{{DataSetting_Agency_Ticket_Setting.AgencyName || 'ตั๋วโดยสาร AviaBooking'}}</strong>
+            	</span>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" style="width:1.9cm;">
+                <table id="table-ticket-agency" width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tbody>
+                        <tr>
+                            <td class="ticketmbfielddata" style="height:7mm;">{{globalVariable.currentDate | date:'HH:mm'}}</td>
+                        </tr>
+                        <tr>
+                            <td class="ticketnfielddata" style="height:5mm;">15/07/2559</td>
+                        </tr>
+                        <tr>
+                            <td class="ticketnfielddata" style="height:5mm;">อาเขต -</td>
+                        </tr>
+                        <tr>
+                            <td class="ticketnfielddata" style="height:5mm;">อ.ปาย</td>
+                        </tr>
+                        <tr>
+                            <td class="ticketnfielddata" style="height:5mm;">
+                                <div id="seat_no_left">4A</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="ticketnfielddata" style="height:5mm;">0632186176</td>
+                        </tr>
+                        <tr>
+                            <td class="ticketnfielddata" style="height:5mm;"><strong>150</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="ticketnfielddata" style="height:5mm;">อจลวิชญ์ ผามั่ง</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td valign="top" style="width:6.5cm;">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tbody>
+                        <tr>
+                            <td class="ticketnfielddata" style="height:5mm;">เวลา TIME</td>
+                            <td class="ticketnfielddata">วันที่ DATE</td>
+                        </tr>
+                        <tr>
+                            <td class="ticketmbfielddata">{{globalVariable.currentDate | date:'HH:mm'}}</td>
+                            <td class="ticketmbfielddata">{{globalVariable.currentDate | date:'dd/MM/yyyy'}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="ticketmbfielddata">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                    <tbody>
+                                        <tr>
+                                            <td class="ticketnfielddata">รถเบอร์<br> Bus No.</td>
+                                            <td class="ticketnfielddata">ที่นั่ง<br> SEAT No.</td>
+                                            <td class="ticketnfielddata">ชานชาลา<br> Platform No.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="ticketmbfielddata">3 07</td>
+                                            <td class="ticketmbfielddata">
+                                                <div id="seat_no">4A</div>
+                                            </td>
+                                            <td class="ticketmbfielddata">12</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="ticketnfielddata" style="height:5mm;">จาก From</td>
+                            <td class="ticketnfielddata">ถึง To</td>
+                        </tr>
+                        <tr>
+                            <td class="ticketbfielddata">อาเขต</td>
+                            <td class="ticketbfielddata">อ.ปาย</td>
+                        </tr>
+                        <tr>
+                            <td class="ticketnfielddata" style="height:5mm;">ราคา Price</td>
+                            <td class="ticketnfielddata">ส่วนลด Discount</td>
+                        </tr>
+                        <tr>
+                            <td class="ticketbbfielddata">150</td>
+                            <td class="ticketmbfielddata">0</td>
+                        </tr>
+                        <tr>
+                            <td class="ticketnfielddata" style="height:5mm;">ชื่อผู้โดยสาร Name</td>
+                            <td class="ticketnfielddata">ผู้ขาย Seller </td>
+                        </tr>
+                        <tr>
+                            <td class="ticketnfielddata">0632186176</td>
+                            <td class="ticketnfielddata">อจลวิชญ์ ผามั่ง</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td valign="top" style="width:1.9cm;">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tbody>
+                        <tr>
+                            <td class="ticketmbfielddata" style="height:7mm;">{{globalVariable.currentDate | date:'HH:mm'}}</td>
+                        </tr>
+                        <tr>
+                            <td class="ticketnfielddata" style="height:5mm;">15/07/2559</td>
+                        </tr>
+                        <tr>
+                            <td class="ticketnfielddata" style="height:5mm;">อาเขต -</td>
+                        </tr>
+                        <tr>
+                            <td class="ticketnfielddata" style="height:5mm;">อ.ปาย</td>
+                        </tr>
+                        <tr>
+                            <td class="ticketnfielddata" style="height:5mm;">
+                                <div id="seat_no_right">4A</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="ticketnfielddata" style="height:5mm;">0632186176</td>
+                        </tr>
+                        <tr>
+                            <td class="ticketnfielddata" style="height:5mm;"><strong>150</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="ticketnfielddata" style="height:5mm;">อจลวิชญ์ ผามั่ง</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>

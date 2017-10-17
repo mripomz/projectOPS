@@ -1,0 +1,77 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 650px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">ประวัติการเติมเงิน</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                	<div class="form-group">
+						<label class="col-sm-4 text-right">สถานะรายการ :</label>
+						<div class="col-sm-8">
+							<div lsw-display-status transaction="transactionDetail" typedisplay="topup"></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-4 text-right">เลขที่แจ้ง :</label>
+						<div class="col-sm-8">
+							{{transactionDetail.InformMoneyTransactionIdNumber}}
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-4 text-right">ธนาคารที่ชำระ :</label>
+						<div class="col-sm-8">
+							<div class="pull-left text-center" style="margin-right:5px; width:30px; background: {{AccountBankList[(AccountBankList | lswIndexOf: { AccountBankTypeId: transactionDetail.AccountBank.AccountBankTypeId } : 'AccountBankTypeId')].AccountBankTypeColor}};border-radius: 5px;">
+			                    <span style="color:#FFFFFF">
+			                        <i class="bank bank-{{AccountBankList[(AccountBankList | lswIndexOf: { AccountBankTypeId: transactionDetail.AccountBank.AccountBankTypeId } : 'AccountBankTypeId')].AccountBankTypeLogo}}"></i>
+			                    </span>
+			                </div>
+		                </div>
+	                </div>
+	                <div class="form-group">
+						<label class="col-sm-4 text-right">เลขบัญชีธนาคาร :</label>
+						<div class="col-sm-8">
+							{{transactionDetail.AccountBank.AccountBankNumber}}
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-4 text-right">จำนวนเงิน :</label>
+						<div class="col-sm-8">
+							<span class="danger"><strong>{{transactionDetail.InformMoneyTransferAmount | number:2}}</strong></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-4 text-right">วันเวลาที่ชำระ :</label>
+						<div class="col-sm-8">
+							<strong>{{transactionDetail.InformMoneyTransferDate | jsonDate:'dd/MM/yyyy HH:mm น.'}}</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-4 text-right">วันที่ทำการแจ้ง :</label>
+						<div class="col-sm-8">
+							{{transactionDetail.CreatedDate | jsonDate:'dd/MM/yyyy HH:mm น.'}}
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-4 text-right">หลักฐานการโอนเงิน :</label>
+						<div class="col-sm-8">
+							<a href="#" ng-if="transactionDetail.InformMoneyTransferContentType == 'image/jpeg' || transactionDetail.InformMoneyTransferContentType == 'image/png' || transactionDetail.InformMoneyTransferContentType == 'image/gif'" class="thumbnail thumbnail-show" ng-click="openLightboxModal(transactionDetail.InformMoneyTransferFileUploadUrl)">
+				                <img ng-src="{{transactionDetail.InformMoneyTransferFileUploadUrl}}">
+				            </a>{{transactionDetail.InformMoneyTransferProofUploadId==null?'ยังไม่ได้แนบหลักฐาน':''}}
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-4 text-right">ช่องทางการโอนเงิน :</label>
+						<div class="col-sm-8">
+							{{transactionDetail.InformMoneyTransferType}}
+						</div>
+					</div>
+
+                </div>
+            </div>
+             <div class="modal-footer" style="background-color:#fff !important; border-top:none; text-align: center !important">
+                <button class="btn btn-default" ng-click="$hide();">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>

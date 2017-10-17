@@ -1,0 +1,32 @@
+<table id="ReportForNumberOfVehicle" width="100%" ng-if="reportType.ProgressOperation == 'ReportForNumberOfVehicle' && globalVariable.isShowReport">
+	<tr>
+        <th class="text-center">
+            รายงานแสดงรายจำนวนเที่ยวรถที่วิ่ง<br/>
+            ตั้งแต่วันที่ {{conditionReport.DateStart | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} - ถึง {{conditionReport.DateEnd | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}}
+        </th>
+    </tr>
+    <tr>
+        <td>ผู้ออก : {{SellingName}} วันที่ : {{dateTimeNow | date:'dd/MM/yyyy เวลา HH:mm:ss น.'}}</td>
+    </tr>
+    <tr>
+    	<td>
+    		<div class="col-md-4 col-md-offset-4">
+	    		<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+		        	<tr>
+		        		<th class="text-center">ที่</th>
+		        		<th class="text-center">เลขรถ</th>
+		        		<th class="text-center">เที่ยว</th>
+		        	</tr>
+		        	<tr ng-repeat="item in dataReport.NumberOfVehicleList">
+		        		<td align="center">{{$index + 1}}</td>
+		        		<td align="center">{{item.VehicleNumber}}</td>
+		        		<td align="center">{{item.NumberOfTrip}}</td>
+		        	</tr>
+		        	<tr ng-if="dataReport.NumberOfVehicleList.length == 0">
+		        		<td class="text-center" colspan="3">ไม่มีข้อมูล</td>
+		        	</tr>
+		        </table>
+	        </div>
+    	</td>
+    </tr>
+</table>

@@ -1,0 +1,87 @@
+<div class="col-md-6 col-md-offset-3">
+    <table id="ReportForRevenueFromTicketSales" width="100%" ng-if="reportType.RevenueTicket == 'ReportForRevenueFromTicketSales' && conditionReport.ReportType == 'RevenueByAdvanceSold_Short' && globalVariable.isShowReport">
+    	<tr>
+            <th class="text-center">
+                ใบรายงานที่นั่งแบบย่อ (เฉพาะล่วงหน้า)<br/>
+                ระหว่างวันที่ {{conditionReport.DateStart | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} {{conditionReport.TimeStart + ' น.'}} - ถึง {{conditionReport.DateEnd | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} {{conditionReport.TimeEnd + ' น.'}}<br/>
+                จุดขาย : {{(stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: conditionReport.StopPoint } : 'StopPointId')].StopPointName_TH) || 'ทั้งหมด'}}<br/>
+                พนักงาน : {{(salesList[(salesList | lswIndexOf: { UserId: conditionReport.UserId } : 'UserId')].FullName) || 'ทั้งหมด'}}
+            </th>
+        </tr>
+        <tr>
+        	<td>
+        		<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+        			<tr>
+                        <th>ที่นั่ง</th>
+                        <th class="text-right">จำนวนเงิน</th>
+                        <th class="text-right">คอมมิชชัน</th>
+                        <th class="text-right">จำนวนเงิน</th>
+                    </tr>
+                    <tbody ng-repeat="item in dataReport.AdvanceSoldShortList">
+                        <tr class="active">
+                            <td colspan="4">
+                                {{item.RouteName_TH}} <strong>[{{item.VehicleOperationDate | jsonDate:'dd/MM/yyyy HH:mm น.'}}]
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>{{item.VehicleSeatName}}</td>
+                            <td align="right">{{item.TotalPrice | number:2}}</td>
+                            <td align="right">{{item.SaleCommission | number:2}}</td>
+                            <td align="right">{{item.TotalResult | number:2}}</td>
+                        </tr>
+                    </tbody>
+                    <tr ng-if="dataReport.AdvanceSoldDisplayDetailShortList.length == 0">
+                        <td colspan="4" align="center">ไม่มีข้อมูล</td> 
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            ผู้โดยสาร
+                        </td>
+                        <td colspan="3" align="right">
+                            {{dataReport.AdvanceSoldShortList | total:'TotalSeats'}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">ยอดเงิน</td>
+                        <td colspan="3" align="right">
+                            {{(dataReport.AdvanceSoldShortList | total:'TotalPrice') | number:2}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">คอมมิชชัน</td>
+                        <td colspan="3" align="right">
+                            {{(dataReport.AdvanceSoldShortList | total:'SaleCommission') | number:2}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">ยอดเงินสุทธิ</td>
+                        <td colspan="3" align="right">
+                            {{(dataReport.AdvanceSoldShortList | total:'TotalResult') | number:2}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <div class="col-md-12 margin-bottom-10">
+                                <table class="table table-bordered" style="margin-bottom:0px">
+                                    <tr>
+                                        <td align="right" width="25%"><strong>ผู้รับผิดชอบ:</strong></td>
+                                        <td width="35%">{{SellingName}}</td>
+                                        <td align="right" width="20%"><strong>ตำแหน่ง:</strong></td>
+                                        <td width="20%"></td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right"><strong>ลายเซ็น:</strong></td>
+                                        <td colspan="3"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-12 margin-bottom-10 text-center">
+                                <span class="printOnly">{{dateTimeNow | date:'dd/MM/yyyy HH:mm น.'}}</span>
+                            </div>
+                        </td>
+                    </tr>
+        		</table>
+        	</td>
+       	</tr>
+    </table>
+</div>

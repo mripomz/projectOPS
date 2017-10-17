@@ -1,0 +1,206 @@
+msgid "TITLE_LOGIN"
+msgstr "Login"
+
+msgid "Avia Business Management Login"
+msgstr "เข้าสู่ระบบการจัดการธุรกิจ Avia"
+
+msgid "LOGIN"
+msgstr "Login"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Forgot your Password?"
+msgstr "Forgot your Password?"
+
+msgid "Password"
+msgstr "Password"
+
+msgid "User Management"
+msgstr "จัดการผู้ใช้"
+
+msgid "Vehicle Asset Management"
+msgstr "ระบบจัดการรถ"
+
+msgid "Roles Management"
+msgstr "จัดการบทบาท"
+
+msgid "User"
+msgstr "ผู้ใช้"
+
+msgid "Users List"
+msgstr "รายชื่อผู้ใช้"
+
+msgid "User Add"
+msgstr "เพิ่มผู้ใช้ใหม่"
+
+msgid "Seat Capacity and Seat Arrangement"
+msgstr "การสร้างผังรถ"
+
+msgid "Vehicle Detail"
+msgstr "รายละเอียดรถยนต์"
+
+msgid "Ownership"
+msgstr "รถบริษัท/รถร่วม"
+
+msgid "User ID"
+msgstr "ลำดับผู้ใช้"
+
+msgid "Name"
+msgstr "ชื่อ"
+
+msgid "Name Surname"
+msgstr "ชื่อ-นามสกุล"
+
+msgid "Status"
+msgstr "สถานะ"
+
+msgid "Edit"
+msgstr "แก้ไข"
+
+msgid "Delete"
+msgstr "ลบ"
+
+msgid "Create User"
+msgstr "สร้างผู้ใช้ใหม่"
+
+msgid "Users Management"
+msgstr "จัดการผู้ใช้งาน"
+
+msgid "Add User"
+msgstr "เพิ่มผู้ใช้"
+
+msgid "Edit User"
+msgstr "แก้ไขผู้ใช้"
+
+msgid "Dashboard"
+msgstr "กระดานข่าว"
+
+msgid "User Roles and Responsibilities"
+msgstr "จัดการหน้าที่และจำกัดการเข้าใช้ระบบ"
+
+msgid "Pages Controller Management"
+msgstr "จัดการหน้าเพจ"
+
+msgid "Add Page Controller"
+msgstr "เพิ่มหน้าเพจ"
+
+msgid "Pages Roles Management"
+msgstr "จัดการสิทธิ์การเข้าใช้หน้า"
+
+msgid "Role"
+msgstr "บทบาท"
+
+msgid "Assets Management"
+msgstr "ระบบจัดการรถ"
+
+msgid "Stop Point Management"
+msgstr "จัดการจุดจอด"
+
+msgid "Add Stop Point"
+msgstr "เพิ่มจุดจอดรถ"
+
+msgid "Route Management"
+msgstr "จัดการเส้นทางรถ"
+
+msgid "Add Route"
+msgstr "เพิ่มเส้นทางเดินรถ"
+
+msgid "Route Vehicle Operations"
+msgstr "จัดการเที่ยวรถ"
+
+msgid "Add Vehicle Trip"
+msgstr "เพิ่มเที่ยวรถ"
+
+msgid "Discount Management"
+msgstr "จัดการส่วนลด"
+
+msgid "Fee Management"
+msgstr "จัดการค่าดำเนินการ"
+
+msgid "Booking Management"
+msgstr "ขาย/จองบัตรโดยสาร"
+
+msgid "Sales Management"
+msgstr "จัดการฝ่ายขาย"
+
+msgid "Agency Management"
+msgstr "จัดการเอเจนซี่"
+
+msgid "Agency Setting"
+msgstr "ตั้งค่าเอเจนซี่"
+
+msgid "Vehicle Type Management"
+msgstr "จัดการประเภทรถ"
+
+msgid "Route Vehicle Multiple Operations"
+msgstr "เปิดหลายเที่ยวรถ"
+
+msgid "Bank Account Management"
+msgstr "จัดการบัญชีธนาคาร"
+
+msgid "Inform Transfer Topup"
+msgstr "แจ้งชำระเงิน"
+
+msgid "Agency Topup"
+msgstr "เติมเงิน"
+
+msgid "Agency Withdrawal"
+msgstr "ถอนเงิน"
+
+msgid "Agency History"
+msgstr "ประวัติการเงิน"
+
+msgid "Accounting Inform Transfer"
+msgstr "รายการแจ้งชำระเงิน"
+
+msgid "Accounting Withdrawal"
+msgstr "รายการแจ้งถอนเงิน"
+
+msgid "Agency Booking"
+msgstr "ขายบัตรโดยสาร"
+
+msgid "Borrow Credit"
+msgstr "จัดการเครดิตเอเจนซี"
+
+msgid "Unpaid Debtor"
+msgstr "รายการผู้ค้างชำระ"
+
+msgid "Reports"
+msgstr "รายงาน"
+
+msgid "Location Management"
+msgstr "จัดการรายละเอียดสถานที่"
+
+msgid "Price Location Management"
+msgstr "จัดการราคา"
+
+msgid "Service Management"
+msgstr "จัดการรถรับส่ง"
+
+msgid "Passenger Management"
+msgstr "จัดการรับส่งผู้โดยสาร"
+
+msgid "Reports Pickup Dropoff Passenger"
+msgstr "รายงานบริการรับส่ง"
+
+msgid "ReportsPassenger"
+msgstr "รายงานการเปลี่ยนข้อมูลผู้โดยสาร"
+
+msgid "ReportTicketBooking"
+msgstr "รายงานการจองตั๋ว"
+
+msgid "ReportOperations"
+msgstr "รายงานการดำเนินงาน"
+
+msgid "ReportSellingTicket"
+msgstr "รายงานการขายตั๋ว"
+
+msgid "ReportAct"
+msgstr "รายงาน พ.ร.บ"
+
+msgid "ReportTaxAndInspection"
+msgstr "รายงานตรวจสอบวันครบกำหนดภาษี / ตรวจสภาพกลางปี"
+
+msgid "ReportInsurance"
+msgstr "รายงานประกันภัย"

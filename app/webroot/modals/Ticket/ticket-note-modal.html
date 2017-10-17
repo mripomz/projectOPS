@@ -1,0 +1,27 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><strong>เพิ่มบันทึก</strong></h3>
+            </div>
+            <div class="modal-body" style="max-height:650px;overflow-y:auto;">
+                <div class="form-horizontal">
+                	<div class="form-group">
+                        <label class="col-sm-4 control-label">ข้อความ : </label>
+                        <div class="col-sm-8">
+                            <textarea ng-model="operationNoteDetail.VehicleOperationNoteDesc" class="form-control" placeholder="ข้อความ" rows="5"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group text-center">
+                        <div class="col-sm-6 text-right">
+                            <button class="btn btn-primary" ng-click="SaveVehicleOperationNotes()" ng-disabled="operationNoteDetail.VehicleOperationNoteDesc == ''">บันทึก</button>
+                        </div>
+                        <div class="col-sm-6 text-left">
+                            <button class="btn btn-danger" ng-click="$hide();">ยกเลิก</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

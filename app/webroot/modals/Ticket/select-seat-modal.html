@@ -1,0 +1,99 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 400px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">เลือกประเภทผู้โดยสาร</h3>
+            </div>
+            <div class="modal-body" style="max-height:650px;overflow-y:auto;">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-5 text-right">ตำแหน่งที่นั่ง : </label>
+                        <div class="col-sm-7">
+                            <strong>{{globalVariable.currentSeatSelect.VehicleSeatName}}</strong>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-5 text-right">สถานะปัจจุบัน : </label>
+                        <div class="col-sm-7">
+                            <strong>{{globalVariable.currentSeatSelect.isNotExist?'ว่าง':'เลือกแล้ว'}}</strong>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="!globalVariable.currentSeatSelect.isNotExist">
+                        <label class="col-sm-5 text-right">ประเภทผู้โดยสาร : </label>
+                        <div class="col-sm-7">
+                            <strong>{{((globalVariable.currentSeatSelect.Gender == 0)?'ชาย':((globalVariable.currentSeatSelect.Gender == 1)?'หญิง':'อื่นๆ'))}}</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 no-padding">
+                    <ol class="breadcrumb">
+                        <li class="active">ประเภทผู้โดยสาร</li>
+                    </ol>
+                </div>
+            	<table class="table table-condensed">
+        			<tr>
+        				<th class="col-md-8">ประเภทผู้โดยสาร</th>
+        				<th class="col-md-4"></th>
+        			</tr>
+                    <tr ng-if="globalVariable.currentSeatSelect.isNotExist || globalVariable.currentSeatSelect.Gender == 0">
+                        <td><i class="avia avia-male" aria-hidden="true"></i> ผู้ชาย</td>
+                        <td align="right">
+                            <button class="btn btn-xs" ng-class="{'btn-primary':globalVariable.currentSeatSelect.isNotExist,'btn-danger':!globalVariable.currentSeatSelect.isNotExist}" ng-click="selectBooking(0);$hide()">
+                                <span ng-if="globalVariable.currentSeatSelect.isNotExist"><i class="fa fa-plus"></i> เลือก</span>
+                                <span ng-if="!globalVariable.currentSeatSelect.isNotExist"><i class="fa fa-times-circle" aria-hidden="true"></i> ยกเลิก</span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-if="globalVariable.currentSeatSelect.isNotExist || globalVariable.currentSeatSelect.Gender == 1">
+                        <td><i class="avia avia-female" aria-hidden="true"></i> ผู้หญิง</td>
+                        <td align="right">
+                            <button class="btn btn-xs" ng-class="{'btn-primary':globalVariable.currentSeatSelect.isNotExist,'btn-danger':!globalVariable.currentSeatSelect.isNotExist}" ng-click="selectBooking(1);$hide()">
+                                <span ng-if="globalVariable.currentSeatSelect.isNotExist"><i class="fa fa-plus"></i> เลือก</span>
+                                <span ng-if="!globalVariable.currentSeatSelect.isNotExist"><i class="fa fa-times-circle" aria-hidden="true"></i> ยกเลิก</span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-if="globalVariable.currentSeatSelect.isNotExist || globalVariable.currentSeatSelect.Gender == 2">
+                        <td><i class="avia avia-boy" aria-hidden="true"></i> เด็กชาย</td>
+                        <td align="right">
+                            <button class="btn btn-xs" ng-class="{'btn-primary':globalVariable.currentSeatSelect.isNotExist,'btn-danger':!globalVariable.currentSeatSelect.isNotExist}" ng-click="selectBooking(2);$hide()">
+                                <span ng-if="globalVariable.currentSeatSelect.isNotExist"><i class="fa fa-plus"></i> เลือก</span>
+                                <span ng-if="!globalVariable.currentSeatSelect.isNotExist"><i class="fa fa-times-circle" aria-hidden="true"></i> ยกเลิก</span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-if="globalVariable.currentSeatSelect.isNotExist || globalVariable.currentSeatSelect.Gender == 3">
+                        <td><i class="avia avia-girl" aria-hidden="true"></i> เด็กหญิง</td>
+                        <td align="right">
+                            <button class="btn btn-xs" ng-class="{'btn-primary':globalVariable.currentSeatSelect.isNotExist,'btn-danger':!globalVariable.currentSeatSelect.isNotExist}" ng-click="selectBooking(3);$hide()">
+                                <span ng-if="globalVariable.currentSeatSelect.isNotExist"><i class="fa fa-plus"></i> เลือก</span>
+                                <span ng-if="!globalVariable.currentSeatSelect.isNotExist"><i class="fa fa-times-circle" aria-hidden="true"></i> ยกเลิก</span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-if="globalVariable.currentSeatSelect.isNotExist || globalVariable.currentSeatSelect.Gender == 4">
+                        <td><i class="avia avia-monk" aria-hidden="true"></i> พระ</td>
+                        <td align="right">
+                            <button class="btn btn-xs" ng-class="{'btn-primary':globalVariable.currentSeatSelect.isNotExist,'btn-danger':!globalVariable.currentSeatSelect.isNotExist}" ng-click="selectBooking(4);$hide()">
+                                <span ng-if="globalVariable.currentSeatSelect.isNotExist"><i class="fa fa-plus"></i> เลือก</span>
+                                <span ng-if="!globalVariable.currentSeatSelect.isNotExist"><i class="fa fa-times-circle" aria-hidden="true"></i> ยกเลิก</span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-if="globalVariable.currentSeatSelect.isNotExist || globalVariable.currentSeatSelect.Gender == 5">
+                        <td><i class="avia avia-soldier" aria-hidden="true"></i> ทหาร</td>
+                        <td align="right">
+                            <button class="btn btn-xs" ng-class="{'btn-primary':globalVariable.currentSeatSelect.isNotExist,'btn-danger':!globalVariable.currentSeatSelect.isNotExist}" ng-click="selectBooking(5);$hide()">
+                                <span ng-if="globalVariable.currentSeatSelect.isNotExist"><i class="fa fa-plus"></i> เลือก</span>
+                                <span ng-if="!globalVariable.currentSeatSelect.isNotExist"><i class="fa fa-times-circle" aria-hidden="true"></i> ยกเลิก</span>
+                            </button>
+                        </td>
+                    </tr>
+        			<tr>
+        				<td align="center" colspan="5"><button ng-click="$hide()" class="btn btn-default">ปิด</button></td>
+        			</tr>
+        		</table>
+            </div>
+        </div>
+    </div>
+</div>

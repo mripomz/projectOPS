@@ -1,0 +1,245 @@
+<div class="panel panel-primary" style="border-radius:0px;border-top-right-radius:4px;">
+	<div class="panel-heading text-right" style="border-top-left-radius:0px;padding:10px">
+		<h3 class="pull-left" style="color:#FFF;font-size:30px;">หมายเลขตัวถัง - {{vehicleDetail.ChassisNumber}} / ทะเบียนรถ - {{vehicleDetail.PlateNumber}}</h3>
+  		<button class="btn btn-default" ng-click="updateVehicle();" scroll-on-click>บันทึก</button>
+	</div>
+	<div class="panel-body">
+	    <form id="vehicleDetalForm" class="form-horizontal" role="form" name="vehicledetailform" novalidate enctype="multipart/form-data" data-file-upload="options" ng-class="{'fileupload-processing': processing() || loadingFiles}">
+			<div class="form-group">
+		    	<label for="PlateNumber" class="col-sm-2 control-label">ทะเบียนรถ</label>
+		    	<div class="col-sm-10">
+		    		<input autocomplete="off"  type="text" class="form-control" name="PlateNumber" ng-model="vehicleDetail.PlateNumber" placeholder="โปรดระบุทะเบียนรถ" required />
+		    	</div>
+		    </div>
+		    <div class="form-group">
+		    	<label for="PlateProvince" class="col-sm-2 control-label">จังหวัด</label>
+		    	<div class="col-sm-10">
+		    		<select class="form-control" ng-model="vehicleDetail.PlateProvince" ng-options="o.ProvinceId as o.ProvinceName_TH for o in ProvicesList.Provinces">
+                        <option value="">โปรดเลือกจังหวัดที่จดทะเบียน</option>
+                    </select>
+		    	</div>
+		    </div>
+			<div class="form-group">
+				<label for="VehicleSeatPlanName" class="col-sm-2 control-label">ผังโดยสาร</label>
+				<div class="col-sm-10">
+					<select class="form-control" ng-model="vehicleDetail.VehicleSeatPlanId" ng-options="o.VehicleSeatPlanId as o.VehicleSeatPlanName for o in TemplateSeatList" name="VehicleSeatPlanId">
+						<option value="">กรุณาเลือกผังรถโดยสาร</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="VehicleSeatPlanName" class="col-sm-2 control-label">รถบริการรับส่งผู้โดยสาร</label>
+				<div class="col-sm-10 margin-top-5">
+					<input type="checkbox" ng-model="vehicleDetail.IsServicePickupDropOff"/>
+				</div>
+			</div>
+		    <div class="form-group">
+		    	<label for="VehicleNumber" class="col-sm-2 control-label">เบอร์รถ<span class="error" ng-show="Vehicle.VehicleNumber.$error.required || Vehicle.VehicleNumber.$invalid">*</span></label>
+		    	<div class="col-sm-10">
+		    		<input autocomplete="off"  type="text" class="form-control" name="VehicleNumber" ng-model="vehicleDetail.VehicleNumber"/>
+		    	</div>
+		    </div>
+		    <div class="form-group">
+		    	<label for="Brand" class="col-sm-2 control-label">ยี่ห้อ</label>
+		    	<div class="col-sm-10">
+		    		<input autocomplete="off"  type="text" class="form-control" name="Brand" ng-model="vehicleDetail.Brand"/>
+		    	</div>
+		    </div>
+		    <div class="form-group">
+		    	<label for="Model" class="col-sm-2 control-label">รุ่น/แบบ</label>
+		    	<div class="col-sm-10">
+		    		<input autocomplete="off"  type="text" class="form-control" name="Model" ng-model="vehicleDetail.Model"/>
+		    	</div>
+		    </div>
+		    <div class="form-group">
+		    	<label for="ChassisNumber" class="col-sm-2 control-label">หมายเลขตัวถัง<span class="error" ng-show="vehicledetailform.ChassisNumber.$error.required || vehicledetailform.ChassisNumber.$invalid">*</span></label>
+		    	<div class="col-sm-10">
+		    		<input autocomplete="off"  type="text" class="form-control" name="ChassisNumber" ng-model="vehicleDetail.ChassisNumber" placeholder="โปรดระบุหมายเลขตัวถัง" required/>
+		    	</div>
+		    </div>
+		    <div class="form-group">
+		    	<label for="EngineNumber" class="col-sm-2 control-label">หมายเลขเครื่อง</label>
+		    	<div class="col-sm-10">
+		    		<input autocomplete="off"  type="text" class="form-control" name="EngineNumber" ng-model="vehicleDetail.EngineNumber"/>
+		    	</div>
+		    </div>
+		    <div class="form-group">
+		    	<label for="Colour" class="col-sm-2 control-label">สี</label>
+		    	<div class="col-sm-10">
+		    		<input autocomplete="off"  type="text" class="form-control" name="Colour" ng-model="vehicleDetail.Colour"/>
+		    	</div>
+		    </div>
+		    <div class="form-group">
+		    	<label for="PistonNumber" class="col-sm-2 control-label">จำนวนลูกสูบ</label>
+		    	<div class="col-sm-10">
+		    		<input autocomplete="off"  type="text" class="form-control" name="PistonNumber" ng-model="vehicleDetail.PistonNumber" fcsa-number/>
+		    	</div>
+		    </div>
+		    <div class="form-group">
+		    	<label for="HorsePower" class="col-sm-2 control-label">แรงม้า</label>
+		    	<div class="col-sm-10">
+		    		<input autocomplete="off"  type="text" class="form-control" name="HorsePower" ng-model="vehicleDetail.HorsePower" fcsa-number/>
+		    	</div>
+		    </div>
+		    <div class="form-group">
+		    	<label for="WheelConfiguration" class="col-sm-2 control-label">เพลา และ ล้อ</label>
+		    	<div class="col-sm-10">
+		    		<input autocomplete="off"  type="text" class="form-control" name="WheelConfiguration" ng-model="vehicleDetail.WheelConfiguration"/>
+		    	</div>
+		    </div>
+		    <div class="form-group">
+		    	<label for="FuelCapacity" class="col-sm-2 control-label">ความจุถังน้ำมัน (ลิตร)</label>
+		    	<div class="col-sm-10">
+		    		<input autocomplete="off"  type="text" class="form-control" name="FuelCapacity" ng-model="vehicleDetail.FuelCapacity" fcsa-number/>
+		    	</div>
+		    </div>
+		    <div class="form-group">
+		    	<label for="WeightCapacity" class="col-sm-2 control-label">น้ำหนักบรรทุก (ตัน)</label>
+		    	<div class="col-sm-10">
+		    		<input autocomplete="off"  type="text" class="form-control" name="WeightCapacity" ng-model="vehicleDetail.WeightCapacity" fcsa-number/>
+		    	</div>
+		    </div>
+		    <div class="form-group">
+		    	<label for="TotalWeight" class="col-sm-2 control-label">น้ำหนักรวม (ตัน)</label>
+		    	<div class="col-sm-10">
+		    		<input autocomplete="off"  type="text" class="form-control" name="TotalWeight" ng-model="vehicleDetail.TotalWeight" fcsa-number/>
+		    	</div>
+		    </div>
+		    <div class="form-group">
+		    	<label for="FuelType" class="col-sm-2 control-label">ชนิดเชื้อเพลิง</label>
+		    	<div class="col-sm-10">
+		    		<input autocomplete="off"  type="text" class="form-control" name="FuelType" ng-model="vehicleDetail.FuelType"/>
+		    	</div>
+		    </div>
+		    <div class="form-group">
+		    	<label for="TiresSize" class="col-sm-2 control-label">ขนาดยาง</label>
+		    	<div class="col-sm-10">
+		    		<input autocomplete="off"  type="text" class="form-control" name="TiresSize" ng-model="vehicleDetail.TiresSize"/>
+		    	</div>
+		    </div>
+		    <div class="form-group">
+		    	<label for="SparePartList" class="col-sm-2 control-label">รายการอะไหล่</label>
+		    	<div class="col-sm-10">
+		    		<textarea name="SparePartList" class="form-control" ng-model="vehicleDetail.SparePartList"></textarea>
+		    	</div>
+		    </div>
+		    <div class="form-group">
+		    	<label class="col-sm-2 control-label">จัดการรูปภาพ</label>
+		    	<div class="col-sm-10">
+		    		<table class="table table-striped files ng-cloak">
+		    			<tr>
+		    				<th width="100">รูปภาพ</th>
+		    				<th class="text-left">รายละเอียด</th>
+		    				<th class="text-left">สถานะ</th>
+		    				<th class="text-right">ขนาด</th>
+		    				<th class="text-right"></th>
+		    			</tr>
+		    			<tr ng-repeat="item in vehicleGalleryList.VehicleGalleryList">
+		    				<td>
+		    					<a ng-click="openLightboxModal(item.ThumbnailUrl)" target="_blank" class="thumbnail thumbnail-show">
+		    						<img ng-src="{{item.ThumbnailUrl}}">
+		    					</a>
+		    				</td>
+		    				<td>
+		    					<span ng-if="!item.isEdit">{{item.Description}}</span>
+		    					<input type="text" ng-model="item.Description" ng-if="item.isEdit" class="form-control" />
+		    				</td>
+		    				<td>
+		    					<span ng-if="!item.isEdit">{{item.IsShow?'แสดง':'ไม่แสดง'}}</span>
+		    					<input type="checkbox" ng-model="item.IsShow" ng-if="item.isEdit"/>
+		    				</td>
+		    				<td class="text-right">
+		    					{{item.Size | formatFileSize}}
+		    				</td>
+		    				<td class="text-right">
+		    					<a class="btn btn-primary btn-xs" ng-click="saveVehicleGallery(item); item.isEdit = false;" ng-if="item.isEdit">บันทึก</a>
+		    					<a class="btn btn-danger btn-xs" ng-click="item.isEdit = false;" ng-if="item.isEdit">ยกเลิก</a>
+		    					<a class="btn btn-warning btn-xs" ng-click="item.isEdit = true;" ng-if="!item.isEdit">แก้ไข</a>
+		    					<a class="btn btn-danger btn-xs" message-en="Are you sure to delete this image?" message-th="ต้องการที่จะลบรูปภาพนี้ออกจากระบบ ใช่หรือไม่?" lsw-confirm-modal="removeVehicleGallery(item)" ng-if="!item.isEdit">ลบ</a>
+		    				</td>
+		    			</tr>
+		    			<tr ng-if="vehicleGalleryList.VehicleGalleryList.length == 0">
+		    				<td colspan="5">ยังไม่ได้อัพโหลดรูปภาพเข้าสู่ในระบบ</td>
+		    			</tr>
+		    		</table>
+		    	</div>
+			</div>
+		    <div class="form-group">
+		    	<label class="col-sm-2 control-label">อัพโหลดรูปภาพ</label>
+		    	<div class="col-sm-10">
+		    		<!-- The table listing the files available for upload/download -->
+			        <table class="table table-striped files ng-cloak">
+			            <tr ng-repeat="file in queue" ng-class="{'processing': file.$processing()}">
+			                <td data-ng-switch data-on="!!file.thumbnailUrl">
+			                    <div class="preview" data-ng-switch-when="true">
+			                        <a ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}" data-gallery><img ng-src="{{file.thumbnailUrl}}" alt=""></a>
+			                    </div>
+			                    <div class="preview" data-ng-switch-default data-file-upload-preview="file"></div>
+			                </td>
+			                <td>
+			                    <p class="name" data-ng-switch data-on="!!file.url">
+			                        <span data-ng-switch-when="true" data-ng-switch data-on="!!file.thumbnailUrl">
+			                            <a data-ng-switch-when="true" ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}" data-gallery>{{file.name}}</a>
+			                            <a data-ng-switch-default ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}">{{file.name}}</a>
+			                        </span>
+			                        <span data-ng-switch-default>{{file.name}}</span>
+			                    </p>
+			                    <strong ng-show="file.error" class="error text-danger">{{file.error}}</strong>
+			                </td>
+			                <td>
+			                    <p class="size">{{file.size | formatFileSize}}</p>
+			                    <div class="progress progress-striped active fade" ng-class="{pending: 'in'}[file.$state()]" data-file-upload-progress="file.$progress()"><div class="progress-bar progress-bar-success" ng-style="{width: num + '%'}"></div></div>
+			                </td>
+			                <td>
+			                    <button type="button" class="btn btn-warning cancel" ng-click="file.$cancel()" ng-hide="!file.$cancel || file.$response().textStatus == 'success'">
+			                        <i class="glyphicon glyphicon-ban-circle"></i>
+			                        <span>ยกเลิก</span>
+			                    </button>
+			                    <button type="button" class="btn btn-danger destroy" ng-click="file.$destroy()" ng-hide="!file.$destroy()">
+			                        <i class="glyphicon glyphicon-trash"></i>
+			                        <span>ลบ</span>
+			                    </button>
+			                </td>
+			            </tr>
+			        </table>
+		    		<div class="row fileupload-buttonbar">
+			            <div class="col-lg-7">
+			                <!-- The fileinput-button span is used to style the file input field as button -->
+			                <div class="pull-left" style="margin-right:10px;">
+				                <span class="btn btn-success fileinput-button" ng-class="{disabled: disabled}">
+				                    <i class="glyphicon glyphicon-plus"></i>
+				                    <span>เพิ่มไฟล์</span>
+				                    <input id="fileupload" type="file" name="files[]" multiple ng-disabled="disabled">
+				                </span>
+			                </div>
+			                <div class="pull-left" style="margin-right:10px;" title="{{(!currentProcess.fileInQueue)?'โปรดเพิ่มไฟล์ก่อน':''}}">
+				                <button type="button" class="btn btn-primary start" ng-click="submit()" ng-disabled="!currentProcess.fileInQueue">
+				                    <i class="glyphicon glyphicon-upload"></i>
+				                    <span>อัพโหลดไฟล์</span>
+				                </button>
+			                </div>
+			                <div class="pull-left">
+				                <button type="button" class="btn btn-danger cancel" ng-click="cancel()">
+				                    <i class="glyphicon glyphicon-ban-circle"></i>
+				                    <span>ยกเลิก</span>
+				                </button>
+			                </div>
+			                <!-- The global file processing state -->
+			                <span class="fileupload-process"></span>
+			            </div>
+			            <!-- The global progress state -->
+			            <div class="col-lg-5 fade" ng-class="{in: active()}">
+			                <!-- The global progress bar -->
+			                <div class="progress progress-striped active" data-file-upload-progress="progress()"><div class="progress-bar progress-bar-success" ng-style="{width: num + '%'}"></div></div>
+			                <!-- The extended global progress state -->
+			                <div class="progress-extended">&nbsp;</div>
+			            </div>
+			        </div>
+		    	</div>
+		    </div>
+		</form>
+		<div class="col-md-4 col-md-offset-4">
+			<button class="btn btn-default btn-block" ng-click="updateVehicle();" scroll-on-click>บันทึก</button>
+		</div>
+	</div>
+</div>

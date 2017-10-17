@@ -1,0 +1,21 @@
+<button class="btn btn-warning" ng-click="UploadInformTransfer()" ng-if="informDetail.InformMoneyTransferProofUploadId == null || informDetail.InformMoneyTransferProofUploadId == '00000000-0000-0000-0000-000000000000'">อัพโหลดหลักฐาน</button>
+<div class="col-sm-12 no-padding" ng-show="!!informDetail.InformMoneyTransferFileUploadUrl">
+    <table class="table table-striped files ng-cloak">
+        <tr>
+            <th class="col-xs-3">หลักฐาน</th>
+            <th class="col-xs-6">หลักฐาน</th>
+            <th class="col-xs-5 text-right"></th>
+        </tr>
+        <tr>
+            <td class="col-xs-3">
+                <a ng-if="informDetail.InformMoneyTransferContentType == 'image/jpeg' || informDetail.InformMoneyTransferContentType == 'image/png' || informDetail.InformMoneyTransferContentType == 'image/gif'"  ng-click="openLightboxModal(informDetail.InformMoneyTransferFileUploadUrl)" target="_blank" class="thumbnail thumbnail-show">
+                    <img ng-src="{{informDetail.InformMoneyTransferFileUploadUrl}}">
+                </a>
+            </td>
+            <td class="col-xs-6">{{informDetail.InformMoneyTransferFileName}}</td>
+            <td class="col-xs-5 text-right">
+                <a class="btn btn-danger btn-xs" message-en="Are you sure to delete this image?" message-th="ต้องการที่จะลบหลักฐานการชำระเงินนี้ ใช่หรือไม่?" lsw-confirm-modal="removeInformTransfer()">ลบ</a>
+            </td>
+        </tr>
+    </table>
+</div>

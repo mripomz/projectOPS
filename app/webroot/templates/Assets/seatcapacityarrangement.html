@@ -1,0 +1,13 @@
+<div class="panel panel-primary" style="border-radius:0px;border-top-right-radius:4px;">
+	<div class="panel-heading text-left" style="border-top-left-radius:0px;padding:10px">
+		<h3 style="color:#FFF;font-size:30px;">หมายเลขตัวถัง - {{vehicleDetail.ChassisNumber}} / ทะเบียนรถ - {{vehicleDetail.PlateNumber}}</h3>
+		<button class="btn btn-warning" ng-style="VehicleSeatPlan.IsEdited && {'visibility':'hidden'}" message-en="Are you sure to edit this seat plan?" message-th="ต้องการที่จะแก้ไขแผนผังนี้ ใช่หรือไม่?" lsw-confirm-modal="editVehicleseatPlan()"><i class="fa fa-pencil"></i> แก้ไข</button>
+	</div>
+	<div class="panel-body">
+	    <form class="form-horizontal" role="form" name="seatcapacityarrangementform" novalidate>
+	    	<section ng-if="VehicleSeatPlan.IsEdited" ng-include="rootUrl + '../templates/Assets/Elements/seatcapacityarrangement-incompleted.html'"></section>
+		    <section ng-if="!VehicleSeatPlan.IsEdited" ng-include="rootUrl + '../templates/Assets/Elements/seatcapacityarrangement-completed.html'"></section>
+		    </div>
+		</form>
+	</div>
+</div>

@@ -1,0 +1,50 @@
+﻿<div class="lsw-select input-group {{config.inputGroupClass}} padTop2" ng-class="config.small ? 'input-group-sm':''" ng-if="options">
+
+    <span class="input-group-addon">
+        {{config.label}}
+    </span>
+
+    <div class="input-group-btn">
+        <!-- Selected -->
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-click="toggled = !toggled" style="background-color: white;">
+
+            <!-- Not selected-->
+            <span ng-if="selected == null || selected == undefined || selected == ''">Please Select</span>
+
+            <!-- Without Template-->
+            <span ng-if="!config.optionTemplate">{{ !config.displayField || !config.valueField ? selected : selected[config.displayField] }}</span>
+
+            <!-- With Template -->
+            <span ng-if="!!config.optionTemplate" ng-include="config.optionTemplate"></span>
+
+            <span class="caret"></span>
+        </button>
+        <!-- Options -->
+        <ul class="lsw-select-options dropdown-menu" ng-show="true">
+            <li ng-if="config.showPleaseSelect">
+                <a class="lsw-select-option" ng-click="setSelected('', $index)" ng-show="selected != null">
+                    Please Select
+                </a>
+            </li>
+            <li ng-repeat="option in filtered = (options
+                    | unique:config.uniqueOn
+                    | complement:uniqueTo:config.uniqueOn
+                    | filter:lswSelectFilter
+                    | orderBy:config.groupField)">
+
+                <!-- Grouping -->
+                <span class="lsw-select-option-group" ng-if="!!config.groupField && option[config.groupField] && ($first || filtered[$index-1][config.groupField] != option[config.groupField])">{{option[config.groupField]}}</span>
+
+                <!-- Option-->
+                <a class="lsw-select-option" ng-click="setSelected(option, $index)">
+
+                    <!-- Without Template -->
+                    <span ng-if="!config.optionTemplate">{{ !config.displayField ? option : option[config.displayField] }}</span>
+
+                    <!-- With Template -->
+                    <span ng-if="!!config.optionTemplate" ng-include="config.optionTemplate"></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

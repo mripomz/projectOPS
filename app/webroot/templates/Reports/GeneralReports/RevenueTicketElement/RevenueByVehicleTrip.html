@@ -1,0 +1,49 @@
+<table id="ReportForRevenueFromTicketSales" width="100%" ng-if="reportType.RevenueTicket == 'ReportForRevenueFromTicketSales' && conditionReport.ReportType == 'RevenueByVehicleTrip' && globalVariable.isShowReport">
+	<tr>
+        <th class="text-center">
+            รายงานรายได้จำแนกตามเที่ยวรถ ตาม{{conditionReport.TypeSearch == 'Transaction'?'วันทำรายการ':'วันเดินทาง'}}<br/>
+            ตั้งแต่วันที่ {{conditionReport.DateStart | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} {{conditionReport.TimeStart + ' น.'}} - ถึง {{conditionReport.DateEnd | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} {{conditionReport.TimeEnd + ' น.'}}
+        </th>
+    </tr>
+    <tr>
+        <td>ผู้ออก : {{SellingName}} วันที่ : {{dateTimeNow | date:'dd/MM/yyyy เวลา HH:mm:ss น.'}}</td>
+    </tr>
+    <tr>
+    	<td>
+    		<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+    			<tr>
+    				<th class="text-left">เส้นทางเดินรถ</th>
+    				<th class="text-left">เที่ยวรถ</th>
+    				<th class="text-right">ที่นั่งขาย</th>
+    				<th class="text-right">ยอดขาย (บาท)</th>
+    				<th class="text-right">ที่นั่งคืน</th>
+    				<th class="text-right">ยอดคืน (บาท)</th>
+    				<th class="text-right">ปรับ (บาท)</th>
+    				<th class="text-right">สุทธิ (บาท)</th>
+    			</tr>
+    			<tr ng-if="dataReport.RevenueByVehicleTripList.length == 0">
+    				<td align="center" colspan="8">ไม่มีข้อมูล</td>
+    			</tr>
+    			<tr ng-repeat="item in dataReport.RevenueByVehicleTripList">
+    				<td>{{item.RouteName_TH}}</td>
+    				<td>{{item.VehicleOperationDate | jsonDate:'dd/MM/yyyy : HH:mm'}} [{{item.VehicleSeatPlanName}}]</td>
+    				<td align="right">{{item.TotalSales}}</td>
+    				<td align="right">{{item.TotalPrice | number:2}}</td>
+    				<td align="right">{{item.TotalReturn}}</td>
+    				<td align="right">{{item.TotalReturnPrice | number:2}}</td>
+    				<td align="right">{{item.TicketReturnFee | number:2}}</td>
+    				<td align="right">{{(item.TotalPrice - item.TotalReturnPrice + item.TicketReturnFee) | number:2}}</td>
+    			</tr>
+                <tr>
+                    <td colspan="2" align="right">รวม</td>
+                    <td align="right">{{dataReport.RevenueByVehicleTripList | total:'TotalSales'}}</td>
+                    <td align="right">{{dataReport.RevenueByVehicleTripList | total:'TotalPrice' | number:2}}</td>
+                    <td align="right">{{dataReport.RevenueByVehicleTripList | total:'TotalReturn'}}</td>
+                    <td align="right">{{dataReport.RevenueByVehicleTripList | total:'TotalReturnPrice' | number:2}}</td>
+                    <td align="right">{{dataReport.RevenueByVehicleTripList | total:'TicketReturnFee' | number:2}}</td>
+                    <td align="right">{{(dataReport.RevenueByVehicleTripList | total:'TotalPrice') - (dataReport.RevenueByVehicleTripList | total:'TotalReturnPrice') + (dataReport.RevenueByVehicleTripList | total:'TicketReturnFee') | number:2}}</td>
+                </tr>
+    		</table>
+    	</td>
+   	</tr>
+</table>

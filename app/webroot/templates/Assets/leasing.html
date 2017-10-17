@@ -1,0 +1,55 @@
+<div class="panel panel-primary" style="border-radius:0px;border-top-right-radius:4px;">
+	<div class="panel-heading text-right" style="border-top-left-radius:0px;padding:10px">
+		<h3 class="pull-left" style="color:#FFF;font-size:30px;">หมายเลขตัวถัง - {{vehicleDetail.ChassisNumber}} / ทะเบียนรถ - {{vehicleDetail.PlateNumber}}</h3>
+  		<button class="btn btn-default" ng-click="editVehicleLeasing()">เพิ่มการผ่อนชำระ</button>
+	</div>
+	<div class="panel-body">
+		<div class="col-md-12 margin-top-10">
+            <div class="input-group pull-right" style="width: 200px; top: 2px;">
+                <div class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </div>
+                <input type="search" placeholder="ค้นหา..." class="form-control input-sm" ng-model="lswFilterOptionsLeasing.lswFilter">
+            </div>
+            <div class="navbar-form navbar-left">
+                <div lsw-paginate="lswPaginateOptionsLeasing" class="lsw-paginate-position" small="true" ng-model="mainLeasing.LeaseList">
+                </div>    
+            </div>
+            <div class="input-group  pull-right" style="margin-right:2px;">
+				<button ng-click="filterLeasingOption()" class="btn input-sm" ng-class="{'btn-primary' : !showLeasingAll}">แสดงทั้งหมด</button>
+			</div>
+            <div lsw-table="lswTableOptionsLeasing" ng-model="mainLeasing.LeaseList">
+                <script type="text/ng-template" id="theadLeasingTemplate.html">
+                    <th class="col-md-1 cursor-point" ng-click="sort('VehicleLeaseAgreementNumber');">เลขที่สัญญา</th>
+                    <th class="col-md-2 cursor-point" ng-click="sort('VehicleLeaseCompany');">บริษัทลิสซิ่ง</th>
+                    <th class="col-md-2 cursor-point" ng-click="sort('VehicleLeaseBuyerName');">ชื่อผู้ทำสัญญา</th>
+                    <th class="col-md-1 cursor-point text-right" ng-click="sort('VehicleLeasePrice');">ราคาซื้อ</th>
+                    <th class="col-md-1 cursor-point" ng-click="sort('VehicleLeaseInstalmentDate');">วันที่ผ่อนชำระ</th>
+                    <th class="col-md-1 cursor-point" ng-click="sort('VehicleLeaseNumberOfInstalment');">จำนวนการผ่อนชำระ</th>
+                    <th class="col-md-1 cursor-point" ng-click="sort('IsActive');">สถานะ</th>
+                    <th class="col-md-3"></th>
+                </script>
+                <script type="text/ng-template" id="tbodyLeasingTemplate.html">
+                	<td>{{row.VehicleLeaseAgreementNumber}}</td>
+                	<td>{{row.VehicleLeaseCompany}}</td>
+                	<td>{{row.VehicleLeaseBuyerName}}</td>
+                	<td class="text-right">{{row.VehicleLeasePrice | currency:''}}</td>
+                    <td>{{row.VehicleLeaseInstalmentDate | date:'dd/MM/yyyy'}}</td>
+                    <td>{{row.VehicleLeaseNumberOfInstalment}}</td>
+                    <td>{{(row.IsActive)?'ใช้งาน':'ไม่ใช้งาน'}}</td>
+                    <td align="right">
+                        <button class="btn btn-info btn-xs" ng-click="parent.viewVehicleLeasingDetail(row);">
+                            <i class="glyphicon glyphicon-usd"></i> ผ่อนชำระ
+                        </button>
+                        <button class="btn btn-warning btn-xs" ng-click="parent.editVehicleLeasing(row.VehicleLeaseId);">
+                            <i class="glyphicon glyphicon-pencil"></i> แก้ไข
+                        </button>
+                        <button class="btn btn-danger btn-xs" message-en="Are you sure to delete this account?" message-th="ต้องการที่จะลบสัญญานี้ออกจากระบบ ใช่หรือไม่?" lsw-confirm-modal="parent.RemoveVehicleLeasing(row.VehicleLeaseId)">
+                            <i class="glyphicon glyphicon-trash"></i> ลบ
+                        </button>
+                    </td>
+                </script>
+            </div>
+        </div>
+	</div>
+</div>

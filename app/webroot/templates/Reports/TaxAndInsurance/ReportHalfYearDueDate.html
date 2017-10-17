@@ -1,0 +1,76 @@
+<div class="form-horizontal">
+   
+    <div class="form-group">
+        <label class="col-sm-6 control-label"> <div class="pull-right"> กรุณาเลือกเดือน</div></label>
+        <label class="col-sm-6 control-label">
+            <div class="pull-left">
+                <select 
+                        ng-model="conditionReportHalfYearDueDate.months" 
+                        ng-options="x for x in months">
+                        <option value="">กรุณาเลือกเดือน</option>
+                </select>
+            </div> 
+        </label>
+       <!--  <div class="col-sm-4">
+            <div class="input-group">
+                <input type="text" name="dateStart" class="form-control" ng-model="conditionReport.DateStart" placeholder="จากวันที่" bs-datepicker data-date-type="string" data-model-date-format="MM/dd/yyyy" data-date-format="dd/MM/yyyy" data-autoclose="true" data-placement="bottom" ng-change="resetReport()">
+                <label for="dateStart" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+            </div>
+        </div>
+        <label class="col-sm-2 control-label">จนถึงวันที่ : </label>
+        <div class="col-sm-4">
+            <div class="input-group">
+                <input type="text" name="dateEnd" class="form-control" ng-model="conditionReport.DateEnd" placeholder="จากวันที่" bs-datepicker data-date-type="string" data-model-date-format="MM/dd/yyyy" data-date-format="dd/MM/yyyy" data-autoclose="true" data-placement="bottom" ng-change="resetReport()">
+                <label for="dateEnd" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">เวลา : </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" ng-model="conditionReport.TimeStart" id="timeStart" placeholder="เวลาเริ่มต้น" data-time-type="string" data-minute-step="1" bs-timepicker data-autoclose="true" ng-change="resetReport()">
+        </div>
+        <label class="col-sm-2 control-label">เวลา : </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" ng-model="conditionReport.TimeEnd" id="timeEnd" placeholder="เวลาเริ่มต้น" data-time-type="string" data-minute-step="1" bs-timepicker data-autoclose="true" ng-change="resetReport()">
+        </div> -->
+    </div>
+    <div class="form-group margin-top-20">
+        <div class="col-md-4 col-md-offset-4">
+            <button class="btn btn-block btn-primary" ng-click="generateReportHalfYearDueDate()">แสดงรายงาน</button>
+        </div>
+    </div>
+</div>
+<hr/>
+<div class="col-md-12 no-padding reportZone margin-top-20">
+    <table id="ReportForChangeNotes" class="table table-hover table-condensed" ng-if="globalVariable.isShowReport">
+        <tr>
+            <td colspan="7">ผู้ออก : {{SellingName}} วันที่ : {{dateTimeNow | date:'dd/MM/yyyy เวลา HH:mm:ss น.'}}</td>
+        </tr>
+        <tr>
+            <th class="text-center" colspan="7">
+                <strong>รายงานตรวจสอบวันครบกำหนดภาษี</strong><br/>
+                ระหว่างวันที่ {{conditionReport.DateStart | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} เวลา {{conditionReport.TimeStart}} น. ถึงวันที่ {{conditionReport.DateEnd | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} เวลา {{conditionReport.TimeEnd}} น.
+            </th>
+        </tr>
+        <tr>
+            <th class="text-center">ลำดับ</th>
+            <th>ทะเบียนรถ</th>
+            <th>จังหวัด</th>
+            <th>ยี่ห้อ</th>
+            <th>หมายเลขตัวถัง</th>
+            <th>เดือนที่ครบกำหนดตรวจสถาพกลางปี</th>
+        </tr>
+        <tr ng-repeat="item in AnualTaxDueDate">
+            <td align="center">{{$index+1}}</td>
+            <td>{{item.PlateNumber}}</td>
+            <td>{{item.PlateProvinceName }}</td>
+            <td>{{item.Brand}}</td>
+            <td>{{item.ChassisNumber}}</td>
+            <td>{{item.StartHalfYearDueDate}}</td>
+        </tr>
+        <tr ng-if="AnualTaxDueDate.length == 0">
+            <td align="center" colspan="7">ไม่มีข้อมูล</td>
+        </tr>
+    </table>
+</div>

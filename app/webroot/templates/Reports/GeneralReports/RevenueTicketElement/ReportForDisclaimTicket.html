@@ -1,0 +1,44 @@
+<table id="ReportForDisclaimTicket" width="100%" ng-if="reportType.RevenueTicket == 'ReportForDisclaimTicket' && globalVariable.isShowReport">
+    <tr>
+        <th class="text-center">
+            รายงานแสดงรายละเอียดการสละสิทธิที่นั่ง<br/>
+            ระหว่างวันที่ {{conditionReport.DateStart | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} - ถึงวันที่ {{conditionReport.DateEnd | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}}
+        </th>
+    </tr>
+    <tr>
+        <td>ผู้ออก : {{SellingName}} วันที่ : {{dateTimeNow | date:'dd/MM/yyyy เวลา HH:mm:ss น.'}}</td>
+    </tr>
+    <tr>
+        <td>
+            <div class="reportZone">
+                <table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+                    <tr>
+                        <th class="text-center">ที่</th>
+                        <th>รหัสการจอง</th>
+                        <th>เลขรถ</th>
+                        <th>เส้นทาง</th>
+                        <th>วันเวลาเดินทาง</th>
+                        <th>ผู้โดยสาร</th>
+                        <th class="text-center">ที่นั่ง</th>
+                        <th>วันที่สละสิทธิ์</th>
+                        <th>ผู้ทำการสละสิทธิ์</th>
+                    </tr>
+                    <tr ng-repeat="item in dataReport.DisclaimTicketList">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td>{{item.ReferenceCode}}</td>
+                        <td>{{item.VehicleNumber}}</td>
+                        <td>{{item.StopPointStart + ' - ' + item.StopPointEnd}}</td>
+                        <td>{{item.VehicleOperationDate | jsonDate:'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{item.PassengerFirstName + ' ' + item.PassengerLastName}}</td>
+                        <td align="center">{{item.VehicleSeatName}}</td>
+                        <td>{{item.ReturnedDate | jsonDate:'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{item.ReturnedBy}}</td>
+                    </tr>
+                    <tr ng-if="dataReport.DisclaimTicketList.length == 0">
+                        <td colspan="9" align="center">ไม่มีข้อมูล</td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
+</table>

@@ -1,0 +1,587 @@
+<table id="ReportForOperationIndividual" width="100%" ng-if="reportType.ProgressOperation == 'ReportForOperationIndividual' && globalVariable.isShowReport && conditionReport.ReportType == 'OperationIndividual'">
+	<tr>
+        <th class="text-center">
+            รายงานแสดงการดำเนินงานส่วนบุคคล จำแนกตาม{{conditionReport.TypeSearch == 'Transaction'?'วันทำรายการ':'วันเดินทาง'}}<br/>
+            ระหว่างวันที่ {{conditionReport.DateStart | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} เวลา {{conditionReport.TimeStart}} น. ถึงวันที่ {{conditionReport.DateEnd | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} เวลา {{conditionReport.TimeEnd}} น.
+        </th>
+    </tr>
+    <tr>
+        <td>ผู้ออก : {{SellingName}} วันที่ : {{dateTimeNow | date:'dd/MM/yyyy เวลา HH:mm:ss น.'}}</td>
+    </tr>
+    <tr>
+    	<td>
+    		<table id="DirectSellingPointList" width="100%" class="break-page">
+    			<tbody>
+        			<tr>
+        				<td align="right">
+        					<button class="dontPrint btn btn-primary btn-xs" ng-click="printDivById('DirectSellingPointList')"><i class="fa fa-print" aria-hidden="true"></i> พิมพ์</button>
+        					<button class="dontPrint btn btn-primary btn-xs" ng-click="generateExcelbyId('DirectSellingPointList')"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel</button>
+        				</td>
+        			</tr>
+        			<tr>
+        				<td align="center"><h4><strong>รายงานแสดงการขายบัตรโดยสารวันเดินทาง (ตรงจุดขาย)</strong></h4></td>
+        			</tr>
+    			</tbody>
+    			<tr>
+    				<td>
+    					<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+	        				<tr>
+		        				<th class="text-center">ที่</th>
+		        				<th class="text-left">รหัสการจอง</th>
+		        				<th class="text-center">วันเดินทาง</th>
+		        				<th class="text-center">เลขรถ</th>
+		        				<th class="text-center">มตร.</th>
+		        				<th class="text-center">เวลา</th>
+		        				<th>ขึ้นจาก</th>
+		        				<th>ปลายทาง</th>
+		        				<th class="text-center">ที่นั่ง</th>
+		        				<th class="text-right">ราคา</th>
+		        				<th>ผู้โดยสาร</th>
+		        				<th>วันทำ<br/>รายการ</th>
+		        				<th>พนักงาน<br/>จอง</th>
+		        				<th>พนักงาน<br/>รับเงิน</th>
+		        			</tr>
+		        			<tr style="border:1px #ccc solid;" ng-if="dataReport.DirectSellingPointList.length == 0">
+		        				<td colspan="14" align="center">ไม่มีข้อมูล</td>
+		        			</tr>
+		        			<tbody ng-repeat="(key,value) in dataReport.DirectSellingPointList | groupBy:'StopPointName_TH'">
+		        				<tr>
+        							<th colspan="14" class="active"><span style="font-size:18px"><strong>{{key}}</strong></span></th>
+        						</tr>
+        						<tr ng-repeat="item in value">
+        							<td align="center">{{item.No}}</td>
+        							<td>{{item.ReferenceCode}}</td>
+        							<td>{{item.VehicleOperationDate | jsonDate:'dd/MM/yyyy'}}</td>
+        							<td align="center">{{item.VehicleNumber}}</td>
+        							<td>{{item.VehicleSeatPlanName}}</td>
+        							<td>{{item.VehicleOperationDate | jsonDate:'HH:mm'}}</td>
+        							<td>{{item.StopPointStart}}</td>
+        							<td>{{item.StopPointEnd}}</td>
+        							<td align="center">{{item.VehicleSeatName}}</td>
+        							<td align="right">{{item.TotalPrice}}</td>
+        							<td>{{item.PassengerFirstName + ' ' + item.PassengerLastName}}</td>
+        							<td>{{item.UpdatedDate | jsonDate:'dd/MM/yyyy'}}</td>
+        							<td>{{item.CreatedBy}}</td>
+        							<td>{{item.UpdatedBy}}</td>
+        						</tr>
+		        			</tbody>
+    					</table>
+    				</td>
+    			</tr>
+    			<tr>
+    				<td align="right">
+    					<div style="font-size:24px;">
+    						<strong>
+    							ยอดรวมทั้งหมด : {{dataReport.DirectSellingPointList.length}} ที่นั่ง 
+    							รวมเป็นเงิน : <span class="danger">{{((dataReport.DirectSellingPointList | total:'TotalPrice') || 0) | number:2}}</span> บาท
+    						</strong>
+    					</div>
+    				</td>
+    			</tr>
+    		</table>
+    	</td>
+    </tr>
+    <tr>
+    	<td>
+    		<table id="NotDirectSellingPointList" width="100%" class="margin-top-20 break-page">
+    			<tbody>
+        			<tr>
+        				<td align="right">
+        					<button class="dontPrint btn btn-primary btn-xs" ng-click="printDivById('NotDirectSellingPointList')"><i class="fa fa-print" aria-hidden="true"></i> พิมพ์</button>
+        					<button class="dontPrint btn btn-primary btn-xs" ng-click="generateExcelbyId('NotDirectSellingPointList')"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel</button>
+        				</td>
+        			</tr>
+        			<tr>
+        				<td align="center"><h4><strong>รายงานแสดงการขายบัตรโดยสารวันเดินทาง (ไม่ตรงจุดขาย)</strong></h4></td>
+        			</tr>
+    			</tbody>
+    			<tr>
+    				<td>
+    					<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+	        				<tr>
+		        				<th class="text-center">ที่</th>
+		        				<th class="text-left">รหัสการจอง</th>
+		        				<th class="text-center">วันเดินทาง</th>
+		        				<th class="text-center">เลขรถ</th>
+		        				<th class="text-center">มตร.</th>
+		        				<th class="text-center">เวลา</th>
+		        				<th>ขึ้นจาก</th>
+		        				<th>ปลายทาง</th>
+		        				<th class="text-center">ที่นั่ง</th>
+		        				<th class="text-right">ราคา</th>
+		        				<th>ผู้โดยสาร</th>
+		        				<th>วันทำ<br/>รายการ</th>
+		        				<th>พนักงาน<br/>จอง</th>
+		        				<th>พนักงาน<br/>รับเงิน</th>
+		        			</tr>
+		        			<tr style="border:1px #ccc solid;" ng-if="dataReport.NotDirectSellingPointList.length == 0">
+		        				<td colspan="14" align="center">ไม่มีข้อมูล</td>
+		        			</tr>
+		        			<tbody ng-repeat="(key,value) in dataReport.NotDirectSellingPointList | groupBy:'StopPointName_TH'">
+		        				<tr>
+        							<th colspan="14" class="active"><span style="font-size:18px"><strong>{{key}}</strong></span></th>
+        						</tr>
+        						<tr ng-repeat="item in value" ng-class="{'warning':item.TicketStatus == 4}">
+        							<td align="center">{{item.No}}</td>
+        							<td>{{item.ReferenceCode}}</td>
+        							<td>{{item.VehicleOperationDate | jsonDate:'dd/MM/yyyy'}}</td>
+        							<td align="center">{{item.VehicleNumber}}</td>
+        							<td>{{item.VehicleSeatPlanName}}</td>
+        							<td>{{item.VehicleOperationDate | jsonDate:'HH:mm'}}</td>
+        							<td>{{item.StopPointStart}}</td>
+        							<td>{{item.StopPointEnd}}</td>
+        							<td align="center">{{item.VehicleSeatName}}{{item.TicketStatus == 4?'[คืน]':''}}</td>
+        							<td align="right">{{item.TotalPrice}}</td>
+        							<td>{{item.PassengerFirstName + ' ' + item.PassengerLastName}}</td>
+        							<td>{{item.UpdatedDate | jsonDate:'dd/MM/yyyy'}}</td>
+        							<td>{{item.CreatedBy}}</td>
+        							<td>{{item.UpdatedBy}}</td>
+        						</tr>
+		        			</tbody>
+    					</table>
+    				</td>
+    			</tr>
+    			<tr>
+    				<td align="right">
+    					<div style="font-size:24px;">
+    						<strong>
+    							ยอดรวมทั้งหมด : {{dataReport.NotDirectSellingPointList.length}} ที่นั่ง 
+    							รวมเป็นเงิน : <span class="danger">{{((dataReport.NotDirectSellingPointList | total:'TotalPrice') || 0) | number:2}}</span> บาท
+    						</strong>
+    					</div>
+    				</td>
+    			</tr>
+    		</table>
+    	</td>
+    </tr>
+    <tr ng-if="conditionReport.TypeSearch == 'Transaction'">
+    	<td>
+    		<table id="PreSaleList" width="100%" class="margin-top-20 break-page">
+    			<tbody>
+        			<tr>
+        				<td align="right">
+        					<button class="dontPrint btn btn-primary btn-xs" ng-click="printDivById('PreSaleList')"><i class="fa fa-print" aria-hidden="true"></i> พิมพ์</button>
+        					<button class="dontPrint btn btn-primary btn-xs" ng-click="generateExcelbyId('PreSaleList')"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel</button>
+        				</td>
+        			</tr>
+        			<tr>
+        				<td align="center"><h4><strong>รายงานแสดงการขายบัตรโดยสาร ล่วงหน้า</strong></h4></td>
+        			</tr>
+    			</tbody>
+    			<tr>
+    				<td>
+    					<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+	        				<tr>
+		        				<th class="text-center">ที่</th>
+		        				<th class="text-left">รหัสการจอง</th>
+		        				<th class="text-center">วันเดินทาง</th>
+		        				<th class="text-center">เลขรถ</th>
+		        				<th class="text-center">มตร.</th>
+		        				<th class="text-center">เวลา</th>
+		        				<th>ขึ้นจาก</th>
+		        				<th>ปลายทาง</th>
+		        				<th class="text-center">ที่นั่ง</th>
+		        				<th class="text-right">ราคา</th>
+		        				<th>ผู้โดยสาร</th>
+		        				<th>วันทำ<br/>รายการ</th>
+		        				<th>พนักงาน<br/>จอง</th>
+		        				<th>พนักงาน<br/>รับเงิน</th>
+		        			</tr>
+		        			<tr style="border:1px #ccc solid;" ng-if="dataReport.PreSaleList.length == 0">
+		        				<td colspan="14" align="center">ไม่มีข้อมูล</td>
+		        			</tr>
+		        			<tbody ng-repeat="(key,value) in dataReport.PreSaleList | groupBy:'StopPointName_TH'">
+		        				<tr>
+        							<th colspan="14" class="active"><span style="font-size:18px"><strong>{{key}}</strong></span></th>
+        						</tr>
+        						<tr ng-repeat="item in value" ng-class="{'warning':item.TicketStatus == 4}">
+        							<td align="center">{{item.No}}</td>
+        							<td>{{item.ReferenceCode}}</td>
+        							<td>{{item.VehicleOperationDate | jsonDate:'dd/MM/yyyy'}}</td>
+        							<td align="center">{{item.VehicleNumber}}</td>
+        							<td>{{item.VehicleSeatPlanName}}</td>
+        							<td>{{item.VehicleOperationDate | jsonDate:'HH:mm'}}</td>
+        							<td>{{item.StopPointStart}}</td>
+        							<td>{{item.StopPointEnd}}</td>
+        							<td align="center">{{item.VehicleSeatName}}{{item.TicketStatus == 4?'[คืน]':''}}</td>
+        							<td align="right">{{item.TotalPrice}}</td>
+        							<td>{{item.PassengerFirstName + ' ' + item.PassengerLastName}}</td>
+        							<td>{{item.UpdatedDate | jsonDate:'dd/MM/yyyy'}}</td>
+        							<td>{{item.CreatedBy}}</td>
+        							<td>{{item.UpdatedBy}}</td>
+        						</tr>
+		        			</tbody>
+    					</table>
+    				</td>
+    			</tr>
+    			<tr>
+    				<td align="right">
+    					<div style="font-size:24px;">
+    						<strong>
+    							ยอดรวมทั้งหมด : {{dataReport.PreSaleList.length}} ที่นั่ง 
+    							รวมเป็นเงิน : <span class="danger">{{((dataReport.PreSaleList | total:'TotalPrice') || 0) | number:2}}</span> บาท
+    						</strong>
+    					</div>
+    				</td>
+    			</tr>
+    		</table>
+    	</td>
+    </tr>
+    <tr>
+    	<td>
+    		<table id="ReturnTicketDayTripList" width="100%" class="margin-top-20 break-page">
+    			<tbody>
+        			<tr>
+        				<td align="right">
+        					<button class="dontPrint btn btn-primary btn-xs" ng-click="printDivById('ReturnTicketDayTripList')"><i class="fa fa-print" aria-hidden="true"></i> พิมพ์</button>
+        					<button class="dontPrint btn btn-primary btn-xs" ng-click="generateExcelbyId('ReturnTicketDayTripList')"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel</button>
+        				</td>
+        			</tr>
+        			<tr>
+        				<td align="center"><h4><strong>รายงานการคืนที่นั่งขาย</strong></h4></td>
+        			</tr>
+    			</tbody>
+    			<tr>
+    				<td>
+    					<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+	        				<tr>
+		        				<th class="text-center">ที่</th>
+		        				<th class="text-left">รหัสการจอง</th>
+		        				<th class="text-center">เลขรถ</th>
+		        				<th class="text-center">จุดขึ้นรถ - จุดลงรถ</th>
+		        				<th class="text-center">วันเดินทาง</th>
+		        				<th>ผู้โดยสาร</th>
+		        				<th>วันทำ<br/>รายการ</th>
+		        				<th class="text-center">คืนที่นั่ง</th>
+		        				<th class="text-right">คืนเงิน</th>
+		        				<th class="text-right">ค่าปรับ</th>
+		        				<th class="text-center"">วันเวลาคืน</th>
+		        				<th>พนักงาน</th>
+		        			</tr>
+		        			<tr style="border:1px #ccc solid;" ng-if="dataReport.ReturnTicketDayTripList.length == 0">
+		        				<td colspan="12" align="center">ไม่มีข้อมูล</td>
+		        			</tr>
+		        			<tbody ng-repeat="(key,value) in dataReport.ReturnTicketDayTripList | groupBy:'StopPointName_TH'">
+		        				<tr>
+        							<th colspan="12" class="active"><span style="font-size:18px"><strong>{{key}}</strong></span></th>
+        						</tr>
+        						<tr ng-repeat="item in value" ng-class="{'warning':item.TicketStatus == 4}">
+        							<td align="center">{{item.No}}</td>
+        							<td>{{item.ReferenceCode}}</td>
+        							<td align="center">{{item.VehicleNumber}}</td>
+        							<td>{{item.StopPointStart + ' - ' + item.StopPointEnd}}</td>
+        							<td>{{item.VehicleOperationDate | jsonDate:'dd/MM/yyyy HH:mm'}}</td>
+        							<td>{{item.PassengerFirstName + ' ' + item.PassengerLastName}}</td>
+        							<td>{{item.UpdatedDate | jsonDate:'dd/MM/yyyy'}}</td>
+        							<td align="center">{{item.VehicleSeatName}}{{item.TicketStatus == 4?'[คืน]':''}}</td>
+        							<td align="right">{{item.TotalPrices}}</td>
+									<td align="right">{{item.TicketReturnFee}}</td>
+									<td>{{item.ReturnedDate | jsonDate:'dd/MM/yyyy'}}</td>
+        							<td>{{item.ReturnedBy}}</td>
+        						</tr>
+		        			</tbody>
+    					</table>
+    				</td>
+    			</tr>
+    			<tr>
+    				<td align="right">
+    					<div style="font-size:24px;">
+    						<strong>
+    							ยอดรวมทั้งหมด : {{dataReport.ReturnTicketDayTripList.length}} ที่นั่ง 
+    							คืนเงิน : <span class="danger">{{((dataReport.ReturnTicketDayTripList | total:'TotalPrices') || 0) | number:2}}</span> บาท
+    							ค่าปรับ : <span class="danger">{{((dataReport.ReturnTicketDayTripList | total:'TicketReturnFee') || 0) | number:2}}</span> บาท
+    						</strong>
+    					</div>
+    				</td>
+    			</tr>
+    		</table>
+    	</td>
+    </tr>
+    <tr>
+    	<td>
+    		<table id="ReturnTicketOtherDayList" width="100%" class="margin-top-20 break-page">
+    			<tr>
+    				<td align="right">
+    					<button class="dontPrint btn btn-primary btn-xs" ng-click="printDivById('ReturnTicketOtherDayList')"><i class="fa fa-print" aria-hidden="true"></i> พิมพ์</button>
+    					<button class="dontPrint btn btn-primary btn-xs" ng-click="generateExcelbyId('ReturnTicketOtherDayList')"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel</button>
+    				</td>
+    			</tr>
+    			<tr>
+    				<td align="center"><h4><strong>รายงานการคืนที่นั่งขาย (วันเวลาคืนไม่ตรงกับวันเดินทาง)</strong></h4></td>
+    			</tr>
+    			<tr>
+    				<td>
+    					<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+    						<tr>
+		        				<th class="text-center">ที่</th>
+		        				<th class="text-left">รหัสการจอง</th>
+		        				<th class="text-center">เลขรถ</th>
+		        				<th class="text-center">จุดขึ้นรถ - จุดลงรถ</th>
+		        				<th class="text-center">วันเดินทาง</th>
+		        				<th>ผู้โดยสาร</th>
+		        				<th>วันทำ<br/>รายการ</th>
+		        				<th class="text-center">คืนที่นั่ง</th>
+		        				<th class="text-right">คืนเงิน</th>
+		        				<th class="text-right">ค่าปรับ</th>
+		        				<th class="text-center">วันเวลาคืน</th>
+		        				<th>พนักงาน</th>
+		        			</tr>
+		        			<tr style="border:1px #ccc solid;" ng-if="dataReport.ReturnTicketOtherDayList.length == 0">
+		        				<td colspan="12" align="center">ไม่มีข้อมูล</td>
+		        			</tr>
+        					<tbody ng-repeat="(key,value) in dataReport.ReturnTicketOtherDayList | groupBy:'StopPointName_TH'">
+        						<tr>
+        							<th colspan="12" class="active"><span style="font-size:18px"><strong>{{key}}</strong></span></th>
+        						</tr>
+        						<tr ng-repeat="item in value" ng-class="{'warning':item.TicketStatus == 4}">
+        							<td align="center">{{item.No}}</td>
+        							<td>{{item.ReferenceCode}}</td>
+        							<td align="center">{{item.VehicleNumber}}</td>
+        							<td>{{item.StopPointStart + ' - ' + item.StopPointEnd}}</td>
+        							<td>{{item.VehicleOperationDate | jsonDate:'dd/MM/yyyy HH:mm'}}</td>
+        							<td>{{item.PassengerFirstName + ' ' + item.PassengerLastName}}</td>
+        							<td>{{item.UpdatedDate | jsonDate:'dd/MM/yyyy'}}</td>
+        							<td align="center">{{item.VehicleSeatName}}{{item.TicketStatus == 4?'[คืน]':''}}</td>
+        							<td align="right">{{item.TotalPrices}}</td>
+									<td align="right">{{item.TicketReturnFee}}</td>
+									<td>{{item.ReturnedDate | jsonDate:'dd/MM/yyyy'}}</td>
+        							<td>{{item.ReturnedBy}}</td>
+        						</tr>
+    						</tbody>
+    					</table>
+    				</td>
+    			</tr>
+    			<tr>
+    				<td align="right">
+    					<div style="font-size:24px;">
+    						<strong>
+    							ยอดรวมทั้งหมด : {{dataReport.ReturnTicketOtherDayList.length}} ที่นั่ง 
+    							คืนเงิน : <span class="danger">{{((dataReport.ReturnTicketOtherDayList | total:'TotalPrices') || 0) | number:2}}</span> บาท
+    							ค่าปรับ : <span class="danger">{{((dataReport.ReturnTicketOtherDayList | total:'TicketReturnFee') || 0) | number:2}}</span> บาท
+    						</strong>
+    					</div>
+    				</td>
+    			</tr>
+    		</table>
+    	</td>
+    </tr>
+    <tr>
+    	<td>
+    		<table id="FreightList" width="100%" class="margin-top-20 break-page">
+    			<tr>
+    				<td align="right">
+    					<button class="dontPrint btn btn-primary btn-xs" ng-click="printDivById('FreightList')"><i class="fa fa-print" aria-hidden="true"></i> พิมพ์</button>
+    					<button class="dontPrint btn btn-primary btn-xs" ng-click="generateExcelbyId('FreightList')"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel</button>
+    				</td>
+    			</tr>
+    			<tr>
+    				<td align="center"><h4><strong>รายงานค่าระวางสินค้า</strong></h4></td>
+    			</tr>
+    			<tr>
+    				<td>
+    					<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+							<tr>
+		        				<th class="text-center">ที่</th>
+		        				<th class="text-left">ระวาง</th>
+		        				<th class="text-center">จำนวน</th>
+		        				<th class="text-right">ราคา</th>
+		        				<th class="text-center">เลขรถ</th>
+		        				<th class="text-center">มาตรฐานรถ</th>
+		        				<th class="text-center">วันเดินทาง</th>
+		        				<th class="text-center">เวลา</th>
+		        				<th class="text-center">วันทำรายการ</th>
+		        				<th>พนักงาน</th>
+		        			</tr>
+		        			<tr style="border:1px #ccc solid;" ng-if="dataReport.FreightList.length == 0">
+		        				<td colspan="10" align="center">ไม่มีข้อมูล</td>
+		        			</tr>
+    						<tbody ng-repeat="(key,value) in dataReport.FreightList | groupBy:'StopPointName_TH'">
+    							<tr>
+        							<th colspan="10" class="active"><span style="font-size:18px"><strong>{{key}}</strong></span></th>
+        						</tr>
+        						<tr ng-repeat="item in value">
+        							<td align="center">{{item.No}}</td>
+        							<td>{{item.VehicleOperationFreightDesc}}</td>
+        							<td align="center">{{item.VehicleOperationFreightUnit}}</td>
+        							<td align="right">{{item.TotalFreight}}</td>
+        							<td align="center">{{item.VehicleNumber}}</td>
+        							<td align="center">{{item.VehicleSeatPlanName}}</td>
+        							<td align="center">{{item.VehicleOperationDate | jsonDate:'dd/MM/yyyy'}}</td>
+        							<td align="center">{{item.VehicleOperationDate | jsonDate:'HH:mm'}}</td>
+        							<td align="center">{{item.CreatedDate | jsonDate:'dd/MM/yyyy'}}</td>
+        							<td>{{item.FirstName + ' ' + item.LastName}}</td>
+        						</tr>
+    						</tbody>
+    						
+    					</table>
+    				</td>
+    			</tr>
+    			<tr>
+    				<td align="right">
+    					<div style="font-size:24px;">
+    						<strong>
+    							ยอดรวมค่าระวาง : <span class="danger">{{((dataReport.FreightList | total:'TotalFreight') || 0) | number:2}}</span> บาท
+    						</strong>
+    					</div>
+    				</td>
+    			</tr>
+    		</table>
+    	</td>
+    </tr>
+    <tr>
+    	<td>
+    		<table id="CostList" width="100%" class="margin-top-20 break-page">
+    			<tr>
+    				<td align="right">
+    					<button class="dontPrint btn btn-primary btn-xs" ng-click="printDivById('CostList')"><i class="fa fa-print" aria-hidden="true"></i> พิมพ์</button>
+    					<button class="dontPrint btn btn-primary btn-xs" ng-click="generateExcelbyId('CostList')"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel</button>
+    				</td>
+    			</tr>
+    			<tr>
+    				<td align="center"><h4><strong>รายงานค่าใช้จ่าย</strong></h4></td>
+    			</tr>
+    			<tr>
+    				<td>
+    					<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+							<tr>
+		        				<th class="text-center">ที่</th>
+		        				<th class="text-left">ค่าใช้จ่าย</th>
+		        				<th class="text-right">ยอดจ่าย</th>
+		        				<th class="text-center">เลขรถ</th>
+		        				<th class="text-center">มาตรฐานรถ</th>
+		        				<th class="text-center">วันเดินทาง</th>
+		        				<th class="text-center">เวลา</th>
+		        				<th class="text-center">วันทำรายการ</th>
+		        				<th>พนักงาน</th>
+		        			</tr>
+		        			<tr style="border:1px #ccc solid;" ng-if="dataReport.CostList.length == 0">
+		        				<td colspan="9" align="center">ไม่มีข้อมูล</td>
+		        			</tr>
+		        			<tbody ng-repeat="(key,value) in dataReport.CostList | groupBy:'StopPointName_TH'">
+			        			<tr>
+        							<th colspan="9" class="active"><span style="font-size:18px"><strong>{{key}}</strong></span></th>
+        						</tr>
+        						<tr ng-repeat="item in value">
+        							<td align="center">{{item.No}}</td>
+        							<td>{{item.VehicleOperationCostDesc}}</td>
+        							<td align="right">{{item.TotalCost}}</td>
+        							<td align="center">{{item.VehicleNumber}}</td>
+        							<td align="center">{{item.VehicleSeatPlanName}}</td>
+        							<td align="center">{{item.VehicleOperationDate | jsonDate:'dd/MM/yyyy'}}</td>
+        							<td align="center">{{item.VehicleOperationDate | jsonDate:'HH:mm'}}</td>
+        							<td align="center">{{item.CreatedDate | jsonDate:'dd/MM/yyyy'}}</td>
+        							<td>{{item.FirstName + ' ' + item.LastName}}</td>
+        						</tr>
+    						</tbody>
+    					</table>
+    				</td>
+    			</tr>
+    			<tr>
+    				<td align="right">
+    					<div style="font-size:24px;">
+    						<strong>
+    							ยอดรวมค่าใช้จ่าย : <span class="danger">{{((dataReport.CostList | total:'TotalCost') || 0) | number:2}}</span> บาท
+    						</strong>
+    					</div>
+    				</td>
+    			</tr>
+    		</table>
+    	</td>
+    </tr>
+    <tr>
+    	<td>
+    		<table id="SummaryList" width="100%" class="margin-top-20 break-page">
+    			<tr>
+    				<td align="right">
+    					<button class="dontPrint btn btn-primary btn-xs" ng-click="printDivById('SummaryList')"><i class="fa fa-print" aria-hidden="true"></i> พิมพ์</button>
+    					<button class="dontPrint btn btn-primary btn-xs" ng-click="generateExcelbyId('SummaryList')"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel</button>
+    				</td>
+    			</tr>
+    			<tr>
+    				<td align="center"><h4><strong>สรุป</strong></h4></td>
+    			</tr>
+    			<tr>
+    				<td>
+    					<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+	        				<tr>
+		        				<th class="text-center" rowspan="2">พนักงาน</th>
+		        				<th class="text-center" colspan="3">วันเดินทาง</th>
+		        				<th class="text-center" colspan="3">วันอื่น</th>
+		        				<th class="text-right" rowspan="2">ค่าระวาง<br/>(+)</th>
+		        				<th class="text-right" rowspan="2">ค่าใช้จ่าย<br/>(-)</th>
+		        				<th class="text-right" rowspan="2">ค่าคอม<br/>(-)</th>
+		        				<th class="text-center" rowspan="2">สุทธิ</th>
+		        			</tr>
+		        			<tr>
+		        				<th class="text-right">ยอดขายตั๋ว<br/>(+)</th>
+		        				<th class="text-right">ยอดคืนตั๋ว<br/>(-)</th>
+		        				<th class="text-right">ค่าปรับคืนตั๋ว<br/>(+)</th>
+		        				<th class="text-right">ยอดขายตั๋ว<br/>(+)</th>
+		        				<th class="text-right">ยอดคืนตั๋ว<br/>(-)</th>
+		        				<th class="text-right">ค่าปรับคืนตั๋ว<br/>(+)</th>
+		        			</tr>
+		        			<tr style="border:1px #ccc solid;" ng-if="dataReport.SummaryList.length == 0">
+		        				<td colspan="11" align="center">ไม่มีข้อมูล</td>
+		        			</tr>
+		        			<tbody ng-repeat="(key,value) in dataReport.SummaryList | groupBy:'StopPointName_TH'">
+		        				<tr>
+    								<th colspan="11" class="active"><span style="font-size:18px"><strong>{{key}}</strong></span></th>
+        						</tr>
+        						<tr ng-repeat="item in value">
+        							<td>{{item.CreatedBy}}</td>
+        							<td align="right">{{item.TotalPrice | number:2}}</td>
+        							<td align="right">{{item.TotalReturnPrice | number:2}}</td>
+        							<td align="right">{{item.TotalTicketReturnFee | number:2}}</td>
+        							<td align="right">{{item.OtherTotalPrice | number:2}}</td>
+        							<td align="right">{{item.OtherTotalReturnPrice | number:2}}</td>
+        							<td align="right">{{item.OtherTotalTicketReturnFee | number:2}}</td>
+        							<td align="right">{{item.TotalFreights | number:2}}</td>
+        							<td align="right">{{item.TotalCosts | number:2}}</td>
+        							<td align="right">{{item.SaleCommission | number:2}}</td>
+									<td align="right">
+										<strong>{{(item.TotalPrice - item.TotalReturnPrice + item.TotalTicketReturnFee + item.OtherTotalPrice - item.OtherTotalReturnPrice + item.OtherTotalTicketReturnFee + item.TotalFreights - item.TotalCosts - item.SaleCommission) | number:2}}</strong>
+									</td>
+        						</tr>
+        						<tr ng-if="$last">
+        							<td align="right"><strong>รวม</strong></td>
+        							<td align="right">
+        								<strong>{{((dataReport.SummaryList | total:'TotalPrice') || 0) | number:2}}</strong>
+        							</td>
+        							<td align="right">
+        								<strong>{{((dataReport.SummaryList | total:'TotalReturnPrice') || 0) | number:2}}</strong>
+        							</td>
+        							<td align="right">
+        								<strong>{{((dataReport.SummaryList | total:'TotalTicketReturnFee') || 0) | number:2}}</strong>
+        							</td>
+        							<td align="right">
+        								<strong>{{((dataReport.SummaryList | total:'OtherTotalPrice') || 0) | number:2}}</strong>
+        							</td>
+        							<td align="right">
+        								<strong>{{((dataReport.SummaryList | total:'OtherTotalReturnPrice') || 0) | number:2}}</strong>
+        							</td>
+        							<td align="right">
+        								<strong>{{((dataReport.SummaryList | total:'OtherTotalTicketReturnFee') || 0) | number:2}}</strong>
+        							</td>
+        							<td align="right">
+        								<strong>{{((dataReport.SummaryList | total:'TotalFreights') || 0) | number:2}}</strong>
+        							</td>
+        							<td align="right">
+        								<strong>{{((dataReport.SummaryList | total:'TotalCosts') || 0) | number:2}}</strong>
+        							</td>
+        							<td align="right">
+        								<strong>{{((dataReport.SummaryList | total:'SaleCommission') || 0) | number:2}}</strong>
+        							</td>
+        							<td align="right">
+        								<strong>
+        									{{(((dataReport.SummaryList | total:'TotalPrice') || 0) - ((dataReport.SummaryList | total:'TotalReturnPrice') || 0) + ((dataReport.SummaryList | total:'TotalTicketReturnFee') || 0) + ((dataReport.SummaryList | total:'OtherTotalPrice') || 0) - ((dataReport.SummaryList | total:'OtherTotalReturnPrice') || 0) + ((dataReport.SummaryList | total:'OtherTotalTicketReturnFee') || 0) + ((dataReport.SummaryList | total:'TotalFreights') || 0) - ((dataReport.SummaryList | total:'TotalCosts') || 0) - ((dataReport.SummaryList | total:'SaleCommission') || 0)) | number:2}}
+        								</strong>
+        							</td>
+        						</tr>
+		        			</tbody>
+    					</table>
+    				</td>
+    			</tr>
+    		</table>
+    	</td>
+    </tr>
+</table>

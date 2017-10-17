@@ -1,0 +1,597 @@
+<div class="col-xs-12 tabbable tabs-blocks tabs-primary no-padding" ng-init="globalVariable.IsPrintReportActive = 0">
+    <ul class="nav nav-tabs" tabindex="3" style="overflow: hidden; outline: none;">
+        <li class="cursor-point" ng-class="{'active' : globalVariable.IsPrintReportActive == 0}">
+            <a ng-click="globalVariable.IsPrintReportActive = 0">
+                <i class="fa fa-cube" aria-hidden="true"></i> ผังรถและข้อมูล
+            </a>
+        </li>
+        <li class="cursor-point" ng-class="{'active' : globalVariable.IsPrintReportActive == 1}">
+            <a ng-click="globalVariable.IsPrintReportActive = 1">
+                <i class="fa fa-taxi" aria-hidden="true"></i> ขึ้นรถ
+            </a>
+        </li>
+        <li class="cursor-point" ng-class="{'active' : globalVariable.IsPrintReportActive == 2}">
+            <a ng-click="globalVariable.IsPrintReportActive = 2">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i> รายงาน
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content" style="padding:0px;">
+    	<div class="tab-pane" ng-class="{'active' : globalVariable.IsPrintReportActive == 0}">
+            <div class="panel panel-primary" style="border-radius:0px;border-top-right-radius:4px;">
+                <div class="panel-heading text-left" style="border-top-left-radius:0px;padding:10px">
+                    <h3 style="color:#FFF;font-size:30px;">
+                   		พิมพ์ผังที่นั่ง
+                    </h3>
+                </div>
+                <div class="panel-body">
+                	<div class="col-md-12">
+						<div class="col-md-12 ng-padding margin-bottom-10">
+							<div class="col-md-8 no-padding">
+								<label class="col-sm-2 text-right">จุดขาย:</label>
+								<div class="col-sm-5 no-padding">
+									<select class="form-control" ng-model="globalVariable.currentStopPointReportChoose" ng-options="o.StopPointId as o.StopPointName_TH for o in RouteProviceList">
+										<option value="">--ทุกจุดขาย--</option>
+									</select>
+								</div>
+								<label class="col-sm-2 text-right">พนักงาน:</label>
+								<div class="col-sm-3 no-padding-left">
+									<select class="form-control" ng-model="globalVariable.currentUserIdReportChoose" ng-options="o.UserId as o.FirstName + ' ' + o.LastName for o in userList">
+										<option value="">--ทั้งหมด--</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-md-1 no-padding">
+								<button class="btn btn-primary btn-block" ng-click="searchSummaryReport()">ค้นหา</button>
+							</div>
+							<div class="col-md-3 no-padding">
+								<div class="col-md-6 no-padding-right">
+									<select class="form-control" ng-model="globalVariable.printDivDetail">
+										<option value="printSummaryReportAll">--พิมพ์ทั้งหมด--</option>
+										<option value="printSummaryReportSeatPlan">ผังที่นั่ง</option>
+										<option value="printSummaryReportDetail">ข้อมูล</option>
+									</select>
+								</div>
+								<div class="col-md-6 no-padding-right">
+									<button class="btn btn-primary btn-block" ng-click="printDiv()">พิมพ์</button>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12 margin-bottom-10" id="printSummaryReportAll">
+							<div class="panel panel-primary print-no-border" id="printSummaryReportSeatPlan">
+								<div class="printOnly text-center"><h2>{{globalVariable.titlePrimary}}</h2></div>
+								<div class="panel-heading" style="border-top-left-radius:0px;padding:10px">
+									<h3 style="color:#FFF">ผังที่นั่ง</h3>
+								</div>
+								<div class="panel-body">
+									<div ng-repeat="eachFloor in SummarySeatFloorBooking track by $index" class="break-page">
+										<h5 class="cursor-point" ng-click="eachFloor.IsOpen = !eachFloor.IsOpen">
+											<strong>
+												ชั้นที่ : {{$index+1}} <i class="dontPrint" ng-class="{'fa fa-angle-down':eachFloor.IsOpen,'fa fa-angle-left':!eachFloor.IsOpen}"></i>
+											</strong>
+										</h5>
+										<table class="table table-bordered" ng-show="eachFloor.IsOpen" style="font-size: 16px !important;">
+											<tr ng-repeat="eachLineSeat in eachFloor.NewList track by $index">
+												<td ng-repeat="eachSeat in eachLineSeat track by $index" width="{{100/eachLineSeat.length}}%">
+													<div ng-if="checkTypeShow(eachSeat.VehicleSeatTypeId)" style="min-width:100px;min-height:50px;">
+														<strong>{{eachSeat.VehicleSeatName}}</strong>
+														<div class="col-md-12 no-padding text-left" ng-repeat="eachPassenger in eachSeat.vehicleOperationSeatList" style="border-top:dashed 1px #000000">
+															<strong>{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: eachPassenger.StopPointStartId } : 'StopPointId')].StopPointName_TH}} - {{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: eachPassenger.StopPointEndId } : 'StopPointId')].StopPointName_TH}}</strong><br/>
+															<span><strong>ชื่อ : </strong>{{eachPassenger.Passenger.PassengerFirstName + ' ' + eachPassenger.Passenger.PassengerLastName}} {{eachPassenger.TicketStatus==1?'[ตั๋วจอง]':''}}<br/></span>
+															<span ng-if="!!eachPassenger.ReferenceCode"><strong>Ref : </strong>{{eachPassenger.ReferenceCode}}</span>&nbsp;&nbsp;&nbsp;
+															<span ng-if="!!eachPassenger.Passenger.PassengerPhone"><strong>โทร : </strong>{{eachPassenger.Passenger.PassengerPhone}}<br/></span>
+															<span ng-if="!!eachPassenger.Notes"><strong>หมายเหตุ : </strong>{{eachPassenger.Notes}}<br/></span>
+															<strong>{{eachPassenger.TicketPrice - eachPassenger.DiscountPrice}} บ.</strong> - {{eachPassenger.CreatedBy}}
+														</div>
+													</div>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+
+							<div id="printSummaryReportDetail">
+								<div class="printOnly text-center"><h2>{{globalVariable.titlePrimary}}</h2></div>
+								<div class="panel panel-primary print-no-border">
+									<div class="panel-heading" style="border-top-left-radius:0px;padding:10px">
+										<h3 style="color:#FFF">สรุปยอดขาย</h3>
+									</div>
+									<div class="panel-body">
+										<table class="table table-bordered margin-bottom-10">
+											<thead>
+												<tr>
+													<th class="text-center" rowspan="2">ผู้ขาย</th>
+													<th class="text-center" rowspan="2">เคาน์เตอร์</th>
+													<th class="text-center" colspan="5">วันเดินทาง</th>
+													<th class="text-center" colspan="5">วันอื่น</th>
+													<th class="text-right" rowspan="2">รวม<br/>ที่นั่ง<br/>ขาย</th>
+													<th class="text-right" rowspan="2">รวม<br/>ที่นั่ง<br/>คืน</th>
+													<th class="text-right" rowspan="2">ที่นั่ง<br/>สุทธิ</th>
+													<th class="text-right" rowspan="2">ยอดเงิน<br/>สุทธิ</th>
+												</tr>
+												<tr>
+													<th class="text-right">ยอด<br/>ขาย</th>
+													<th class="text-right">ยอด<br/>คืน</th>
+													<th class="text-right">ยอด<br/>สุทธิ</th>
+													<th class="text-right">ที่นั่ง<br/>ขาย</th>
+													<th class="text-right">ที่นั่ง<br/>คืน</th>
+													<th class="text-right">ยอด<br/>ขาย</th>
+													<th class="text-right">ยอด<br/>คืน</th>
+													<th class="text-right">ยอด<br/>สุทธิ</th>
+													<th class="text-right">ที่นั่ง<br/>ขาย</th>
+													<th class="text-right">ที่นั่ง<br/>คืน</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="report in SummaryReport.SalesSummaryReportList track by $index">
+													<td>{{report.CreatedBy}}</td>
+													<td>{{report.StopPointName_TH}}</td>
+													<td align="right">{{report.TotalPrice | number:2}}</td>
+													<td align="right">{{report.TotalReturnPrice | number:2}}</td>
+													<td align="right">{{(report.TotalPrice - report.TotalReturnPrice) | number:2}}</td>
+													<td align="right">{{report.TotalSales}}</td>
+													<td align="right">{{report.TotalReturn}}</td>
+
+													<td align="right">{{report.OtherTotalPrice | number:2}}</td>
+													<td align="right">{{report.OtherTotalReturnPrice | number:2}}</td>
+													<td align="right">{{(report.OtherTotalPrice - report.OtherTotalReturnPrice) | number:2}}</td>
+													<td align="right">{{report.OtherTotalSales}}</td>
+													<td align="right">{{report.OtherTotalReturn}}</td>
+
+													<td align="right">{{report.TotalSales + report.OtherTotalSales}}</td>
+													<td align="right">{{report.TotalReturn + report.OtherTotalReturn}}</td>
+													<td align="right">{{(report.TotalReturn + report.OtherTotalSales) - (report.TotalReturn + report.OtherTotalReturn)}}</td>
+													<td align="right">{{((report.TotalPrice - report.TotalReturnPrice) + (report.OtherTotalPrice - report.OtherTotalReturnPrice)) | number:2}}</td>
+												</tr>
+											</tbody>
+											<tfoot>
+												<tr>
+													<td>รวมสุทธิ</td>
+													<td colspan="4" align="right">{{(SummaryReport.SalesSummaryReportList | total:'TotalPrice') - (SummaryReport.SalesSummaryReportList | total:'TotalReturnPrice') | number:2}}</td>
+													<td colspan="2"></td>
+													<td colspan="3" align="right">{{(SummaryReport.SalesSummaryReportList | total:'OtherTotalPrice') - (SummaryReport.SalesSummaryReportList | total:'OtherTotalReturnPrice') | number:2}}</td>
+													<td colspan="2"></td>
+													<td align="right">
+														{{((SummaryReport.SalesSummaryReportList | total:'TotalSales') + (SummaryReport.SalesSummaryReportList | total:'OtherTotalSales')) | number}}
+													</td>
+													<td align="right">
+														{{((SummaryReport.SalesSummaryReportList | total:'TotalReturn') + (SummaryReport.SalesSummaryReportList | total:'OtherTotalReturn')) | number}}
+													</td>
+													<td align="right">
+														{{((SummaryReport.SalesSummaryReportList | total:'TotalReturn') + (SummaryReport.SalesSummaryReportList | total:'OtherTotalSales'))-((SummaryReport.SalesSummaryReportList | total:'TotalReturn') + (SummaryReport.SalesSummaryReportList | total:'OtherTotalReturn')) | number}}
+													</td>
+													<td align="right">
+														<strong>
+															{{((SummaryReport.SalesSummaryReportList | total:'TotalPrice') - (SummaryReport.SalesSummaryReportList | total:'TotalReturnPrice'))+((SummaryReport.SalesSummaryReportList | total:'OtherTotalPrice') - (SummaryReport.SalesSummaryReportList | total:'OtherTotalReturnPrice')) | number:2}}
+														</strong>
+													</td>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+								</div>
+
+								<div class="panel panel-primary print-no-border">
+									<div class="panel-heading" style="border-top-left-radius:0px;padding:10px">
+										<h3 style="color:#FFF">ค่าระวาง</h3>
+									</div>
+									<div class="panel-body">
+										<table class="table">
+											<tr>
+												<th class="col-xs-4">ระวาง</th>
+												<th class="col-xs-3 text-right">จำนวน</th>
+												<th class="col-xs-3 text-right">ราคา</th>
+											</tr>
+											<tr ng-repeat="freight in vehicleOperationFreightList track by $index">
+												<td>{{freight.VehicleOperationFreightDesc || '-'}}</td>
+												<td align="right">{{freight.VehicleOperationFreightUnit | number:0}}</td>
+												<td align="right">{{freight.VehicleOperationFreightPrice | number:2}}</td>
+											</tr>
+											<tr ng-if="vehicleOperationFreightList.length == 0">
+												<td align="center" colspan="3">ไม่มีข้อมูล</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+
+								<div class="panel panel-primary print-no-border break-page">
+									<div class="panel-heading" style="border-top-left-radius:0px;padding:10px">
+										<h3 style="color:#FFF">ค่าใช้จ่าย</h3>
+									</div>
+									<div class="panel-body">
+										<table class="table">
+											<tr>
+												<th class="col-xs-4">ค่าใช้จ่าย</th>
+												<th class="col-xs-3 text-right">จำนวน</th>
+												<th class="col-xs-3 text-right">ราคา</th>
+											</tr>
+											<tr ng-repeat="cost in vehicleOperationCostList track by $index">
+												<td>{{cost.VehicleOperationCostDesc || '-'}}</td>
+												<td align="right">{{cost.VehicleOperationCostUnit | number:0}}</td>
+												<td align="right">{{cost.VehicleOperationCostPrice | number:2}}</td>
+											</tr>
+											<tr ng-if="vehicleOperationCostList.length == 0">
+												<td align="center" colspan="3">ไม่มีข้อมูล</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+
+								<div class="panel panel-primary print-no-border">
+									<div class="panel-heading" style="border-top-left-radius:0px;padding:10px">
+										<h3 style="color:#FFF">สรุปรายละเอียด</h3>
+									</div>
+									<div class="panel-body text-right">
+										รวมที่นั่งสุทธิ {{((SummaryReport.SalesSummaryReportList | total:'TotalSales') + (SummaryReport.SalesSummaryReportList | total:'OtherTotalSales'))-((SummaryReport.SalesSummaryReportList | total:'TotalReturn') + (SummaryReport.SalesSummaryReportList | total:'OtherTotalReturn')) | number}} ที่นั่ง : <strong>{{((SummaryReport.SalesSummaryReportList | total:'TotalPrice') - (SummaryReport.SalesSummaryReportList | total:'TotalReturnPrice'))+((SummaryReport.SalesSummaryReportList | total:'OtherTotalPrice') - (SummaryReport.SalesSummaryReportList | total:'OtherTotalReturnPrice')) | number:2}}</strong> บาท<br/>
+										ค่าใช้จ่าย : {{vehicleOperationCostList | total:'VehicleOperationCostPrice' | number:2}} บาท<br/>
+										ค่าระวาง : {{vehicleOperationFreightList | total:'VehicleOperationFreightPrice' | number:2}} บาท<br/>
+										หลังหักค่าใช้จ่ายเหลือ {{((SummaryReport.SalesSummaryReportList | total:'TotalSales') + (SummaryReport.SalesSummaryReportList | total:'OtherTotalSales'))-((SummaryReport.SalesSummaryReportList | total:'TotalReturn') + (SummaryReport.SalesSummaryReportList | total:'OtherTotalReturn')) | number}} ที่นั่ง ยอดรวม <strong>{{((SummaryReport.SalesSummaryReportList | total:'TotalPrice') - (SummaryReport.SalesSummaryReportList | total:'TotalReturnPrice'))+((SummaryReport.SalesSummaryReportList | total:'OtherTotalPrice') - (SummaryReport.SalesSummaryReportList | total:'OtherTotalReturnPrice')) - (vehicleOperationCostList | total:'VehicleOperationCostPrice') - (vehicleOperationFreightList | total:'VehicleOperationFreightPrice') | number:2}}</strong> บาท
+									</div>
+								</div>
+							</div>
+						</div>
+					</div> 
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane" ng-class="{'active' : globalVariable.IsPrintReportActive == 1}">
+        	<div class="panel panel-primary" style="border-radius:0px;border-top-right-radius:4px;">
+                <div class="panel-heading text-left" style="border-top-left-radius:0px;padding:10px">
+                    <h3 style="color:#FFF;font-size:30px;">
+                   		พิมพ์จุดขึ้นรถ
+                    </h3>
+                </div>
+                <div class="panel-body">
+                	<div class="col-md-12 no-padding margin-bottom-10">
+                		<label class="col-md-2 text-right">ขึ้นรถ : </label>
+                		<div class="col-md-8 no-padding-right">
+							<select class="form-control" ng-model="globalVariable.currentStopPointDeparturedReportChoose" ng-options="o.StopPointId as o.StopPointName_TH for o in RouteProviceList" ng-change="ReportForDeparturedEachStopPoint()">
+						</select>
+						</div>
+						<div class="col-md-2 no-padding-right">
+							<button class="btn btn-primary btn-block" ng-click="globalVariable.printDivDetail = 'printStopPointReport';printDiv()">พิมพ์</button>
+						</div>
+					</div>
+					<div class="col-md-12 no-padding margin-bottom-10" id="printStopPointReport">
+						<div style="min-width: 350px;margin:0 auto; width:85%">
+							<h2 class="text-center">AviaBooking</h2>
+							<h3 class="text-center">ใบรายงานที่นั่งแบบย่อตามจุดขึ้นรถ</h3>
+							<div class="col-md-12 no-padding margin-bottom-10">
+								<div class="col-md-12">
+									<label class="col-md-2 text-right">วันที่ :</label>
+									<span class="col-md-4">{{dateSearchValue | date:'dd MMMM yyyy'}}</span>
+									<label class="col-md-2 text-right">จุดขึ้น :</label>
+									<span class="col-md-4">
+										{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: globalVariable.currentStopPointDeparturedReportChoose } : 'StopPointId')].StopPointName_TH}}
+									</span>	
+								</div>
+								<div class="col-md-12">
+									<label class="col-md-2 text-right">เบอร์รถ :</label>
+									<span class="col-md-4">{{VehicleDetail.VehicleNumber || '-'}}</span>
+									<label class="col-md-2 text-right">เวลา :</label>
+									<span class="col-md-4">
+										{{RouteProviceList[(RouteProviceList | lswIndexOf: { StopPointId: globalVariable.currentStopPointDeparturedReportChoose } : 'StopPointId')].Time | date:'HH:mm น.'}}
+									</span>
+								</div>
+								<div class="col-md-12">
+									<label class="col-md-2 text-right">สาย :</label>
+									<span class="col-md-10">{{(VehicleRoute[(VehicleRoute | lswIndexOf: { RouteId: globalVariable.currentVehicleOpreDetail.RouteId } : 'RouteId')].RouteMainNumber) + '-' + (VehicleRoute[(VehicleRoute | lswIndexOf: { RouteId: globalVariable.currentVehicleOpreDetail.RouteId } : 'RouteId')].RouteNumber) + ' ' + (VehicleRoute[(VehicleRoute | lswIndexOf: { RouteId: globalVariable.currentVehicleOpreDetail.RouteId } : 'RouteId')].RouteName_TH)}}</span>
+								</div>
+								<div class="col-md-12">
+									<label class="col-md-2 text-right">พขร 1 :</label>
+									<span class="col-md-4">{{vehicleRouteTripDetail.VehicleOperationDrive_1 || '-'}}</span>
+									<label class="col-md-2 text-right">พขร 2 :</label>
+									<span class="col-md-4">{{vehicleRouteTripDetail.VehicleOperationDrive_2 || '-'}}</span>
+								</div>
+							</div>
+							<div class="col-md-12 margin-bottom-10">
+								<table class="table">
+									<tr>
+										<th width="10%">ที่นั่ง</th>
+										<th width="15%">เลขตั๋ว</th>
+										<th width="30%">จุดลง</th>
+										<th width="15%" class="text-right">ยอดเงิน</th>
+										<th width="30%">ผู้ขาย</th>
+									</tr>
+									<tr ng-repeat="depart in DeparturedEachStopPoint">
+										<td>{{depart.VehicleSeatName}}</td>
+										<td>{{depart.ReferenceCode}}</td>
+										<td>{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: depart.StopPointEndId } : 'StopPointId')].StopPointName_TH}}</td>
+										<td align="right">{{depart.TotalPrice | number:2}}</td>
+										<td>{{depart.SellerName}}</td>
+									</tr>
+									<tr ng-if="DeparturedEachStopPoint.length > 0">
+										<td colspan="3"><strong>ผู้โดยสาร :</strong> {{DeparturedEachStopPoint.length}}</td>
+										<td colspan="2" align="right"><strong>ยอดเงิน :</strong> {{(DeparturedEachStopPoint | total:'TotalPrice') | number:2}}</td>
+									</tr>
+									<tr ng-if="DeparturedEachStopPoint.length == 0">
+										<td align="center" colspan="5">ไม่มีข้อมูล</td>
+									</tr>
+								</table>
+							</div>
+							<div class="col-md-12 margin-bottom-10">
+								<table class="table table-bordered">
+									<tr>
+										<td align="right" width="25%"><strong>ผู้รับผิดชอบ:</strong></td>
+										<td width="35%">{{SellingName}}</td>
+										<td align="right" width="20%"><strong>ตำแหน่ง:</strong></td>
+										<td width="20%"></td>
+									</tr>
+									<tr>
+										<td align="right"><strong>ลายเซ็น:</strong></td>
+										<td colspan="3"></td>
+									</tr>
+								</table>
+							</div>
+							<div class="col-md-12 margin-bottom-10 text-center">
+								<span class="printOnly">{{dateTimeNow | date:'dd/MM/yyyy HH:mm น.'}}</span>
+							</div>
+						</div>
+					</div>
+                </div>
+			</div>
+        </div>
+
+        <div class="tab-pane" ng-class="{'active' : globalVariable.IsPrintReportActive == 2}">
+        	<div class="panel panel-primary" style="border-radius:0px;border-top-right-radius:4px;">
+                <div class="panel-heading text-left" style="border-top-left-radius:0px;padding:10px">
+                    <h3 style="color:#FFF;font-size:30px;">
+                   		รายงาน
+                    </h3>
+                </div>
+                <div class="panel-body">
+                	<div class="col-md-12 no-padding margin-bottom-10">
+                		<label class="col-md-2 text-right">ประเภทรายงาน : </label>
+                		<div class="col-md-8 no-padding-right">
+							<select class="form-control" ng-model="globalVariable.reportSummaryShowType" ng-change="changedShowingReportType()">
+								<option value="ReportBookingSimple">รายงานที่นั่งแบบย่อ</option>
+								<option value="ReportBookedSimple">รายงานที่นั่งแบบย่อ สุทธิ</option>
+								<option value="ReportBookedSimpleShowPhone">รายงานที่นั่งแบบย่อ แสดงเบอร์โทร</option>
+								<option value="ReportSold">รายงานตั๋วแบบย่อ (ขายล่วงหน้า)</option>
+								<option value="ReportSameDay">รายงานตั๋วแบบย่อ (ขายวันเดินทาง)</option>
+								<option value="Passenger">รายงานสรุปจำนวนผู้โดยสาร</option>
+								<option value="Expense">รายงานค่าใช้จ่าย</option>
+								<option value="Parcel">รายงานค่าระวาง</option>
+							</select>
+						</div>
+						<div class="col-md-2 no-padding-right">
+							<button class="btn btn-primary btn-block" ng-click="globalVariable.printDivDetail = 'printReports';printDiv()">พิมพ์</button>
+						</div>
+					</div>
+					<div class="col-md-12 no-padding margin-bottom-10" id="printReports">
+							<div style="min-width: 350px;margin:0 auto; width:60%">
+								<h2 class="text-center">AviaBooking</h2>
+								<h3 class="text-center">
+									<span ng-if="globalVariable.reportSummaryShowType == 'ReportBookingSimple'">ใบรายงานที่นั่งแบบย่อ</span>
+									<span ng-if="globalVariable.reportSummaryShowType == 'ReportBookedSimple'">ใบรายงานที่นั่งแบบย่อ สุทธิ</span>
+									<span ng-if="globalVariable.reportSummaryShowType == 'ReportBookedSimpleShowPhone'">ใบรายงานที่นั่งแบบย่อ แสดงเบอร์โทร</span>
+									<span ng-if="globalVariable.reportSummaryShowType == 'ReportSold'">ใบรายงานตั๋วแบบย่อ (ขายล่วงหน้า)</span>
+									<span ng-if="globalVariable.reportSummaryShowType == 'ReportSameDay'">ใบรายงานตั๋วแบบย่อ (ขายวันเดินทาง)</span>
+									<span ng-if="globalVariable.reportSummaryShowType == 'Passenger'">ใบรายงานสรุปจำนวนผู้โดยสาร</span>
+									<span ng-if="globalVariable.reportSummaryShowType == 'Expense'">ใบรายงานค่าใช้จ่าย</span>
+									<span ng-if="globalVariable.reportSummaryShowType == 'Parcel'">ใบรายงานค่าระวาง</span>
+								</h3>
+								<div class="col-md-12 no-padding margin-bottom-10">
+									<div class="col-md-12">
+										<label class="col-md-2 text-right">วันที่ :</label>
+										<span class="col-md-4">{{dateSearchValue | date:'dd MMMM yyyy'}}</span>
+										<label class="col-md-2 text-right">ต้นทาง :</label>
+										<span class="col-md-4">
+											{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: globalVariable.startStopPointDeparturedReport } : 'StopPointId')].StopPointName_TH}}
+										</span>	
+									</div>
+									<div class="col-md-12">
+										<label class="col-md-2 text-right">เบอร์รถ :</label>
+										<span class="col-md-4">{{VehicleDetail.VehicleNumber || '-'}}</span>
+										<label class="col-md-2 text-right">เวลา :</label>
+										<span class="col-md-4">{{globalVariable.currentVehicleOpreDetail.VehicleOperationDate | jsonDate:'HH:mm น.'}}</span>
+									</div>
+									<div class="col-md-12">
+										<label class="col-md-2 text-right">สาย :</label>
+										<span class="col-md-10">{{(VehicleRoute[(VehicleRoute | lswIndexOf: { RouteId: globalVariable.currentVehicleOpreDetail.RouteId } : 'RouteId')].RouteMainNumber) + '-' + (VehicleRoute[(VehicleRoute | lswIndexOf: { RouteId: globalVariable.currentVehicleOpreDetail.RouteId } : 'RouteId')].RouteNumber) + ' ' + (VehicleRoute[(VehicleRoute | lswIndexOf: { RouteId: globalVariable.currentVehicleOpreDetail.RouteId } : 'RouteId')].RouteName_TH)}}</span>
+									</div>
+									<div class="col-md-12">
+										<label class="col-md-2 text-right">พขร 1 :</label>
+										<span class="col-md-4">{{vehicleRouteTripDetail.VehicleOperationDrive_1 || '-'}}</span>
+										<label class="col-md-2 text-right">พขร 2 :</label>
+										<span class="col-md-4">{{vehicleRouteTripDetail.VehicleOperationDrive_2 || '-'}}</span>
+									</div>
+								</div>
+								<div class="col-md-12 margin-bottom-10">
+									<div ng-if="globalVariable.reportSummaryShowType == 'ReportBookingSimple' || globalVariable.reportSummaryShowType == 'ReportBookedSimple'">
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+													<th width="20%">ที่นั่ง</th>
+													<th width="25%">เลขตั๋ว</th>
+													<th width="30%">จุดลง</th>
+													<th width="25%" class="text-right">ราคา</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="bookingSimple in ReportBookingSimple">
+													<td>{{bookingSimple.VehicleSeatName}}</td>
+													<td>{{bookingSimple.ReferenceCode}}</td>
+													<td>{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: bookingSimple.StopPointEndId } : 'StopPointId')].StopPointName_TH}}</td>
+													<td align="right">{{bookingSimple.TicketPrice - bookingSimple.DiscountPrice | number:2}}</td>
+												</tr>
+											</tbody>
+											<tfoot>
+												<tr>
+													<td colspan="3" align="right">รวม</td>
+													<td align="right"><strong>{{(ReportBookingSimple | total:'TicketPrice') - (ReportBookingSimple | total:'DiscountPrice') | number:2}}</strong></td>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+									<div ng-if="globalVariable.reportSummaryShowType == 'ReportBookedSimpleShowPhone'">
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+													<th>ที่นั่ง</th>
+													<th>เบอร์โทร</th>
+													<th>จุดลง</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="bookingSimplePhone in ReportBookedSimpleShowPhone">
+													<td>{{bookingSimplePhone.VehicleSeatName}}</td>
+													<td>{{bookingSimplePhone.Passenger.PassengerPhone}}</td>
+													<td>{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: bookingSimplePhone.StopPointEndId } : 'StopPointId')].StopPointName_TH}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div ng-if="globalVariable.reportSummaryShowType == 'ReportSold'">
+										<table class="table table-bordered">
+											<tbody>
+												<tr ng-repeat="bookingSold in ReportSoldList">
+													<td>{{$index + 1}}</td>
+													<td>{{bookingSold.VehicleSeatName + '-' + bookingSold.ReferenceCode}} {{showGender(bookingSold.Gender)}} {{bookingSold.TicketStatus == 1?'[ตั๋วจอง]':''}}<br/>
+													คุณ {{bookingSold.Passenger.PassengerFirstName + ' ' + bookingSold.Passenger.PassengerLastName}} | {{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: bookingSold.StopPointStartId } : 'StopPointId')].StopPointName_TH}} - {{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: bookingSold.StopPointEndId } : 'StopPointId')].StopPointName_TH}}</td>
+													<td align="right">
+														{{bookingSold.TicketPrice - bookingSold.DiscountPrice | number:2}}
+													</td>
+												</tr>
+											</tbody>
+											<tfoot>
+												<td colspan="2">
+													ผู้โดยสาร:  {{ReportSoldList | totalFilterCount:'TicketStatus':2}} คน
+												</td>
+												<td colspan="2" align="right">
+													ยอดเงิน: {{(ReportSoldList | totalFilterExcept:'TicketPrice':'TicketStatus':1) - (ReportSoldList | totalFilterExcept:'DiscountPrice':'TicketStatus':1) | number:2}} บาท
+												</td>
+											</tfoot>
+										</table>
+									</div>
+									<div ng-if="globalVariable.reportSummaryShowType == 'ReportSameDay'">
+										<table class="table table-bordered">
+											<tbody>
+												<tr ng-repeat="bookingSameDay in ReportSameDayList">
+													<td>{{$index + 1}}</td>
+													<td>{{bookingSameDay.VehicleSeatName + '-' + bookingSameDay.ReferenceCode}} {{showGender(bookingSameDay.Gender)}} {{bookingSameDay.Gender==0?'ผู้ชาย':'ผู้หญิง'}}<br/>
+													คุณ {{bookingSameDay.Passenger.PassengerFirstName + ' ' + bookingSameDay.Passenger.PassengerLastName}} | {{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: bookingSameDay.StopPointStartId } : 'StopPointId')].StopPointName_TH}} - {{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: bookingSameDay.StopPointEndId } : 'StopPointId')].StopPointName_TH}}</td>
+													<td align="right">
+														{{bookingSameDay.TicketPrice - bookingSameDay.DiscountPrice | number:2}}
+													</td>
+												</tr>
+											</tbody>
+											<tfoot>
+												<td colspan="2">
+													ผู้โดยสาร:  {{ReportSameDayList | totalFilterCount:'TicketStatus':2}} คน
+												</td>
+												<td colspan="2" align="right">
+													ยอดเงิน: {{(ReportSameDayList | totalFilterExcept:'TicketPrice':'TicketStatus':1) - (ReportSameDayList | totalFilterExcept:'DiscountPrice':'TicketStatus':1) | number:2}} บาท
+												</td>
+											</tfoot>
+										</table>
+									</div>
+									<div ng-if="globalVariable.reportSummaryShowType == 'Passenger'">
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+													<th class="text-center">ชื่อจุดรับ - ส่ง</th>
+													<th class="text-center">ขึ้น(คน)</th>
+													<th class="text-center">ลง(คน)</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="passenger in PassengerList">
+													<td>{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: passenger.StopPointId } : 'StopPointId')].StopPointName_TH}}</td>
+													<td align="center">{{passenger.GetIn}}</td>
+													<td align="center">{{passenger.GetOut}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div ng-if="globalVariable.reportSummaryShowType == 'Expense'">
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+													<th>ค่าใช้จ่าย</th>
+													<th calss="text-right">จำนวน</th>
+													<th class="text-right">ราคา</th>
+													<th>เคาน์เตอร์</th>
+													<th>พนักงาน</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="expense in Expenseist">
+													<td>{{expense.VehicleOperationCostDesc}}</td>
+													<td align="right">{{expense.VehicleOperationCostUnit}}</td>
+													<td align="right">{{expense.VehicleOperationCostPrice | number:2}}</td>
+													<td>{{(stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: expense.StopPointId } : 'StopPointId')].StopPointName_TH) || '-'}}</td>
+													<td>{{expense.CreatedBy || '-'}}</td>
+												</tr>
+											</tbody>
+											<tfoot>
+												<tr>
+													<td colspan="2" align="right">ค่าใช้จ่ายรวม</td>
+													<td align="right">
+														{{Expenseist | total:'VehicleOperationCostPrice' | number:2}}
+													</td>
+													<td colspan="2"></td>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+									<div ng-if="globalVariable.reportSummaryShowType == 'Parcel'">
+										<table class="table table-bordered">
+											<thead>
+												<tr>
+													<th>ระวาง</th>
+													<th class="text-right">จำนวน</th>
+													<th class="text-right">ราคา</th>
+													<th>เคาน์เตอร์</th>
+													<th>พนักงาน</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="parcel in ParcelList">
+													<td>{{parcel.VehicleOperationFreightDesc}}</td>
+													<td align="right">{{parcel.VehicleOperationFreightUnit}}</td>
+													<td align="right">{{parcel.VehicleOperationFreightPrice | number:2}}</td>
+													<td>{{(stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: parcel.StopPointId } : 'StopPointId')].StopPointName_TH) || '-'}}</td>
+													<td>{{parcel.CreatedBy || '-'}}</td>
+												</tr>
+											</tbody>
+											<tfoot>
+												<tr>
+													<td colspan="2" align="right">ค่าใช้จ่ายรวม</td>
+													<td align="right">
+														{{ParcelList | total:'VehicleOperationFreightPrice' | number:2}}
+													</td>
+													<td colspan="2"></td>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+								</div>
+								<div class="col-md-12 margin-bottom-10" ng-if="globalVariable.reportSummaryShowType == 'ReportSold' || globalVariable.reportSummaryShowType == 'ReportSameDay'">
+									<table class="table table-bordered">
+										<tr>
+											<td align="right" width="25%"><strong>ผู้รับผิดชอบ:</strong></td>
+											<td width="35%">{{SellingName}}</td>
+											<td align="right" width="20%"><strong>ตำแหน่ง:</strong></td>
+											<td width="20%"></td>
+										</tr>
+										<tr>
+											<td align="right"><strong>ลายเซ็น:</strong></td>
+											<td colspan="3"></td>
+										</tr>
+									</table>
+								</div>
+								<div class="col-md-12 margin-bottom-10 text-center">
+									<span class="printOnly">{{dateTimeNow | date:'dd/MM/yyyy HH:mm น.'}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+                </div>
+			</div>
+        </div>
+    </div>
+</div>

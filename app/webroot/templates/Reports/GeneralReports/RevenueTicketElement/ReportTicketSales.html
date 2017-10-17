@@ -1,0 +1,62 @@
+<table id="ReportForTicketSalesDetail" width="100%" ng-if="reportType.RevenueTicket == 'ReportForTicketSalesDetail' && conditionReport.ReportType == 'ReportTicketSales' && globalVariable.isShowReport">
+	<tr>
+        <th class="text-center">
+            รายงานแสดงการขายบัตรโดยสาร จำแนกตามวันทำรายการ<br/>
+            ระหว่างวันที่ {{conditionReport.DateStart | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} {{conditionReport.TimeStart + ' น.'}} - ถึง {{conditionReport.DateEnd | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} {{conditionReport.TimeEnd + ' น.'}}
+        </th>
+    </tr>
+    <tr>
+    	<td>
+    		<div class="col-md-12 no-padding reportZoneLarge margin-top-20">
+	    		<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+	    			<tr>
+	    				<th class="text-center">ที่</th>
+	    				<th>รหัสจอง</th>
+	    				<th>วันเดินทาง</th>
+	    				<th>เลขรถ</th>
+	    				<th>มาตรฐานรถ</th>
+	    				<th>ต้นทาง</th>
+	    				<th>ปลายทาง</th>
+	    				<th>ที่นั่ง</th>
+	    				<th class="text-right">ราคา</th>
+	    				<th class="text-right">ยอดคืน</th>
+	    				<th class="text-right">ค่า<br/>ธรรมเนียม</th>
+	    				<th class="text-right">ส่วนลด</th>
+	    				<th class="text-right">ราคา<br/>สุทธิ</th>
+	    				<th>ผู้โดยสาร</th>
+	    				<th>โทร</th>
+	    				<th>วันทำ<br/>รายการ</th>
+	    				<th>สถานะ</th>
+	    				<th>ผู้คืน</th>
+	    				<th>ผู้จอง</th>
+	    				<th>ผู้รับเงิน</th>
+	    				<th>เคาเตอร์</th>
+	    			</tr>
+	    			<tr ng-repeat="item in dataReport.TicketSalesList">
+	    				<td align="center">{{$index+1}}</td>
+	    				<td>{{item.ReferenceCode}}</td>
+	    				<td>{{item.VehicleOperationDate | jsonDate:'dd/MM/yyyy HH:mm'}}</td>
+	    				<td>{{item.VehicleNumber}}</td>
+	    				<td>{{item.VehicleSeatPlanName}}</td>
+	    				<td>{{item.StopPointStart}}</td>
+	    				<td>{{item.StopPointEnd}}</td>
+	    				<td>{{item.VehicleSeatName}}</td>
+	    				<td align="right">{{item.TicketPrice | number:2}}</td>
+	    				<td align="right">{{item.TotalReturnPrice | number:2}}</td>
+	    				<td align="right">{{item.TicketReturnFee | number:2}}</td>
+	    				<td align="right">{{item.DiscountPrice | number:2}}</td>
+	    				<td align="right">{{item.FinalTotalPrice + item.TicketReturnFee | number:2}}</td>
+	    				<td>{{item.PassengerFirstName + ' ' + item.PassengerLastName}}</td>
+	    				<td>{{item.PassengerPhone}}</td>
+	    				<td>{{item.UpdatedDate | jsonDate:'dd/MM/yyyy HH:mm'}}</td>
+	    				<td>{{item.TicketStatusMessage}}</td>
+	    				<td>{{item.ReturnedBy}}</td>
+	    				<td>{{item.CreatedBy}}</td>
+	    				<td>{{item.UpdatedBy}}</td>
+	    				<td>{{item.StopPointName_TH}}</td>
+	    			</tr>
+	    		</table>
+    		</div>
+    	</td>
+    </tr>
+</table>

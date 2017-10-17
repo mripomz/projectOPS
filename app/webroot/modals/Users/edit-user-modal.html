@@ -1,0 +1,123 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 650px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">{{modal.TitleModal}}</h3>
+            </div>
+            <div class="modal-body">
+            	<div class="alert alert-danger" ng-show="errorMsg.isError">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <div ng-bind-html="errorMsg.message | sanitize"></div>
+                </div>
+	            <form class="form-horizontal" role="form" name="editUser" novalidate>
+	            	<div class="form-group">
+	                	<label for="UserCodeNumber" class="col-sm-3 control-label">รหัสพนักงาน<span class="error" ng-show="editUser.UserCodeNumber.$error.required">*</span></label></label>
+	                	<div class="col-sm-9">
+	                		<input type="text" class="form-control" id="UserCodeNumber" ng-model="updateUser.UserCodeNumber" placeholder="รหัสพนักงาน" maxlength="50" name="UserCodeNumber" required></span>
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="email" class="col-sm-3 control-label">{{formDisplay.Email}}</label>
+	                	<div class="col-sm-9">
+	                		<label>{{updateUser.Email}}</label>
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="firstname" class="col-sm-3 control-label">{{formDisplay.FirstName}}<span class="error" ng-show="editUser.firstname.$error.required">*</span></label>
+	                	<div class="col-sm-9">
+	                		<input type="text" class="form-control" name="firstname" ng-model="updateUser.FirstName" placeholder="{{formDisplay.FirstName}}" required maxlength="500"  ng-pattern="/^([a-zA-Zก-๙]+\s)*[a-zA-Zก-๙]+$/">
+	                		<span class="error" ng-show="!editUser.firstname.$error.required && editUser.firstname.$error.pattern">ชื่อ ต้องเป็นภาษาไทยหรือภาษาอังกฤษเท่านั้น</span>
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="lastname" class="col-sm-3 control-label">{{formDisplay.LastName}}<span class="error" ng-show="editUser.LastName.$error.required">*</span></label></label>
+	                	<div class="col-sm-9">
+	                		<input type="text" class="form-control" id="LastName" ng-model="updateUser.LastName" placeholder="{{formDisplay.LastName}}" maxlength="100" ng-pattern="/^([a-zA-Zก-๙]+\s)*[a-zA-Zก-๙]+$/" name="LastName" required>
+	                		<span class="error" ng-show="!editUser.LastName.$error.required && editUser.LastName.$error.pattern">นามสกุล ต้องเป็นภาษาไทยหรือภาษาอังกฤษเท่านั้น</span>
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="address" class="col-sm-3 control-label">{{formDisplay.Address}}</label>
+	                	<div class="col-sm-9">
+	                		<input type="text" class="form-control" id="address" ng-model="updateUser.Address" placeholder="{{formDisplay.Address}}">
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="City" class="col-sm-3 control-label">{{formDisplay.City}}</label>
+	                	<div class="col-sm-9">
+	                		<input type="text" class="form-control" id="City" ng-model="updateUser.City" placeholder="{{formDisplay.City}}" maxlength="200">
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="State" class="col-sm-3 control-label">{{formDisplay.State}}</label>
+	                	<div class="col-sm-9">
+	                		<input type="text" class="form-control" id="State" ng-model="updateUser.State" placeholder="{{formDisplay.State}}" maxlength="200">
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="Province" class="col-sm-3 control-label">{{formDisplay.Province}}</label>
+	                	<div class="col-sm-9">
+	                		<select ng-options="o.ProvinceId as o.ProvinceName_TH for o in ProvicesList.Provinces" ng-model="updateUser.ProvinceId" class="form-control" name="Province">
+	                			<option value="">--{{formDisplay.Province}}--</option>
+	                		</select>
+	                	</div>
+
+	                </div>
+	                <div class="form-group">
+	                	<label for="Zip" class="col-sm-3 control-label">{{formDisplay.Zip}}</label>
+	                	<div class="col-sm-9">
+	                		<input type="text" class="form-control" id="Zip" ng-model="updateUser.Zip" placeholder="{{formDisplay.Zip}}" maxlength="20">
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="Phone" class="col-sm-3 control-label">{{formDisplay.Phone}}</label>
+	                	<div class="col-sm-9">
+	                		<input type="text" class="form-control" id="Phone" ng-model="updateUser.Phone" placeholder="{{formDisplay.Phone}}" maxlength="20">
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="IsActive" class="col-sm-3 control-label">{{formDisplay.IsActive}}</label>
+	                	<div class="col-sm-9">
+	                		<input type="checkbox" id="IsActive" ng-model="updateUser.IsActive">
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="roles" class="col-sm-3 control-label">{{formDisplay.Role}}<span class="error" ng-show="editUser.Role.$error.required">*</span></label>
+	                	<div class="col-sm-9">
+	                		<select ng-options="o.RoleName as o.RoleName for o in rolesList.RoleList" ng-model="updateUser.RoleName" class="form-control" required name="Role">
+	                			<option value="">--{{formDisplay.Role}}--</option>
+	                		</select>
+	                	</div>
+	                </div>
+	                <hr/>
+	                <div class="form-group">
+	                	<label for="currentPassword" class="col-sm-3 control-label">รหัสผ่านปัจจุบัน</label>
+	                	<div class="col-sm-9">
+	                		<input type="password" class="form-control" id="currentPassword" ng-model="updateUser.currentPassword" placeholder="รหัสผ่านปัจจุบัน" maxlength="25">
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="password" class="col-sm-3 control-label">{{formDisplay.newPassword}}</label>
+	                	<div class="col-sm-9">
+	                		<input type="password" class="form-control" id="password" ng-model="updateUser.Password" placeholder="{{formDisplay.newPassword}}" maxlength="25">
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="ConfirmPassword" class="col-sm-3 control-label">{{formDisplay.newConfirmPassword}}</label>
+	                	<div class="col-sm-9">
+	                		<input type="password" class="form-control" id="ConfirmPassword" ng-model="updateUser.ConfirmPassword" placeholder="{{formDisplay.newConfirmPassword}}" maxlength="25">
+	                	</div>
+	                </div>
+	                <div class="form-group margin-none">
+						<div class="col-sm-offset-3 col-sm-9">
+							<button ng-click="updateUserInfo()" class="btn btn-primary" scroll-on-click>{{formDisplay.Save}}</button>
+							<button ng-click="$hide()" class="btn btn-default">{{formDisplay.Close}}</button>
+						</div>
+					</div>
+	            </form>
+            </div>
+        </div>
+    </div>
+</div>

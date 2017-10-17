@@ -1,0 +1,46 @@
+<table id="ReportForRevenueFromTicketSales" width="100%" ng-if="reportType.RevenueTicket == 'ReportForRevenueFromTicketSales' && conditionReport.ReportType == 'RevenueByCounter' && globalVariable.isShowReport">
+	<tr>
+        <th class="text-center">
+            รายงานสรุปรายได้จำแนกตามเคาเตอร์<br/>
+            ระหว่างวันที่ {{conditionReport.DateStart | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} - ถึง {{conditionReport.DateEnd | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}}
+        </th>
+    </tr>
+    <tr>
+        <td>ผู้ออก : {{SellingName}} วันที่ : {{dateTimeNow | date:'dd/MM/yyyy เวลา HH:mm:ss น.'}}</td>
+    </tr>
+    <tr>
+    	<td>
+    		<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+                <tr>
+                    <th>พนักงาน</th>
+                    <th class="text-right">ยอดขายตั๋ว</th>
+                    <th class="text-right">ยอดคืนตั๋ว</th>
+                    <th class="text-right">ค่าปรับคืนตั๋ว</th>
+                    <th class="text-right">สุทธิ</th>
+                </tr>
+                <tbody ng-repeat="(key,value) in dataReport.CounterList | groupBy:'StopPointName_TH'">
+                    <tr class="active">
+                        <td colspan="5"><strong>{{key}}</strong></td>
+                    </tr>
+                    <tr ng-repeat="item in value">
+                        <td>{{item.FirstName + ' ' + item.LastName}}</td>
+                        <td align="right">{{item.TotalPrice | number:2}}</td>
+                        <td align="right">{{item.TotalReturnPrice | number:2}}</td>
+                        <td align="right">{{item.TicketReturnFee | number:2}}</td>
+                        <td align="right">{{(item.TotalPrice - item.TotalReturnPrice + item.TicketReturnFee) | number:2}}</td>
+                    </tr>    
+                </tbody>
+                <tr ng-if="dataReport.CounterList.length == 0">
+                    <td colspan="5" align="center">ไม่มีข้อมูล</td>
+                </tr>
+                <tr>
+                    <td align="right"><strong>รวม</strong></td>
+                    <td align="right">{{dataReport.CounterList | total:'TotalPrice' | number:2}}</td>
+                    <td align="right">{{dataReport.CounterList | total:'TotalReturnPrice' | number:2}}</td>
+                    <td align="right">{{dataReport.CounterList | total:'TicketReturnFee' | number:2}}</td>
+                    <td align="right">{{(dataReport.CounterList | total:'TotalPrice') - (dataReport.CounterList | total:'TotalReturnPrice') + (dataReport.CounterList | total:'TicketReturnFee')  | number:2}}</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>

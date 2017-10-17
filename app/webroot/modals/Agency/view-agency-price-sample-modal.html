@@ -1,0 +1,32 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 750px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">ตัวอย่างราคาบัตร</h3>
+            </div>
+            <div class="modal-body">
+            	<table class="table">
+            		<tr>
+            			<th class="col-md-1 cursor-point text-center">ลำดับ</th>
+                        <th class="col-md-3 cursor-point">ต้นทาง - ปลายทาง</th>
+                        <th class="col-md-2 cursor-point text-right">ราคาเดิม</th>
+                        <th class="col-md-2 cursor-point text-right">ราคาที่ปรับแล้ว</th>
+                        <th class="col-md-2 cursor-point text-right">ราคาบาทสูงสุด<br/>ที่สามารถตั้งได้</th>
+                        <th class="col-md-2 cursor-point text-right">ราคาเปอร์เซ็นต์สูงสุด<br/>ที่สามารถตั้งได้</th>
+            		</tr>
+            		<tr ng-repeat="item in agencyPriceSample">
+            			<td align="center">{{$index+1}}</td>
+            			<td>{{item.RouteName}}</td>
+            			<td align="right">{{calculatePrice(item.RouteAgencyPriceList[0],'current') | number:2}}</td>
+            			<td align="right"><span class="success">{{calculatePrice(item.RouteAgencyPriceList[0],'fixed') | number:2}}</span></td>
+            			<td align="right"><span class="danger">{{calculatePrice(item.RouteAgencyPriceList[0],'max') | number:2}}</span></td>
+                        <td align="right"><span class="danger">{{calculatePrice(item.RouteAgencyPriceList[0],'max-percent') | number:2}}</span></td>
+            		</tr>
+            	</table>
+            </div>
+             <div class="modal-footer" style="background-color:#fff !important; border-top:none; text-align: center !important">
+                <button class="btn btn-default" ng-click="$hide();">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>

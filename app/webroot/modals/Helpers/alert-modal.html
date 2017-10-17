@@ -1,0 +1,13 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">{{modal.title}}</h3>
+            </div>
+            <div class="modal-body" style="max-height:650px;overflow-y:auto;" ng-bind-html="modal.content | sanitize"></div>
+            <div class="modal-footer">
+            	<button type="button" class="btn btn-default" ng-click="$hide()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

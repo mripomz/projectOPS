@@ -1,0 +1,45 @@
+<table id="ReportForLoginLogOut" width="100%" ng-if="reportType.ProgressOperation == 'ReportForLoginLogOut' && globalVariable.isShowReport">
+	<tr>
+        <th class="text-center">
+            รายงานแสดงการดำเนินงานของพนักงาน<br/>
+            ประจำวันที่ {{conditionReport.DateStart | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}}
+        </th>
+    </tr>
+    <tr>
+        <td>ผู้ออก : {{SellingName}} วันที่ : {{dateTimeNow | date:'dd/MM/yyyy เวลา HH:mm:ss น.'}}</td>
+    </tr>
+    <tr>
+    	<td>
+    		<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+	        	<tr>
+	        		<th class="text-center" colspan="4">รายงานแสดงเวลาดำเนิน</th>
+	        	</tr>
+	        	<tr>
+	        		<th>จุดขาย</th>
+	        		<th>พนักงาน</th>
+	        		<th>เวลาล็อกอินครั้งแรก</th>
+	        		<th>IP ล็อกอินครั้งแรก</th>
+	        		<th>เวลาล็อกเอ้าครั้งสุดท้าย</th>
+	        		<th>IP ล็อกเอ้าครั้งสุดท้าย</th>
+	        		<th>สถานะล่าสุด</th>
+	        		
+	        	</tr>
+	        	<tr ng-repeat="item in dataReport.LoginLogOutList">
+	        		<td>{{item.StopPointName_TH}}</td>
+	        		<td>{{item.FirstName + ' ' + item.LastName}}</td>
+	        		<td>{{item.StartTime | jsonDate:'HH:mm:ss น.'}}</td>
+	        		<td>[{{item.StartIp}}]</td>
+	        		<td ng-if="item.EndIp!=''&&item.IsToday">{{ item.EndtTime | jsonDate:'HH:mm:ss น.' }}</td>
+	        		<td ng-if="item.EndIp!=''&&!item.IsToday">{{ item.EndtTime | jsonDate:'dd/MM/yyyy HH:mm:ss น.' }}</td>
+	        		<!-- {{item.IsToday ? item.EndtTime | jsonDate:'HH:mm:ss น.' : item.EndtTime | jsonDate:'dd/MM/yyyy HH:mm:ss น.'}} -->
+	        		<td ng-if="item.EndIp==''">-</td>
+	        		<td>{{item.EndIp==''?'-':'['+item.EndIp+']'}}</td>
+	        		<td>{{item.TokenStatus == 'LOGGED_IN'?'อยู่ในระบบ':'ล๊อกเอ้าออกจากระบบ'}}</td>
+	        	</tr>
+	        	<tr ng-if="dataReport.LoginLogOutList.length == 0">
+	        		<td class="text-center" colspan="4">ไม่มีข้อมูล</td>
+	        	</tr>
+	        </table>
+    	</td>
+    </tr>
+</table>

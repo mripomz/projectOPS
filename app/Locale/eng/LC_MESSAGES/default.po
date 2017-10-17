@@ -1,0 +1,2 @@
+msgid "TITLE_LOGIN"
+msgstr "Login | Avia Business Management"

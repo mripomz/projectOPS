@@ -1,0 +1,181 @@
+<div class="modal" tabindex="-1" role="dialog" style="display: block; overflow: auto;">
+    <div class="modal-dialog" style="width: 70%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">จัดการการผ่อนชำระรถยนต์</h3>
+            </div>
+            <div class="modal-body" style="min-height:450px;overflow-y:auto;">
+            	<div class="alert alert-danger" ng-show="errorMsg.isError">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <div ng-bind-html="errorMsg.message | sanitize"></div>
+                </div>
+				<form class="form-horizontal" role="form" name="vehicleLeasingDetailform" novalidate enctype="multipart/form-data" data-file-upload="optionsLeasing" ng-class="{'fileupload-processing': processing() || loadingFiles}">
+				    <div class="form-group">
+				    	<label for="VehicleLeasePrice" class="col-sm-2 control-label">ราคาซื้อ (บาท)<span class="error" ng-show="vehicleLeasingDetailform.VehicleLeasePrice.$error.required || vehicleLeasingDetailform.VehicleLeasePrice.$invalid">*</span></label>
+				    	<div class="col-sm-10">
+				    		<input autocomplete="off" type="text" class="form-control" name="VehicleLeasePrice" ng-model="vehicleLeasingDetail.VehicleLeasePrice" required placeholder="ราคาซื้อ" lsw-only-digits fcsa-number/>
+				    	</div>
+				    </div>
+				    <div class="form-group">
+				    	<label for="VehicleLeaseDateOfPurchase" class="col-sm-2 control-label">วันทำสัญญาซื้อขาย<span class="error" ng-show="vehicleLeasingDetailform.VehicleLeaseDateOfPurchase.$error.required || vehicleLeasingDetailform.VehicleLeaseDateOfPurchase.$invalid">*</span></label>
+				    	<div class="col-sm-10">
+				    		<input autocomplete="off" type="text" class="form-control" name="VehicleLeaseDateOfPurchase" ng-model="vehicleLeasingDetail.VehicleLeaseDateOfPurchase" bs-datepicker data-date-type="string" data-model-date-format="MM/dd/yyyy" data-date-format="dd/MM/yyyy" autoclose="true" required placeholder="วันทำสัญญาซื้อขาย"/>
+				    	</div>
+				    </div>
+				    <div class="form-group">
+				    	<label for="VehicleLeaseDownPayment" class="col-sm-2 control-label">เงินดาวน์ (บาท)<span class="error" ng-show="vehicleLeasingDetailform.VehicleLeaseDownPayment.$error.required || vehicleLeasingDetailform.VehicleLeaseDownPayment.$invalid">*</span></label>
+				    	<div class="col-sm-10">
+				    		<input autocomplete="off" type="text" class="form-control" name="VehicleLeaseDownPayment" ng-model="vehicleLeasingDetail.VehicleLeaseDownPayment" required lsw-only-digits fcsa-number placeholder="กรุณากรอกเงินดาวน์"/>
+				    	</div>
+				    </div>
+				    <div class="form-group">
+				    	<label for="VehicleLeaseInterestRate" class="col-sm-2 control-label">อัตราดอกเบี้ย<span class="error" ng-show="vehicleLeasingDetailform.VehicleLeaseInterestRate.$error.required || vehicleLeasingDetailform.VehicleLeaseInterestRate.$invalid">*</span></label>
+				    	<div class="col-sm-10">
+				    		<input autocomplete="off" type="text" class="form-control" name="VehicleLeaseInterestRate" ng-model="vehicleLeasingDetail.VehicleLeaseInterestRate" required placeholder="กรุณากรอกอัตราดอกเบี้ย หน่วยเป็น %" lsw-only-digits fcsa-number/>
+				    	</div>
+				    </div>
+				    <div class="form-group">
+				    	<label for="VehicleLeaseCompany" class="col-sm-2 control-label">บริษัทลิสซิ่ง<span class="error" ng-show="vehicleLeasingDetailform.VehicleLeaseCompany.$error.required || vehicleLeasingDetailform.VehicleLeaseCompany.$invalid">*</span></label>
+				    	<div class="col-sm-10">
+				    		<input autocomplete="off" type="text" class="form-control" name="VehicleLeaseCompany" ng-model="vehicleLeasingDetail.VehicleLeaseCompany" required placeholder="บริษัทลิสซิ่ง"/>
+				    	</div>
+				    </div>
+				    <div class="form-group">
+				    	<label for="VehicleLeaseBuyerName" class="col-sm-2 control-label">ชื่อผู้ทำสัญญา<span class="error" ng-show="vehicleLeasingDetailform.VehicleLeaseBuyerName.$error.required || vehicleLeasingDetailform.VehicleLeaseBuyerName.$invalid">*</span></label>
+				    	<div class="col-sm-10">
+				    		<input autocomplete="off" type="text" class="form-control" name="VehicleLeaseBuyerName" ng-model="vehicleLeasingDetail.VehicleLeaseBuyerName" required placeholder="ชื่อผู้ทำสัญญา"/>
+				    	</div>
+				    </div>
+				    <div class="form-group">
+				    	<label for="VehicleLeaseAgreementNumber" class="col-sm-2 control-label">เลขที่สัญญา<span class="error" ng-show="vehicleLeasingDetailform.VehicleLeaseAgreementNumber.$error.required || vehicleLeasingDetailform.VehicleLeaseAgreementNumber.$invalid">*</span></label>
+				    	<div class="col-sm-10">
+				    		<input autocomplete="off" type="text" class="form-control" name="VehicleLeaseAgreementNumber" ng-model="vehicleLeasingDetail.VehicleLeaseAgreementNumber" required placeholder="เลขที่สัญญา"/>
+				    	</div>
+				    </div>
+				    <div class="form-group">
+				    	<label for="VehicleLeaseInstalmentDate" class="col-sm-2 control-label">วันที่ผ่อนชำระ<span class="error" ng-show="vehicleLeasingDetailform.VehicleLeaseInstalmentDate.$error.required || vehicleLeasingDetailform.VehicleLeaseInstalmentDate.$invalid">*</span></label>
+				    	<div class="col-sm-10">
+				    		<input autocomplete="off"  type="text" class="form-control" name="VehicleLeaseInstalmentDate" ng-model="vehicleLeasingDetail.VehicleLeaseInstalmentDate" bs-datepicker data-date-type="string" data-model-date-format="MM/dd/yyyy"  data-date-format="dd/MM/yyyy" autoclose="true" required placeholder="วันที่ผ่อนชำระ"/>
+				    	</div>
+				    </div>
+				    <div class="form-group">
+				    	<label for="VehicleLeaseNumberOfInstalment" class="col-sm-2 control-label">จำนวนการผ่อนชำระ<span class="error" ng-show="vehicleLeasingDetailform.VehicleLeaseNumberOfInstalment.$error.required || vehicleLeasingDetailform.VehicleLeaseNumberOfInstalment.$invalid">*</span></label>
+				    	<div class="col-sm-10">
+				    		<input autocomplete="off" type="number" min="1" max="99" class="form-control" name="VehicleLeaseNumberOfInstalment" ng-model="vehicleLeasingDetail.VehicleLeaseNumberOfInstalment" required placeholder="จำนวนการผ่อนชำระ (1 - 99)"/>
+				    	</div>
+				    </div>
+				    <div class="form-group">
+				    	<label for="VehicleLeaseInstalmentPayment" class="col-sm-2 control-label">เงินที่ผ่อนชำระในแต่ละงวด<span class="error" ng-show="vehicleLeasingDetailform.VehicleLeaseInstalmentPayment.$error.required || vehicleLeasingDetailform.VehicleLeaseInstalmentPayment.$invalid">*</span></label>
+				    	<div class="col-sm-10">
+				    		<input autocomplete="off" type="text" class="form-control" name="VehicleLeaseInstalmentPayment" ng-model="vehicleLeasingDetail.VehicleLeaseInstalmentPayment" required lsw-only-digits fcsa-number placeholder="เงินที่ผ่อนชำระในแต่ละงวด"/>
+				    	</div>
+				    </div>
+				    <div class="form-group">
+				    	<label for="IsActive" class="col-sm-2 control-label">สถานะ</label>
+				    	<div class="col-sm-10">
+				    		<input autocomplete="off"  type="checkbox" name="IsActive" ng-model="vehicleLeasingDetail.IsActive" placeholder="ระบุจำนวนเงินที่ใช้จ่าย"/>
+				    	</div>
+				    </div>
+		    		<div class="form-group">
+		    			<label class="col-sm-2 control-label" ng-show="vehicleLeasingDocument.FileList.length > 0">&nbsp;</label>
+				    	<div class="col-sm-10" ng-show="vehicleLeasingDocument.FileList.length > 0">
+				    		<table class="table table-striped files ng-cloak">
+				    			<tr>
+				    				<th width="100">เอกสาร</th>
+				    				<th class="text-left">ชื่อเอกสาร</th>
+				    				<th class="text-right"></th>
+				    			</tr>
+				    			<tr ng-repeat="doc in vehicleLeasingDocument.FileList">
+				    				<td>
+				    					<a ng-if="doc.ContentType == 'application/pdf'" ng-href="{{doc.FileUrl}}" target="_blank" class="thumbnail">
+		    								<img src="http://i.imgur.com/YAA62v6.png"/>
+		    							</a>
+
+		    							<a ng-if="doc.ContentType == 'image/jpeg' || doc.ContentType == 'image/png' || doc.ContentType == 'image/gif'"  ng-click="openLightboxModal(doc.FileUrl)" target="_blank" class="thumbnail thumbnail-show">
+				    						<img ng-src="{{doc.FileUrl}}">
+				    					</a>
+		    						</td>
+				    				<td>{{doc.FileName}}</td>
+				    				<td>
+		    							<a class="btn btn-danger btn-xs" message-en="Are you sure to delete this file?" message-th="ต้องการที่จะลบไฟล์นี้ออกจากระบบ ใช่หรือไม่?" lsw-confirm-modal="removeVehicleLeasingDoc(doc.VehicleLeaseId,doc.FileUploadId)">ลบ</a>
+				    				</td>
+				    			</tr>
+				    		</table>
+				    	</div>
+				    	<label class="col-sm-2 control-label">อัพโหลดไฟล์</label>
+				    	<div class="col-sm-10">
+				    		<label class="col-sm-12 control-label text-left" style="color:red;" ng-show="vehicleLeasingDetail.VehicleLeaseId == null || vehicleLeasingDetail.VehicleLeaseId == '' || vehicleLeasingDetail.VehicleLeaseId == '00000000-0000-0000-0000-000000000000'">หากท่านต้องการอัพโหลดไฟล์โปรดกดบันทึกก่อนและกดแก้ไขในภายหลัง</label>
+					        <table class="col-sm-10 table-striped files ng-cloak">
+					            <tr ng-repeat="file in queue" ng-class="{'processing': file.$processing()}">
+					                <td>
+					                    <p class="name" data-ng-switch data-on="!!file.url">
+					                        <span data-ng-switch-when="true" data-ng-switch data-on="!!file.thumbnailUrl">
+					                            <a data-ng-switch-when="true" ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}" data-gallery>{{file.name}}</a>
+					                            <a data-ng-switch-default ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}">{{file.name}}</a>
+					                        </span>
+					                        <span data-ng-switch-default>{{file.name}}</span>
+					                    </p>
+					                    <strong ng-show="file.error" class="error text-danger">{{file.error}}</strong>
+					                </td>
+					                <td>
+					                    <p class="size">{{file.size | formatFileSize}}</p>
+					                    <div class="progress progress-striped active fade" ng-class="{pending: 'in'}[file.$state()]" data-file-upload-progress="file.$progress()"><div class="progress-bar progress-bar-success" ng-style="{width: num + '%'}"></div></div>
+					                </td>
+					                <td>
+					                    <button type="button" class="btn btn-warning cancel" ng-click="file.$cancel()" ng-hide="!file.$cancel || file.$response().textStatus == 'success'">
+					                        <i class="glyphicon glyphicon-ban-circle"></i>
+					                        <span>ยกเลิก</span>
+					                    </button>
+					                    <button type="button" class="btn btn-danger destroy" ng-click="file.$destroy()" ng-hide="!file.$destroy()">
+					                        <i class="glyphicon glyphicon-trash"></i>
+					                        <span>ลบ</span>
+					                    </button>
+					                </td>
+					            </tr>
+					        </table>
+				    		<div class="col-sm-12 fileupload-buttonbar" ng-show="vehicleLeasingDetail.VehicleLeaseId != null && vehicleLeasingDetail.VehicleLeaseId != '' && vehicleLeasingDetail.VehicleLeaseId != '00000000-0000-0000-0000-000000000000'">
+					            <div class="col-sm-12">
+					                <!-- The fileinput-button span is used to style the file input field as button -->
+					                <div class="pull-left" style="margin-right:10px;">
+						                <span class="btn btn-success fileinput-button" ng-class="{disabled: disabled}">
+						                    <i class="glyphicon glyphicon-plus"></i>
+						                    <span>เพิ่มไฟล์</span>
+						                    <input id="fileupload" type="file" name="files[]" multiple ng-disabled="disabled">
+						                </span>
+					                </div>
+					                <div class="pull-left" style="margin-right:10px;" title="{{(!currentProcess.fileInQueue)?'โปรดเพิ่มไฟล์ก่อน':''}}">
+						                <button type="button" class="btn btn-primary start" ng-click="submit()" ng-disabled="!currentProcess.fileInQueue">
+						                    <i class="glyphicon glyphicon-upload"></i>
+						                    <span>อัพโหลดไฟล์</span>
+						                </button>
+					                </div>
+					                <div class="pull-left">
+						                <button type="button" class="btn btn-danger cancel" ng-click="cancel()">
+						                    <i class="glyphicon glyphicon-ban-circle"></i>
+						                    <span>ยกเลิก</span>
+						                </button>
+					                </div>
+					                <!-- The global file processing state -->
+					                <span class="fileupload-process"></span>
+					            </div>
+					            <!-- The global progress state -->
+					            <div class="col-lg-5 fade" ng-class="{in: active()}">
+					                <!-- The global progress bar -->
+					                <div class="progress progress-striped active" data-file-upload-progress="progress()"><div class="progress-bar progress-bar-success" ng-style="{width: num + '%'}"></div></div>
+					                <!-- The extended global progress state -->
+					                <div class="progress-extended">&nbsp;</div>
+					            </div>
+					        </div>
+				    	</div>
+				    </div>
+				    <div class="form-group margin-none text-center">
+						<button ng-click="updateVehicleLeasing()" class="btn btn-primary">บันทึก</button>
+						<button ng-click="$hide()" class="btn btn-default">ปิด</button>
+					</div>
+				</form>
+            </div>
+        </div>
+    </div>
+</div>

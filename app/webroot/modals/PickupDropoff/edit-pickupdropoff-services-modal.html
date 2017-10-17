@@ -1,0 +1,86 @@
+<div class="modal" tabindex="-1" role="dialog" style="display: block; overflow: auto;">
+    <div class="modal-dialog" style="width: 800px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">จัดการรถรับส่ง</h3>
+            </div>
+            <div class="modal-body" style="height:400px;overflow-y:auto;">
+            	<div class="col-md-12 no-padding">
+                    <div class="form-horizontal">
+                    	<div class="form-group">
+                            <label for="Telephone" class="col-sm-2 control-label">เวลารับส่ง :</label>
+                            <div class="col-sm-10">
+                                <div class="col-sm-6 no-padding-left">
+                                    <input type="text" name="dateStart" class="form-control" ng-model="PickupDropoffServiceDetail.TimeService" placeholder="วันที่เริ่มต้น" bs-datepicker data-date-type="date" data-date-format="dd/MM/yyyy" data-autoclose="true" data-placement="bottom" >
+                                </div>
+                                <div class="col-sm-6 no-padding">
+                            	   <input type="text" class="form-control" ng-model="PickupDropoffServiceDetail.TimeService" id="timeStart" placeholder="เวลา" data-time-type="date" data-placement="auto" data-minute-step="1" bs-timepicker data-autoclose="true" ng-change="changeDate()">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="LocationName" class="col-sm-2 control-label">จำนวนที่นั่ง :</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" ng-model="PickupDropoffServiceDetail.PickupDropOffServiceMaxLimit" placeholder="ระยะทาง" lsw-only-digits>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="LocationName" class="col-sm-2 control-label">ประเภท :</label>
+                            <div class="col-sm-10">
+                            	<input type="radio" ng-change="changeDate()"  ng-model="PickupDropoffServiceDetail.TypeOfService" data-ng-value="false"> บริการรับ
+                            	<input type="radio" ng-change="changeDate()" ng-model="PickupDropoffServiceDetail.TypeOfService" data-ng-value="true"> บริการส่ง
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="LocationName" class="col-sm-2 control-label">รถบริการ :</label>
+                            <div class="col-sm-10">
+                                <select 
+                                	ng-model="PickupDropoffServiceDetail.VehicleId" 
+                                	class="form-control" 
+                                	ng-options="o.VehicleId as (o.VehicleNumber || '-') for o in VehicleList">
+                                    <option value="">เลือกรถบริการ รับ - ส่ง</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="LocationName" class="col-sm-2 control-label">จุดหมายรับส่ง :</label>
+                            <div class="col-sm-10">
+                                <!-- <select 
+                                	ng-model="PickupDropoffServiceDetail.StopPointId" 
+                                	class="form-control" 
+                                	ng-options="o.StopPointId as (o.StopPointName_TH || '-') for o in StopPointList">
+                                    <option value="">เลือกจุดหมาย</option>
+                                </select> -->
+                                <input type="text" class="form-control" ng-model="PickupDropoffServiceDetail.StopPointId" data-limit="5" data-html="0" data-animation="am-flip-x" bs-options="o.StopPointId as (o.StopPointName_TH + ' ' + o.ProvinceName_TH) for o in StopPointList" placeholder="เลือกจุดหมายรับส่ง" bs-typeahead>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="LocationName" class="col-sm-2 control-label">เลือกเที่ยวรถ :</label>
+                            <div class="col-sm-10">
+
+                                <select ng-show = "VehicleOperationList.length > 0"
+                                    ng-model="PickupDropoffServiceDetail.VehicleOperationId" 
+                                    class="form-control" 
+                                    ng-options="v.VehicleOperationId as v.RouteName_TH + ' - ' + v.VehicleOperationDate for v in VehicleOperationList">
+                                    <option value="">เลือกบริการเที่ยวรถ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Telephone" class="col-sm-2 control-label">สถานะใช้งาน :</label>
+                            <div class="col-sm-10 margin-top-5">
+                                <input type="checkbox" ng-model="PickupDropoffServiceDetail.IsActived">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 text-center clearfix margin-top-20">
+                        <button class="btn btn-primary" message-en="Are you sure to save?" message-th="คุณต้องการบันทึก ใช่หรือไม่?" lsw-confirm-modal="savePickupDropoffService()">
+                            <i class="glyphicon glyphicon-floppy-disk"></i> บันทึก
+                        </button>
+                        <button class="btn btn-default" ng-click="$hide()">ปิด</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

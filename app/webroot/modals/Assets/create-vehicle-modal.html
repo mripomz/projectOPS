@@ -1,0 +1,58 @@
+<div class="modal" tabindex="-1" role="dialog" style="display: block; overflow: auto;">
+    <div class="modal-dialog" style="width: 800px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">เพิ่มรถ</h3>
+            </div>
+            <div class="modal-body" style="overflow-y:auto;">
+            	<div class="alert alert-danger" ng-show="errorMsg.isError">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <div ng-bind-html="errorMsg.message | sanitize"></div>
+                </div>
+	            <form class="form-horizontal" role="form" name="Vehicle" novalidate>
+                    <div class="form-group">
+                        <label for="ChassisNumber" class="col-sm-3 control-label">หมายเลขตัวถัง<span class="error" ng-show="Vehicle.ChassisNumber.$error.required || Vehicle.ChassisNumber.$invalid">*</span></label>
+                        <div class="col-sm-9">
+                            <input autocomplete="off"  type="text" class="form-control" name="ChassisNumber" ng-model="vehicleDetail.ChassisNumber" placeholder="โปรดระบุเลขตัวถัง" required/>
+                        </div>
+                    </div>
+	                <div class="form-group">
+	                	<label for="PlateNumber" class="col-sm-3 control-label">ทะเบียนรถ</label>
+	                	<div class="col-sm-9">
+	                		<input autocomplete="off"  type="text" class="form-control" name="PlateNumber" ng-model="vehicleDetail.PlateNumber" placeholder="โปรดระบุทะเบียนรถ" required>
+	                	</div>
+	                </div>
+                    <div class="form-group">
+                        <label for="VehicleNumber" class="col-sm-3 control-label">เบอร์รถ<span class="error" ng-show="Vehicle.VehicleNumber.$error.required || Vehicle.VehicleNumber.$invalid">*</span>
+                        </label>
+                        <div class="col-sm-9">
+                            <input autocomplete="off"  type="text" class="form-control" name="VehicleNumber" ng-model="vehicleDetail.VehicleNumber" placeholder="โปรดระบุเบอร์รถ" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="PlateProvince" class="col-sm-3 control-label">จังหวัด</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" ng-model="vehicleDetail.PlateProvince" ng-options="o.ProvinceId as o.ProvinceName_TH for o in ProvicesList.Provinces">
+                                <option value="">โปรดเลือกจังหวัดที่จดทะเบียน</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                <label for="VehicleSeatPlanName" class="col-sm-3 control-label">รถบริการรับส่งผดส.</label>
+                <div class="col-sm-9">
+                    <input type="checkbox" ng-model="vehicleDetail.IsServicePickupDropOff"/>
+                </div>
+            </div>
+	                <div class="form-group margin-none">
+						<div class="col-sm-offset-3 col-sm-9">
+							<button ng-click="saveVehicle()" class="btn btn-primary">บันทึก</button>
+							<button ng-click="$hide()" class="btn btn-default">ปิด</button>
+						</div>
+					</div>
+	            </form>
+            </div>
+        </div>
+    </div>
+</div>

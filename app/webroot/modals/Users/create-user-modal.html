@@ -1,0 +1,84 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 650px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">{{modal.TitleModal}}</h3>
+            </div>
+            <div class="modal-body">
+            	<div class="alert alert-danger" ng-show="errorMsg.isError">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <div ng-bind-html="errorMsg.message | sanitize"></div>
+                </div>
+	            <form class="form-horizontal" role="form" name="addUserForm" novalidate>
+	            	<div class="form-group">
+	                	<label for="usercodenumber" class="col-sm-3 control-label">รหัสพนักงาน<span class="error" ng-show="addUserForm.usercodenumber.$error.required || addUserForm.usercodenumber.$invalid">*</span></label>
+	                	<div class="col-sm-9">
+	                		<input autocomplete="off"  type="text" class="form-control" name="usercodenumber" ng-model="createUser.usercodenumber" placeholder="รหัสพนักงาน" required>
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="email" class="col-sm-3 control-label">{{formDisplay.Email}}<span class="error" ng-show="addUserForm.email.$error.required || addUserForm.email.$invalid">*</span></label>
+	                	<div class="col-sm-9">
+	                		<input autocomplete="off"  type="email" class="form-control" name="email" ng-model="createUser.email" placeholder="{{formDisplay.Email}}" required>
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="password" class="col-sm-3 control-label">{{formDisplay.Password}}<span class="error" ng-show="addUserForm.password.$error.required">*</span></label>
+	                	<div class="col-sm-9">
+	                		<input autocomplete="off"  type="password" class="form-control" name="password" ng-model="createUser.password" placeholder="{{formDisplay.Password}}" required maxlength="25">
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="ConfirmPassword" class="col-sm-3 control-label">{{formDisplay.ConfirmPassword}}</label>
+	                	<div class="col-sm-9">
+	                		<input type="password" class="form-control" id="ConfirmPassword" ng-model="createUser.ConfirmPassword" placeholder="{{formDisplay.ConfirmPassword}}" maxlength="25">
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="firstname" class="col-sm-3 control-label">{{formDisplay.FirstName}}
+	                		<span class="error" ng-show="addUserForm.firstname.$error.required">*</span>
+	                	</label>
+	                	<div class="col-sm-9">
+	                		<input autocomplete="off" type="text" class="form-control" name="firstname" ng-model="createUser.firstname" placeholder="{{formDisplay.FirstName}}" required maxlength="500" ng-pattern="/^([a-zA-Zก-๙]+\s)*[a-zA-Zก-๙]+$/">
+	                		<span class="error" ng-show="!addUserForm.firstname.$error.required && addUserForm.firstname.$error.pattern">ชื่อ ต้องเป็นภาษาไทยหรือภาษาอังกฤษเท่านั้น</span>
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="lastname" class="col-sm-3 control-label">{{formDisplay.LastName}}
+	                		<span class="error" ng-show="addUserForm.LastName.$error.required">*</span></label>
+	                	<div class="col-sm-9">
+	                		<input autocomplete="off" type="text" class="form-control" name="LastName" ng-model="createUser.lastname" placeholder="{{formDisplay.LastName}}" maxlength="100" ng-pattern="/^([a-zA-Zก-๙]+\s)*[a-zA-Zก-๙]+$/" required>
+	                		<span class="error" ng-show="!addUserForm.LastName.$error.required && addUserForm.LastName.$error.pattern">นามสกุล ต้องเป็นภาษาไทยหรือภาษาอังกฤษเท่านั้น</span>
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="roles" class="col-sm-3 control-label">{{formDisplay.Role}}
+	                		<span class="error" ng-show="addUserForm.role.$error.required">*</span></label>
+	                	<div class="col-sm-9">
+	                		<select ng-options="o.RoleName as o.RoleName for o in rolesList.RoleList" ng-model="createUser.rolename" class="form-control" required name="role">
+	                			<option value="">--{{formDisplay.Role}}--</option>
+	                		</select>
+	                	</div>
+	                </div>
+	                <div class="form-group" ng-if="createUser.rolename == 'Agency'">
+	                	<label for="roles" class="col-sm-3 control-label">เกรดเอเจนซี
+	                		<span class="error" ng-show="addUserForm.agency.$error.required">*</span></label>
+	                	<div class="col-sm-9">
+	                		<select ng-options="o.GradeId as o.GradeName for o in gradeList" ng-model="createUser.GradeId" class="form-control" required name="agency">
+	                			<option value="">--กรุณาเลือก--</option>
+	                		</select>
+	                	</div>
+	                </div>
+	                <div class="form-group margin-none">
+						<div class="col-sm-offset-3 col-sm-9">
+							<button ng-click="saveUser()" class="btn btn-primary">{{formDisplay.Save}}</button>
+							<button ng-click="$hide()" class="btn btn-default">{{formDisplay.Close}}</button>
+						</div>
+					</div>
+	            </form>
+            </div>
+        </div>
+    </div>
+</div>

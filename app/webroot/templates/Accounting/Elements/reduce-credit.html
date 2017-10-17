@@ -1,0 +1,31 @@
+<h5><strong>ลด/ชำระเครดิต</strong></h5><hr/>
+<div class="col-md-12">
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label for="CreditAmount" class="col-sm-4 text-right">จำนวนเครดิต : <span class="error" ng-show="reduceCredit.CreditAmount == '' || borrowCredit.CreditAmount == 0">*</span></label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" ng-model="reduceCredit.CreditAmount" name="CreditAmount" lsw-only-digits>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="CreditAmount" class="col-sm-4 text-right">ลด/ชำระจากเครดิต : </label>
+            <div class="col-sm-8">
+                <input type="radio" ng-model="reduceCredit.ReduceFromCreditType" name="ReduceFromCreditType" value="credit"> <span class="success">ลดเครดิต</span> <br/>
+                <input type="radio" ng-model="reduceCredit.ReduceFromCreditType" name="ReduceFromCreditType" value="borrow"> <span class="danger">ลดเครดิตที่ยืม</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="CreditNotes" class="col-sm-4 text-right">หมายเหตุ :  <span class="error" ng-show="reduceCredit.CreditNotes == ''">*</span></label>
+            <div class="col-sm-8">
+                <textarea class="form-control" ng-model="reduceCredit.CreditNotes" rows="3"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <button class="btn btn-primary btn-block" message-en="Are you sure to confirm?" message-th="ยืนยันการลดเครดิต ใช่หรือไม่?" lsw-confirm-modal="ReduceCredit()">
+                    <i class="fa fa-minus" aria-hidden="true"></i> ชำระเครดิต
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

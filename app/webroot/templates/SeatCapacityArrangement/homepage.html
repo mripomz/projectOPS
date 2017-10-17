@@ -1,0 +1,41 @@
+<div class="input-group pull-right" style="width: 200px; top: 2px;">
+    <div class="input-group-addon">
+        <i class="fa fa-search"></i>
+    </div>
+    <input type="search" placeholder="ค้นหา..." class="form-control input-sm" ng-model="lswFilterOptions.lswFilter">
+</div>
+<div class="input-group  pull-right" style="margin-right:2px;">
+		<button ng-click="filterOption()" class="btn input-sm" ng-class="{'btn-primary' : showAll}">แสดงทั้งหมด</button>
+	</div>
+	<div class="navbar-form navbar-left">
+	<div lsw-paginate="lswPaginateOptions" class="lsw-paginate-position" small="true" ng-model="VehicleSeatPlanList">
+	</div>    
+</div>
+	<div lsw-table="lswTableOptions" ng-model="VehicleSeatPlanList">
+    <script type="text/ng-template" id="theadTemplate.html">
+		<th class="col-md-2 cursor-point" ng-click="sort('standardList');">มาตรฐาน</th>
+		<th class="col-md-3 cursor-point" ng-click="sort('VehicleSeatPlanName');">ชื่อผัง</th>
+		<th class="col-md-1 cursor-point" ng-click="sort('SeatAmount');">จำนวนที่นั่ง</th>
+		<th class="col-md-1 cursor-point" ng-click="sort('FloorAmount');">จำนวนชั้น</th>
+		<th class="col-md-1 cursor-point" ng-click="sort('UpdatedDate');">วันที่อัพเดท</th>
+		<th class="col-md-3"></th>
+    </script>
+    <script type="text/ng-template" id="tbodyTemplate.html">
+    	<td>{{row.standardList || '-'}}</td>
+		<td>{{row.VehicleSeatPlanName || '-'}}</td>
+		<td>{{row.SeatAmount || '-'}}</td>
+		<td>{{row.FloorAmount || '-'}}</td>
+		<td>{{(row.UpdatedDate | jsonDate) || '-'}}</td>
+		<td align="right">
+			<button ng-show="row.IsCompleted == 1" class="btn btn-primary btn-xs" ng-disabled="!row.IsCompleted" ng-click="parent.viewSeatPlan(row.VehicleSeatPlanId);">
+				<i class="fa fa-eye"></i> รายละเอียด
+			</button>
+			<button ng-show="row.IsCompleted == 0" class="btn btn-warning btn-xs" ng-click="parent.editPlan(row.VehicleSeatPlanId,0);">
+				<i class="glyphicon glyphicon-pencil"></i> แก้ไข
+			</button>
+			<button class="btn btn-danger btn-xs" message-en="Are you sure to delete this vehicle?" message-th="ต้องการที่จะลบผังรถออกจากระบบ ใช่หรือไม่?" lsw-confirm-modal="parent.removedVehiclePlan(row.VehicleSeatPlanId)">
+				<i class="glyphicon glyphicon-trash"></i> ลบ
+			</button>
+		</td>
+    </script>
+</div>

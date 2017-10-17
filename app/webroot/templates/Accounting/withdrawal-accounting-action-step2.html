@@ -1,0 +1,136 @@
+<h4><strong>ยืนยันการถอนเงิน</strong></h4><hr/>
+<div class="col-md-6 col-md-offset-3">
+    <table class="table table-bordered">
+        <tr>
+            <td align="center" colspan="2">
+                <div class="col-md-12" style="background: {{AccountBankList[(AccountBankList | lswIndexOf: { AccountBankTypeId: WithdrawalCreditDetail.AgencyAccountBank.AccountBankTypeId } : 'AccountBankTypeId')].AccountBankTypeColor}};border-radius: 5px;">
+                    <span style="font-size:64px; color:#FFFFFF">
+                        <i class="bank bank-{{AccountBankList[(AccountBankList | lswIndexOf: { AccountBankTypeId: WithdrawalCreditDetail.AgencyAccountBank.AccountBankTypeId } : 'AccountBankTypeId')].AccountBankTypeLogo}}"></i>
+                    </span>
+                </div>
+                <div class="col-md-12">
+                    <strong style="font-size:36px;">{{AccountBankList[(AccountBankList | lswIndexOf: { AccountBankTypeId: WithdrawalCreditDetail.AgencyAccountBank.AccountBankTypeId } : 'AccountBankTypeId')].AccountBankTypeName}}</strong>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="col-md-5" align="right">
+                <strong>จำนวนเงินที่ต้องโอน : </strong>
+            </td>
+            <td>
+                <strong style="color:red;font-size:24px;">{{(WithdrawalCreditDetail.WithdrawalCreditAmount | number:2) || '-'}}</strong>
+            </td>
+        </tr>
+        <tr>
+            <td class="col-md-5" align="right">
+                <strong>เลขบัญชี : </strong>
+            </td>
+            <td>
+                <strong>
+                    {{WithdrawalCreditDetail.AgencyAccountBank.AccountBankNumber || '-'}}
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td class="col-md-5" align="right">
+                <strong>ชื่อบัญชี : </strong>
+            </td>
+            <td>
+                <strong>
+                    {{WithdrawalCreditDetail.AgencyAccountBank.AccountBankName || '-'}}
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td class="col-md-5" align="right">
+                <strong>ประเภทบัญชี : </strong>
+            </td>
+            <td>
+                <strong>
+                    {{WithdrawalCreditDetail.AgencyAccountBank.AccountType || '-'}}
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td class="col-md-5" align="right">
+                <strong>สาขา : </strong>
+            </td>
+            <td>
+                <strong>
+                    {{WithdrawalCreditDetail.AgencyAccountBank.AccountBankBranch || '-'}}
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td class="col-md-5" align="right">
+                <strong>หมายเหตุ : </strong>
+            </td>
+            <td>
+                {{WithdrawalCreditDetail.WithdrawalCreditNotes || '-'}}
+            </td>
+        </tr>
+        <tr>
+            <td class="col-md-5" align="right">
+                <strong>วัน เวลา ที่โอนเงิน : </strong>
+            </td>
+            <td>
+                <div class="col-sm-8 no-padding">
+                    <div class="input-group">
+                        <input type="text no-padding" class="form-control" name="WithdrawalTransferDate" id="WithdrawalTransferDate" placeholder="เลือกวันที่" ng-model="WithdrawalCreditDetail.WithdrawalTransferDate" bs-datepicker data-model-date-format="MM/dd/yyyy" data-placement="top" data-date-format="dd/MM/yyyy" autoclose="true" required>
+                        <label style="background-color: #eb9316;border-color: #eb9316;" for="WithdrawalTransferDate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+                    </div>
+                </div>
+                <div class="col-sm-4 no-padding-right
+                ">
+                    <div class="input-group">
+                        <input type="text" ng-model="WithdrawalCreditDetail.WithdrawalTransferDate" id="timeStart" data-placement="top" class="form-control" placeholder="เวลา" data-time-format="HH:mm" data-minute-step="1" bs-timepicker required data-autoclose="true">
+                        <label style="background-color: #eb9316;border-color: #eb9316;" for="WithdrawalTransferDateTime" class="input-group-addon"><i class="fa fa-clock-o" aria-hidden="true"></i></label>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="col-md-5" align="right">
+                <strong>หลักฐานการโอนเงิน : </strong>
+            </td>
+            <td>
+                <button class="btn btn-warning btn-lg btn-block" ng-click="uploadTransferPaymentProof()" ng-if="WithdrawalCreditDetail.WithdrawalCreditFileUploadId == null || WithdrawalCreditDetail.WithdrawalCreditFileUploadId == '00000000-0000-0000-0000-000000000000'"><i class="fa fa-cloud-upload" aria-hidden="true"></i> อัพโหลดหลักฐาน</button>
+                <div class="col-sm-12 no-padding" ng-show="!!WithdrawalCreditDetail.WithdrawalCreditFileUploadUrl">
+                    <table class="table table-striped files ng-cloak">
+                        <tr>
+                            <th class="col-xs-3">หลักฐาน</th>
+                            <th class="col-xs-6">ชื่อไฟล์</th>
+                            <th class="col-xs-5 text-right"></th>
+                        </tr>
+                        <tr>
+                            <td class="col-xs-3">
+                                <a ng-if="WithdrawalCreditDetail.WithdrawalCreditContentType == 'image/jpeg' || WithdrawalCreditDetail.WithdrawalCreditContentType == 'image/png' || WithdrawalCreditDetail.WithdrawalCreditContentType == 'image/gif'"  ng-click="openLightboxModal(WithdrawalCreditDetail.WithdrawalCreditFileUploadUrl)" target="_blank" class="thumbnail thumbnail-show">
+                                    <img ng-src="{{WithdrawalCreditDetail.WithdrawalCreditFileUploadUrl}}">
+                                </a>
+                            </td>
+                            <td class="col-xs-6">{{WithdrawalCreditDetail.WithdrawalCreditFileName}}</td>
+                            <td class="col-xs-5 text-right">
+                                <a class="btn btn-danger btn-xs" message-en="Are you sure to delete this image?" message-th="ต้องการที่จะลบโลโก้นี้ ใช่หรือไม่?" lsw-confirm-modal="removeTransferPaymentProof()">ลบ</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <div class="col-md-12 no-padding" ng-if="WithdrawalCreditDetail.WithdrawalCreditStatus == 2">
+                    <button class="btn btn-success btn-block btn-lg" ng-disabled="WithdrawalCreditDetail.WithdrawalCreditFileUploadId == null || WithdrawalCreditDetail.WithdrawalCreditFileUploadId == '00000000-0000-0000-0000-000000000000' || WithdrawalCreditDetail.WithdrawalTransferDate == '' || WithdrawalCreditDetail.WithdrawalTransferDate == null" message-en="Are you sure to confirm this inform payment?" message-th="ยืนยันการถอนเงินเสร็จสิ้น ใช่หรือไม่?" lsw-confirm-modal="confirmUploadProofTransfer()"><i class="fa fa-check" aria-hidden="true"></i> เสร็จสิ้น</button>
+                </div>
+                <div class="col-md-12 no-padding" ng-if="WithdrawalCreditDetail.WithdrawalCreditStatus == 4">
+                    <button class="btn btn-success btn-block btn-lg"><i class="fa fa-check" aria-hidden="true"></i> เสร็จสิ้น</button>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button class="btn btn-primary btn-block btn-lg" ng-click="backToWithdrawalList(WithdrawalCreditDetail.InformMoneyTransferId)">กลับไปหน้ารายการ</button>
+            </td>
+        </tr>
+    </table>
+</div>

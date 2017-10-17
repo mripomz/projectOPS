@@ -1,0 +1,40 @@
+<table id="ReportForVehicleDetail" width="100%" ng-if="reportType.ProgressOperation == 'ReportForVehicleDetail' && globalVariable.isShowReport">
+	<tr>
+        <th class="text-center">
+            รายงานแสดงรายชื่อพนักงานตามเที่ยวรถ<br/>
+            ประจำวันที่ {{conditionReport.DateStart | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}}
+        </th>
+    </tr>
+    <tr>
+        <td>ผู้ออก : {{SellingName}} วันที่ : {{dateTimeNow | date:'dd/MM/yyyy เวลา HH:mm:ss น.'}}</td>
+    </tr>
+    <tr>
+    	<td>
+    		<div class="col-md-10 col-md-offset-1">
+	    		<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+		        	<tr>
+		        		<th class="text-center">ที่</th>
+		        		<th class="text-center">วันที่</th>
+		        		<th class="text-center">เลขรถ</th>
+		        		<th class="text-center">เส้นทาง</th>
+		        		<th class="text-center">เวลา</th>
+		        		<th class="text-center">พนักงานขับรถ 1</th>
+		        		<th class="text-center">พนักงานขับรถ 2</th>
+		        	</tr>
+		        	<tr ng-repeat="item in dataReport.VehicleDetailList">
+		        		<td align="center">{{item.No}}</td>
+		        		<td>{{item.VehicleOperationDate | jsonDate:'dd/MM/yyyy'}}</td>
+		        		<td>{{item.VehicleNumber}}</td>
+		        		<td>{{item.RouteName_TH}}</td>
+		        		<td align="center">{{item.VehicleOperationDate | jsonDate:'HH:mm'}}</td>
+		        		<td>{{item.VehicleOperationDrive_1}}</td>
+		        		<td>{{item.VehicleOperationDrive_2}}</td>
+		        	</tr>
+		        	<tr ng-if="dataReport.VehicleDetailList.length == 0">
+		        		<td class="text-center" colspan="7">ไม่มีข้อมูล</td>
+		        	</tr>
+		        </table>
+	        </div>
+    	</td>
+    </tr>
+</table>

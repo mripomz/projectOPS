@@ -1,0 +1,59 @@
+<div class="col-md-12 filter no-padding margin-bottom-20" ng-if="reportType.RevenueTicket == 'ReportForRevenueFromTicketSales' && conditionReport.ReportType == 'RevenueByVehicleNumber' && globalVariable.isShowReport">
+<div class="col-md-12">
+        <strong class="col-md-2 text-right">ค้นหา : </strong>
+         <div class="col-md-10 no-padding-left">
+            <input type="text" class="form-control" ng-model="filterReport.searchValue"/>
+         </div>
+    </div>
+</div>
+<table id="ReportForRevenueFromTicketSales" width="100%" ng-if="reportType.RevenueTicket == 'ReportForRevenueFromTicketSales' && conditionReport.ReportType == 'RevenueByVehicleNumber' && globalVariable.isShowReport">
+	<tr>
+        <th class="text-center">
+            รายงานรายได้จำแนกตามเบอร์รถ จำแนกตาม{{conditionReport.TypeSearch == 'Transaction'?'วันทำรายการ':'วันเดินทาง'}}<br/>
+            ระหว่างวันที่ {{conditionReport.DateStart | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} - ถึง {{conditionReport.DateEnd | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}}
+        </th>
+    </tr>
+    <tr>
+        <td>ผู้ออก : {{SellingName}} วันที่ : {{dateTimeNow | date:'dd/MM/yyyy เวลา HH:mm:ss น.'}}</td>
+    </tr>
+    <tr>
+    	<td>
+    		<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+    			<tr>
+			    	<th>เบอร์รถ</th>
+			    	<th>เส้นทางเดินรถ</th>
+			    	<th>เที่ยวรถ</th>
+			    	<th class="text-right">ที่นั่งขาย</th>
+			    	<th class="text-right">ยอดขาย (บาท)</th>
+			    	<th class="text-right">ที่นั่งคืน</th>
+			    	<th class="text-right">ยอดคืน (บาท)</th>
+			    	<th class="text-right">ปรับ(บาท)</th>
+			    	<th class="text-right">สุทธิ (บาท)</th>
+			    </tr>
+			    <tr ng-repeat="item in dataReport.VehicleNumberList | filter:filterReport.searchValue">
+			    	<td>{{item.VehicleNumber}}</td>
+			    	<td>{{item.RouteMainNumber + ' - ' + item.RouteNumber + ' ' + item.RouteName_TH}}</td>
+			    	<td>{{item.VehicleOperationDate | jsonDate:'dd/MM/yyyy HH:mm'}} [{{item.VehicleSeatPlanName}}]</td>
+			    	<td align="right">{{item.TotalSeats | number}}</td>
+			    	<td align="right">{{item.TotalPrice | number:2}}</td>
+			    	<td align="right">{{item.TotalReturnSeats | number}}</td>
+			    	<td align="right">{{item.TotalReturnPrice | number:2}}</td>
+			    	<td align="right">{{item.TicketReturnFee | number:2}}</td>
+			    	<td align="right">{{(item.TotalPrice - item.TotalReturnPrice + item.TicketReturnFee) | number:2}}</td>
+			    </tr>
+			    <tr ng-if="dataReport.VehicleNumberList.length == 0">
+			    	<td align="center" colspan="9">ไม่มีข้อมูล</td>
+			    </tr>
+			    <tr>
+			    	<td colspan="3" align="right"><strong>รวม</strong></td>
+			    	<td align="right">{{(dataReport.VehicleNumberList | filter:filterReport.searchValue) | total:'TotalSeats' | number}}</td>
+			    	<td align="right">{{(dataReport.VehicleNumberList | filter:filterReport.searchValue) | total:'TotalPrice' | number:2}}</td>
+			    	<td align="right">{{(dataReport.VehicleNumberList | filter:filterReport.searchValue) | total:'TotalReturnSeats' | number}}</td>
+			    	<td align="right">{{(dataReport.VehicleNumberList | filter:filterReport.searchValue) | total:'TotalReturnPrice' | number:2}}</td>
+			    	<td align="right">{{(dataReport.VehicleNumberList | filter:filterReport.searchValue) | total:'TicketReturnFee' | number:2}}</td>
+			    	<td align="right">{{((dataReport.VehicleNumberList | filter:filterReport.searchValue) | total:'TotalPrice') - ((dataReport.VehicleNumberList | filter:filterReport.searchValue) | total:'TotalReturnPrice') + ((dataReport.VehicleNumberList | filter:filterReport.searchValue) | total:'TicketReturnFee') | number:2}}</td>
+			    </tr>
+    		</table>
+    	</td>
+    </tr>
+</table>

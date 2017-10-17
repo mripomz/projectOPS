@@ -1,0 +1,66 @@
+<div class="form-horizontal">
+   
+    <div class="form-group">
+        <label class="col-sm-6 control-label"> <div class="pull-right"> กรุณาเลือกปี</div></label>
+        <label class="col-sm-6 control-label">
+            <div class="pull-left">
+                <select class="form-control"
+                        ng-model="conditionReportVehicleAct.years" 
+                        ng-options="x for x in years"
+                        ng-change="checkReportVehicleAct()">>
+                        <option value="">กรุณาเลือกปี</option>
+                </select>
+            </div> 
+            <div class="pull-right">
+                <button class="btn btn-primary" ng-disabled="!globalVariable.isShowReport" ng-click="printDiv(1)"><i class="fa fa-print" aria-hidden="true"></i> พิมพ์</button>
+            </div> 
+        </label>
+       
+    </div>
+    <div class="form-group margin-top-20">
+        <div class="col-md-4 col-md-offset-4">
+            <button class="btn btn-block btn-primary" ng-disabled ="!globalVariable.isShowReportVehicleAct" ng-click="generateReportVehicleAct()">แสดงรายงาน</button>
+        </div>
+    </div>
+</div>
+<hr/>
+<div class="col-md-12 no-padding reportZone margin-top-20">
+    <table id="ReportVehicleAct" class="table table-hover table-condensed" ng-if="globalVariable.isShowReport&&globalVariable.isShowReportVehicleAct">
+        <tr>
+            <td colspan="10">ผู้ออก : {{SellingName}} วันที่ : {{dateTimeNow | date:'dd/MM/yyyy เวลา HH:mm:ss น.'}}</td>
+        </tr>
+        <tr>
+            <th class="text-center" colspan="10">
+                <strong>รายงานตรวจสอบ พ.ร.บ.</strong><br/>
+                <strong>ประจำปี </strong><strong>{{conditionReportVehicleAct.years}}</strong><br/>
+            </th>
+        </tr>
+        <tr>
+            <th class="text-center">ลำดับ</th>
+            <th class="text-center">ทะเบียนรถ</th>
+            <th class="text-center">จังหวัด</th>
+            <th class="text-center">ยี่ห้อ</th>
+            <th class="text-center">หมายเลขตัวถัง</th>
+            <th class="text-center">บริษัทประกันภัย</th>
+            <th class="text-center">เลขทะเบียน</th>
+            <th class="text-center">เริ่มต้นวันที่</th>
+            <th class="text-center" >สิ้นสุดวันที่</th>
+            <th class="text-center">จำนวนเงิน</th>
+        </tr>
+        <tr ng-repeat="item in mainAct.reportVehicleActListDTO">
+            <td align="center">{{$index+1}}</td>
+            <td align="center">{{item.PlateNumber}}</td>
+            <td align="center">{{item.PlateProvinceName }}</td>
+            <td align="center">{{item.Brand}}</td>
+            <td align="center">{{item.ChassisNumber}}</td>
+            <td align="center">{{item.ActName}}</td>
+            <td align="center">{{item.ActNumber}}</td>
+            <td align="center">{{item.StartDate | jsonDateTHAI :'DD MMMM YYYY'}}</td>
+            <td align="center">{{item.EndDate | jsonDateTHAI :'DD MMMM YYYY'}}</td>
+            <td align="center">{{item.TotalAmount}}</td>
+        </tr>
+        <tr ng-if="mainAct.reportVehicleActListDTO.length == 0">
+            <td align="center" colspan="7">ไม่มีข้อมูล</td>
+        </tr>
+    </table>
+</div>

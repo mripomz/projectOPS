@@ -1,0 +1,21 @@
+<button class="btn btn-warning" ng-click="DataSetting_UploadAgencyLogo()" ng-if="DataSetting_Agency_Ticket_Setting.AgencyLogoFileUploadId == null || DataSetting_Agency_Ticket_Setting.AgencyLogoFileUploadId == '00000000-0000-0000-0000-000000000000'">อัพโหลดโลโก้</button>
+<div class="col-sm-12 no-padding" ng-show="!!DataSetting_Agency_Ticket_Setting.AgencyLogoFileUploadUrl">
+    <table class="table table-striped files ng-cloak">
+        <tr>
+            <th class="col-xs-3">รูปภาพ</th>
+            <th class="col-xs-6">ชื่อรูปภาพ</th>
+            <th class="col-xs-5 text-right"></th>
+        </tr>
+        <tr>
+            <td class="col-xs-3">
+                <a ng-if="DataSetting_Agency_Ticket_Setting.AgencyLogoContentType == 'image/jpeg' || DataSetting_Agency_Ticket_Setting.AgencyLogoContentType == 'image/png' || DataSetting_Agency_Ticket_Setting.AgencyLogoContentType == 'image/gif'"  ng-click="openLightboxModal(DataSetting_Agency_Ticket_Setting.AgencyLogoFileUploadUrl)" target="_blank" class="thumbnail thumbnail-show">
+                    <img ng-src="{{DataSetting_Agency_Ticket_Setting.AgencyLogoFileUploadUrl}}">
+                </a>
+            </td>
+            <td class="col-xs-6">{{DataSetting_Agency_Ticket_Setting.AgencyLogoFileName}}</td>
+            <td class="col-xs-5 text-right">
+                <a class="btn btn-danger btn-xs" message-en="Are you sure to delete this image?" message-th="ต้องการที่จะลบโลโก้นี้ ใช่หรือไม่?" lsw-confirm-modal="removeAgencyLogo()">ลบ</a>
+            </td>
+        </tr>
+    </table>
+</div>

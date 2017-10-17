@@ -1,0 +1,103 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 400px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">จัดการประเภทผังที่นั่ง</h3>
+            </div>
+            <div class="modal-body" style="max-height:650px;overflow-y:auto;">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">ชื่อผังที่นั่ง</label>
+                    <div class="col-sm-8">
+                        <input autocomplete="off" ng-blur="selectNameChanged()" type="text" class="form-control" name="SeatName" ng-model="currentVehicle.SeatName" placeholder="ชื่อผังที่นั่ง" required/>
+                    </div>
+                </div>
+                <div class="col-xs-12 no-padding" ng-init="showSeatStandardType = false;">
+                    <ol class="breadcrumb" ng-show="!showSeatStandardType">
+                        <li class="active">ประเภทผังที่นั่ง</li>
+                    </ol>
+                    <ol class="breadcrumb" ng-show="showSeatStandardType">
+                        <li><a ng-click="showSeatStandardType = false;">ประเภทผังที่นั่ง</a></li>
+                        <li class="active">ประเภทมาตรฐาน</li>
+                    </ol>
+                </div>
+            	<table class="table table-condensed">
+        			<tr>
+        				<th class="col-md-8">ประเภทผังที่นั่ง</th>
+        				<th class="col-md-4"></th>
+        			</tr>
+                    <tr ng-show="!showSeatStandardType">
+                        <td><i class="avia avia-Sign"></i> ที่ว่าง</td>
+                        <td align="right">
+                            <button class="btn btn-primary btn-xs" ng-click="selectSeatType(2);$hide()">
+                                <i class="fa fa-plus"></i> เลือก
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-show="!showSeatStandardType">
+                        <td><i class="avia avia-driver"></i> คนขับรถ</td>
+                        <td align="right">
+                            <button class="btn btn-primary btn-xs" ng-click="selectSeatType(1);$hide()">
+                                <i class="fa fa-plus"></i> เลือก
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-show="!showSeatStandardType">
+                        <td><i class="avia avia-toilets_unisex"></i> ห้องน้ำ</td>
+                        <td align="right">
+                            <button class="btn btn-primary btn-xs" ng-click="selectSeatType(6);$hide()">
+                                <i class="fa fa-plus"></i> เลือก
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-show="!showSeatStandardType">
+                        <td><i class="avia avia-stairs"></i> บันได</td>
+                        <td align="right">
+                            <button class="btn btn-primary btn-xs" ng-click="selectSeatType(4);$hide()">
+                                <i class="fa fa-plus"></i> เลือก
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-show="!showSeatStandardType">
+                        <td><i class="avia avia-footprint"></i> ทางเดิน</td>
+                        <td align="right">
+                            <button class="btn btn-primary btn-xs" ng-click="selectSeatType(5);$hide()">
+                                <i class="fa fa-plus"></i> เลือก
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-show="!showSeatStandardType">
+                        <td><i class="avia avia-seat"></i> ที่นั่ง</td>
+                        <td align="right">
+                            <button class="btn btn-primary btn-xs" ng-click="showSeatStandardType = true">
+                                <i class="fa fa-plus"></i> เลือก
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-show="!showSeatStandardType">
+                        <td><span class="avia avia-block"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span></span> บล็อค ไม่ขายออนไลน์</td>
+                        <td align="right">
+                            <button class="btn btn-primary btn-xs" ng-click="selectSeatBlockOnline();$hide()">
+                                <i class="fa fa-plus"></i> เลือก
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-show="showSeatStandardType" ng-repeat="standard in VehicleSeatStandard track by $index">
+                        <td>
+                            <span ng-style="seatTypeIconColor(standard.VehicleStandardId)">
+                                <i class="avia avia-seat"></i>
+                            </span> ที่นั่ง {{standard.VehicleStandardName}}
+                        </td>
+                        <td align="right">
+                            <button class="btn btn-primary btn-xs" ng-click="selectSeatTypeStandard(3,standard.VehicleStandardId);$hide()">
+                                <i class="fa fa-plus"></i> เลือก
+                            </button>
+                        </td>
+                    </tr>
+        			<tr>
+        				<td align="center" colspan="5"><button ng-click="$hide()" class="btn btn-default">ปิด</button></td>
+        			</tr>
+        		</table>
+            </div>
+        </div>
+    </div>
+</div>

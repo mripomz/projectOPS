@@ -1,0 +1,68 @@
+<table id="ReportForRevenueFromTicketSales" width="100%" ng-if="reportType.RevenueTicket == 'ReportForRevenueFromTicketSales' && conditionReport.ReportType == 'RevenueByPayeeAndTrip' && globalVariable.isShowReport">
+	<tr>
+        <th class="text-center">
+            รายงานการขายประจำวันจำแนกตามผู้รับเงิน<br/>
+            ระหว่างวันที่ {{conditionReport.DateStart | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} {{conditionReport.TimeStart + ' น.'}} - ถึง {{conditionReport.DateEnd | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} {{conditionReport.TimeEnd + ' น.'}}
+        </th>
+    </tr>
+    <tr>
+    	<td>
+    		<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+    			<tr>
+                    <th rowspan="2" class="text-center">ที่</th>
+                    <th rowspan="2" class="text-center">ผู้รับเงิน</th>
+                    <th colspan="3" class="text-center">ที่นั่งขาย</th>
+                    <th colspan="3" class="text-center">ยอดขาย</th>
+                    <th colspan="3" class="text-center">คืนที่นั่ง</th>
+                    <th rowspan="2" class="text-center">ราคาสุทธิ</th>
+                </tr>
+                <tr>
+                    <th class="text-right">รถออกวันนี้</th>
+                    <th class="text-right">ล่วงหน้า</th>
+                    <th class="text-right">รวม</th>
+                    <th class="text-right">รถออกวันนี้</th>
+                    <th class="text-right">ล่วงหน้า</th>
+                    <th class="text-right">รวม</th>
+                    <th class="text-right">ที่นั่งคืน</th>
+                    <th class="text-right">ยอดคืน</th>
+                    <th class="text-right">ค่าธรรมเนียม</th>
+                </tr>
+                <tbody ng-repeat="(key,value) in dataReport.PayeeAndTripList | groupBy:'VehicleOperationDateOnly'">
+                    <tr class="active">
+                        <td colspan="12">{{value[0].RouteName_TH}} {{key}}</td>
+                    </tr>
+                    <tr ng-repeat="eachItem in value">
+                        <td align="center">{{$index+1}}</td>
+                        <td>{{eachItem.FirstName + ' ' + eachItem.LastName}}</td>
+                        <td align="right">{{eachItem.TotalSeats | number}}</td>
+                        <td align="right">{{eachItem.TotalPreSeats | number}}</td>
+                        <td align="right">{{(eachItem.TotalSeats + eachItem.TotalPreSeats) | number}}</td>
+                        <td align="right">{{eachItem.TotalPrice | number:2}}</td>
+                        <td align="right">{{eachItem.TotalPrePrice | number:2}}</td>
+                        <td align="right">{{(eachItem.TotalPrice + eachItem.TotalPrePrice) | number:2}}</td>
+                        <td align="right">{{eachItem.TotalReturnSeats | number}}</td>
+                        <td align="right">{{eachItem.TotalReturnPrice | number:2}}</td>
+                        <td align="right">{{eachItem.TotalReturnFee | number:2}}</td>
+                        <td align="right">{{(eachItem.TotalPrice + eachItem.TotalPrePrice - eachItem.TotalReturnPrice + eachItem.TotalReturnFee) | number:2}}</td>
+                    </tr>
+                </tbody>
+                <tr ng-if="dataReport.PayeeAndTripList.length == 0">
+                    <td colspan="12" align="center">ไม่มีข้อมูล</td>
+                </tr>
+                <tr class="info">
+                    <td colspan="12"><span stlye="font-size:28px;"><strong>สรุป</strong></span></td>
+                </tr>
+                <tr class="active">
+                    <td align="center"><strong>ที่</strong></td>
+                    <td colspan="6"><strong>ผู้รับเงิน</strong></td>
+                    <td align="right" colspan="5"><strong>ยอดสุทธิ (บาท)</strong></td>
+                </tr>
+                <tr ng-repeat="item in dataReport.PayeeAndTripSummaryList">
+                    <td align="center">{{$index+1}}</td>
+                    <td colspan="6">{{item.FirstName}}</td>
+                    <td align="right" colspan="5">{{(item.TotalPrice - item.TotalReturnPrice + item.TicketReturnFee) | number:2}}</td>
+                </tr>
+    		</table>
+    	</td>
+   	</tr>
+</table>

@@ -1,0 +1,94 @@
+<div class="col-md-12 filter no-padding margin-bottom-20" ng-if="reportType.RevenueTicket == 'ReportForRevenueFromTicketSales' && conditionReport.ReportType == 'RevenueByAdvanceSold' && globalVariable.isShowReport">
+    <div class="col-md-5">
+        <strong class="col-md-2">ค้นหา : </strong>
+         <div class="col-md-10 no-padding-left">
+            <input type="text" class="form-control" ng-model="filterReport.searchValue"/>
+         </div>
+    </div>
+    <div class="col-md-5">
+        <strong class="col-md-3">เรียงลำดับ : </strong>
+        <div class="col-md-3 no-padding-left">
+            <select class="form-control" ng-model="filterReport.sortParam1">
+                <option value="">ลำดับที่1</option>
+                <option value="VehicleNumber">เบอร์รถ</option>
+                <option value="StopPointEnd">ปลายทาง</option>
+                <option value="FullName">พนักงานขาย</option>
+                <option value="StopPointName_TH">สาขาที่ขาย</option>
+            </select>
+        </div>
+        <div class="col-md-3 no-padding-left">
+            <select class="form-control" ng-model="filterReport.sortParam2">
+                <option value="">ลำดับที่2</option>
+                <option value="VehicleNumber">เบอร์รถ</option>
+                <option value="StopPointEnd">ปลายทาง</option>
+                <option value="FullName">พนักงานขาย</option>
+                <option value="StopPointName_TH">สาขาที่ขาย</option>
+            </select>
+        </div>
+        <div class="col-md-3 no-padding-left">
+            <select class="form-control" ng-model="filterReport.sortParam3">
+                <option value="">ลำดับที่3</option>
+                <option value="VehicleNumber">เบอร์รถ</option>
+                <option value="StopPointEnd">ปลายทาง</option>
+                <option value="FullName">พนักงานขาย</option>
+                <option value="StopPointName_TH">สาขาที่ขาย</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-2 no-padding">
+        <button class="btn btn-primary btn-block" ng-click="resetFilter()">รีเซ็ต</button>
+    </div>
+</div>
+<table id="ReportForRevenueFromTicketSales" width="100%" ng-if="reportType.RevenueTicket == 'ReportForRevenueFromTicketSales' && conditionReport.ReportType == 'RevenueByAdvanceSold' && globalVariable.isShowReport">
+	<tr>
+        <th class="text-center">
+            รายงานตั๋วขายล่วงหน้า จำแนกตาม{{conditionReport.TypeSearch == 'Transaction'?'วันทำรายการ':'เบอร์รถ'}}<br/>
+            เดินทางวันที่ {{conditionReport.DateStart | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} {{conditionReport.TimeStart + ' น.'}} - ถึง {{conditionReport.DateEnd | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} {{conditionReport.TimeEnd + ' น.'}}
+        </th>
+    </tr>
+    <tr>
+        <td>ผู้ออก : {{SellingName}} วันที่ : {{dateTimeNow | date:'dd/MM/yyyy เวลา HH:mm:ss น.'}}</td>
+    </tr>
+    <tr>
+    	<td>
+    		<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+    			<tr>
+    				<th rowspan="2">เบอร์รถ</th>
+                    <th rowspan="2">วันที่เดินทาง</th>
+                    <th rowspan="2">เวลาเดินทาง</th>
+    				<th rowspan="2">ปลายทาง</th>
+    				<th class="text-right" rowspan="2">จำนวนที่นั่ง</th>
+    				<th class="text-right" rowspan="2">จำนวนเงิน</th>
+    				<th class="text-center" colspan="4">ดำเนินการ</th>
+    			</tr>
+                <tr>
+                    <th>สาขา</th>
+                    <th>พนักงาน</th>
+                    <th>วันที่</th>
+                    <th class="text-center">เวลา</th>
+                </tr>
+    			<tr ng-if="dataReport.AdvanceSoldList.length == 0">
+    				<td align="center" colspan="10">ไม่มีข้อมูล</td>
+    			</tr>
+    			<tr ng-repeat="item in dataReport.AdvanceSoldList | filter:filterReport.searchValue | orderBy:[filterReport.sortParam1,filterReport.sortParam2,filterReport.sortParam3]">
+    				<td>{{item.VehicleNumber}}</td>
+                    <td>{{item.VehicleOperationDate | jsonDate:'dd/MM/yyyy'}}</td>
+                    <td>{{item.VehicleOperationDate | jsonDate:'HH:mm'}}</td>
+    				<td>{{item.StopPointEnd}}</td>
+                    <td align="right">{{item.TotalSeats}}</td>
+                    <td align="right">{{item.TotalPrice | number:2}}</td>    				
+    				<td>{{item.StopPointName_TH}}</td>
+    				<td>{{item.FullName}}</td>
+    				<td>{{item.CreatedDate | jsonDate:'dd/MM/yyyy'}}</td>
+    				<td align="center">{{item.CreatedDate | jsonDate:'HH:mm'}}</td>
+    			</tr>
+                <tr>
+                    <td align="right" colspan="4"><strong>รวม</strong></td>
+                    <td align="right"><strong>{{dataReport.AdvanceSoldList | total:'TotalSeats'}}</strong></td>
+                    <td align="right"><strong>{{(dataReport.AdvanceSoldList | total:'TotalPrice') | number:2}}</strong></td>
+                    <td align="right" colspan="4"></td>
+                </tr>
+    		</table>
+    	</td>
+   	</tr>
+</table>

@@ -1,0 +1,145 @@
+<div class="modal" tabindex="-1" role="dialog" style="display: block; overflow: auto;">
+    <div class="modal-dialog" style="width: 80%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">รายละเอียดของการผ่อนชำระ หมายเลขตัวถัง - {{vehicleDetail.ChassisNumber}} / ทะเบียนรถ - {{vehicleDetail.PlateNumber}}
+                </h3>
+            </div>
+            <div class="modal-body" style="overflow-y:auto;">
+            	<div class="alert alert-danger" ng-show="errorMsg.isError">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <div ng-bind-html="errorMsg.message | sanitize"></div>
+                </div>
+	            <table class="table table-hover table-condensed">
+                    <tr>
+                        <th class="col-xs-1">งวดที่</th>
+                        <th class="col-xs-2">ครบกำหนดชำระ</th>
+                        <th class="col-xs-3">จำนวนเงินที่ผ่อนชำระ</th>
+                        <th class="col-xs-2">สถานะการชำระ</th>
+                        <th class="col-xs-2">หลักฐานการชำระ</th>
+                        <th class="col-xs-2 text-right">
+                            <!-- <a class="btn btn-primary" ng-disabled="globalStatus.isActivityEdit" ng-click="addVehicleLeasePeriodDetail(VehicleLeaseDetail.LeasePeriodList.length+1)">เพิ่มการผ่อนชำระ</a> -->
+                        </th>
+                    </tr>
+                    <tr ng-show="VehicleLeaseDetail.LeasePeriodList.length == 0">
+                        <td align="center" colspan="6">ยังไม่มีการผ่อนชำระ</td>
+                    </tr>
+                    <tr ng-repeat="item in VehicleLeaseDetail.LeasePeriodList">
+                        <td>
+                            <span>{{item.Period}}</span>
+                        </td>
+                        <td>
+                            <span>{{item.VehicleLeasePeriodDate | date:'dd/MM/yyyy'}}</span>
+                        </td>
+                        <td>
+                            <span ng-if="!item.isEdit">{{(item.IsPaymentStatus == 4)?0:item.VehicleLeasePeriodAmount | currency:''}}</span>
+                            <input ng-if="item.isEdit" class="form-control" type="text" ng-model="item.VehicleLeasePeriodAmount" fcsa-number placeholder="จำนวนเงินที่ผ่อนชำระ" lsw-only-digits />
+                        </td>
+                        <td>
+                            <span ng-if="!item.isEdit || (item.IsPaymentStatus == 4)">{{paymentDisplay[item.IsPaymentStatus]}}</span>
+                            <select ng-if="item.isEdit && (item.IsPaymentStatus != 4)" class="form-control" ng-model="item.IsPaymentStatus" ng-options="o.status as o.display for o in paymentStatus"></select>
+                        </td>
+                        <td>
+                            <!-- PDF -->
+                            <a ng-if="item.ContentType == 'application/pdf'" ng-href="{{item.FileURL}}" target="_blank" class="thumbnail-show ">
+                                <img ng-src="{{rootSiteUrl + 'img/pdfdoc.png'}}"/>
+                            </a>
+
+                            <!-- IMAGE -->
+                            <a ng-if="item.ContentType == 'image/jpeg' || item.ContentType == 'image/png' || item.ContentType == 'image/gif'"  ng-click="openLightboxModal(item.FileURL)" target="_blank" class="thumbnail-show">
+                                <img ng-src="{{item.FileURL}}">
+                            </a>
+
+                            <!-- UPDATE BUT NOT SAVE -->
+                            <a class="thumbnail-show" ng-if="!item.FileURL && item.FileUploadId != null && item.FileUploadId != '00000000-0000-0000-0000-000000000000'">
+                                <img ng-src="{{rootSiteUrl + '/img/thumbnail-default.jpg'}}" width="75"/>
+                            </a>
+
+                            <a ng-if="item.isEdit && item.FileUploadId != null && item.FileUploadId != '00000000-0000-0000-0000-000000000000'" class="btn btn-danger btn-xs" message-en="Are you sure to delete this image?" message-th="ต้องการที่จะลบเอกสารนี้ออกจากระบบ ใช่หรือไม่?" lsw-confirm-modal="removeVehicleLeasePeriodDoc()">ลบ</a>
+
+                            <span ng-if="!item.isEdit && (item.FileUploadId == null || item.FileUploadId == '00000000-0000-0000-0000-000000000000')">ยังไม่ได้อัพโหลดเอกสาร</span>
+
+                            <form class="form-horizontal" role="form" name="vehicleLeasingPeriodDetailForm{{$index}}" novalidate enctype="multipart/form-data" data-file-upload="optionsLeasingDetail" ng-class="{'fileupload-processing': processing() || loadingFiles}">
+                                <table class="col-sm-12 table-striped files ng-cloak" ng-show="item.isEdit">
+                                    <tr ng-repeat="file in queue" ng-class="{'processing': file.$processing()}">
+                                        <td>
+                                            <p class="name" data-ng-switch data-on="!!file.url">
+                                                <span data-ng-switch-when="true" data-ng-switch data-on="!!file.thumbnailUrl">
+                                                    <a data-ng-switch-when="true" ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}" data-gallery>{{file.name}}</a>
+                                                    <a data-ng-switch-default ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}">{{file.name}}</a>
+                                                </span>
+                                                <span data-ng-switch-default>{{file.name}}</span>
+                                            </p>
+                                            <strong ng-show="file.error" class="error text-danger">{{file.error}}</strong>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger btn-xs destroy" ng-click="file.$destroy()" ng-hide="!file.$destroy()">
+                                                <i class="glyphicon glyphicon-trash"></i>
+                                                <span>ลบ</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <div class="col-sm-12 fileupload-buttonbar" ng-show="item.isEdit && (item.FileUploadId == null || item.FileUploadId == '00000000-0000-0000-0000-000000000000')">
+                                    <div class="col-sm-12">
+                                        <!-- The fileinput-button span is used to style the file input field as button -->
+                                        <div class="pull-left" style="margin-right:10px;">
+                                            <span class="btn btn-success btn-xs fileinput-button" ng-class="{disabled: currentProcess.fileInQueue}">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                        <span>เพิ่ม</span>
+                                        <input id="fileupload{{$index}}" type="file" name="files[]" ng-disabled="disabled">
+                                    </span>
+                                        </div>
+                                        <div class="pull-left" style="margin-right:10px;" title="{{(!currentProcess.fileInQueue)?'โปรดเพิ่มไฟล์ก่อน':''}}">
+                                            <button type="button" class="btn btn-primary btn-xs start" ng-click="submit()" ng-disabled="!currentProcess.fileInQueue">
+                                                <i class="glyphicon glyphicon-upload"></i>
+                                                <span>อัพโหลด</span>
+                                            </button>
+                                        </div>
+                                        <div class="pull-left">
+                                            <button type="button" class="btn btn-danger btn-xs cancel" ng-click="cancel()">
+                                                <i class="glyphicon glyphicon-ban-circle"></i>
+                                                <span>ยกเลิก</span>
+                                            </button>
+                                        </div>
+                                        <!-- The global file processing state -->
+                                        <span class="fileupload-process"></span>
+                                    </div>
+                                    <!-- The global progress state -->
+                                    <div class="col-lg-5 fade" ng-class="{in: active()}">
+                                        <!-- The global progress bar -->
+                                        <div class="progress progress-striped active" data-file-upload-progress="progress()"><div class="progress-bar progress-bar-success" ng-style="{width: num + '%'}"></div></div>
+                                        <!-- The extended global progress state -->
+                                        <div class="progress-extended">&nbsp;</div>
+                                    </div>
+                                </div>
+                            </form>
+                        </td>
+                        <td align="right">
+                            <!-- IsEdit -->
+                            <button class="btn btn-primary btn-xs" ng-if="item.isEdit" ng-click="updateVehicleLeasingDetail(item);item.isEdit = false">
+                            <i class="glyphicon glyphicon-pencil"></i> บันทึก
+                            </button>
+                            <button class="btn btn-danger btn-xs" ng-if="item.isEdit" ng-click="cancleUpdateVehicleLeasingDetail()">
+                                <i class="glyphicon glyphicon-ban-circle"></i> ยกเลิก
+                            </button>
+
+                            <!-- Normal -->
+                            <button class="btn btn-warning btn-xs" ng-if="!item.isEdit" ng-disabled="globalStatus.isActivityEdit" ng-click="globalStatus.isActivityEdit = true;item.isEdit = true">
+                            <i class="glyphicon glyphicon-pencil"></i> แก้ไข
+                            </button>
+                            <!-- <button class="btn btn-danger btn-xs" ng-if="!item.isEdit && (($index+1)==VehicleLeaseDetail.LeasePeriodList.length)" ng-disabled="globalStatus.isActivityEdit" message-en="Are you sure to delete this?" message-th="ต้องการที่จะลบออกจากระบบ ใช่หรือไม่?" lsw-confirm-modal="removeVehicleLeasingPeriod(item.VehicleLeasePeriodId)">
+                                <i class="glyphicon glyphicon-trash"></i> ลบ
+                            </button> -->
+                        </td>
+                    </tr>
+                </table>
+                <div class="form-group margin-none text-center">
+                    <button ng-click="$hide()" class="btn btn-default">ปิด</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

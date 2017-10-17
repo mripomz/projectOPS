@@ -1,0 +1,78 @@
+<div class="modal" tabindex="-1" role="dialog" style="display: block; overflow: auto;">
+    <div class="modal-dialog" style="width: 50%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">อัพโหลดโลโก้เอเจนซี่</h3>
+            </div>
+            <div class="modal-body">
+            	<div class="alert alert-danger" ng-show="errorMsg.isError">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <div ng-bind-html="errorMsg.message | sanitize"></div>
+                </div>
+                <div class="form-horizontal">
+				    <div class="form-group">
+				    	<label for="AnnualVehicleAmount" class="col-sm-3 control-label">อัพโหลดรูปภาพ</label>
+				    	<div class="col-sm-9">
+                            <form class="form-horizontal" role="form" name="TaxDateAnnualForm" novalidate enctype="multipart/form-data" data-file-upload="optionsAgencyLogo" ng-class="{'fileupload-processing': processing() || loadingFiles}">
+                                <table class="col-sm-12 table-striped files ng-cloak" ng-show="DataSetting_Agency_Ticket_Setting.AgencyLogoFileUploadId == null || DataSetting_Agency_Ticket_Setting.AgencyLogoFileUploadId == '00000000-0000-0000-0000-000000000000'">
+                                    <tr ng-repeat="file in queue" ng-class="{'processing': file.$processing()}">
+                                        <td valign="middle">
+                                            <p class="name" data-ng-switch data-on="!!file.url">
+                                                <span data-ng-switch-when="true" data-ng-switch data-on="!!file.thumbnailUrl">
+                                                    <a data-ng-switch-when="true" ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}" data-gallery>{{file.name}}</a>
+                                                    <a data-ng-switch-default ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}">{{file.name}}</a>
+                                                </span>
+                                                <span data-ng-switch-default>{{file.name}}</span>
+                                            </p>
+                                            <strong ng-show="file.error" class="error text-danger">{{file.error}}</strong>
+                                        </td>
+                                        <td valign="middle">
+                                            <p class="size">{{file.size | formatFileSize}}</p>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger destroy" ng-click="file.$destroy()" ng-hide="!file.$destroy()">
+                                                <i class="glyphicon glyphicon-trash"></i>
+                                                <span>ลบ</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <div class="col-sm-12 fileupload-buttonbar no-padding" ng-show="DataSetting_Agency_Ticket_Setting.AgencyLogoFileUploadId == null || DataSetting_Agency_Ticket_Setting.AgencyLogoFileUploadId == '00000000-0000-0000-0000-000000000000'">
+                                    <div class="col-sm-12 no-padding">
+                                        <!-- The fileinput-button span is used to style the file input field as button -->
+                                        <div class="pull-left" style="margin-right:10px;">
+                                            <span class="btn btn-success fileinput-button" ng-class="{disabled: currentProcess.fileInQueue}">
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                                <span>เพิ่มไฟล์</span>
+                                                <input id="fileuploadTaxAnnual" type="file" name="files[]" ng-disabled="disabled">
+                                            </span>
+                                        </div>
+                                        <div class="pull-left" style="margin-right:10px;" title="{{(!currentProcess.fileInQueue)?'โปรดเพิ่มไฟล์ก่อน':''}}">
+                                            <button type="button" class="btn btn-primary start" ng-click="submit()" ng-disabled="!currentProcess.fileInQueue">
+                                                <i class="glyphicon glyphicon-upload"></i>
+                                                <span>อัพโหลดไฟล์</span>
+                                            </button>
+                                        </div>
+                                        <div class="pull-left" ng-show="currentProcess.fileInQueue">
+                                            <button type="button" class="btn btn-danger cancel" ng-click="cancel()">
+                                                <i class="glyphicon glyphicon-ban-circle"></i>
+                                                <span>ยกเลิก</span>
+                                            </button>
+                                        </div>
+                                        <span class="fileupload-process"></span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+				    </div>
+				    <div class="form-group margin-none text-center">
+						<button ng-click="$hide()" class="btn btn-default">ปิด</button>
+					</div>
+				</div>
+            </div>
+        </div>
+    </div>
+</div>

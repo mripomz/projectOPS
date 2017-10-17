@@ -1,0 +1,26 @@
+<div class="modal" tabindex="-1" role="dialog" style="z-index: 99999; display: block; overflow: auto;">
+    <div class="modal-dialog" style="width: 450px;">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#fff !important;">
+                <button type="button" class="close" ng-click="$hide();">
+                    &times;
+                </button>
+                <h4 class="modal-title">แจ้งเตือน! : มีผู้โดยสารจองตั๋วแล้วในเที่ยวรถนี้</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <i class="fa fa-exclamation-triangle" style="color: #ffb503; font-size:50px;"></i>
+                        </div>
+                        <div class="col-lg-10" ng-bind-html="modal.content | sanitize"></div> 
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color:#fff !important; border-top:none;">
+                <button class="btn btn-default" ng-click="$hide();"><span class="fa fa-ban"></span>&nbsp;Cancel</button>
+                <button class="btn btn-success" ng-click="$hide(); removeVehicleOperation(modal.key);"><span class="fa fa-check"></span>&nbsp;Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>

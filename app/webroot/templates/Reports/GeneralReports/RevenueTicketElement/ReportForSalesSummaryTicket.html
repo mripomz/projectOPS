@@ -1,0 +1,87 @@
+<table id="ReportForSalesSummaryTicket" width="100%" ng-if="reportType.RevenueTicket == 'ReportForSalesSummaryTicket' && globalVariable.isShowReport">
+	<tr>
+        <th class="text-center">
+            รายงานสรุปยอดขายตั๋วตามวันเดินทาง<br/>
+            ระหว่างวันที่ {{conditionReport.DateStart | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} {{conditionReport.TimeStart + ' น.'}} - ถึงวันที่ {{conditionReport.DateEnd | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} {{conditionReport.TimeEnd + ' น.'}}
+        </th>
+    </tr>
+    <tr>
+        <td>ผู้ออก : {{SellingName}} วันที่ : {{dateTimeNow | date:'dd/MM/yyyy เวลา HH:mm:ss น.'}}</td>
+    </tr>
+    <tr>
+    	<td>
+    		<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+                <tr>
+                    <th class="text-center" rowspan="2" ng-if="conditionReport.SummaryTypeDays">วันเดินทาง</th>
+                    <th class="text-center" rowspan="2" ng-if="conditionReport.SummaryTypeTrips">เที่ยว</th>
+                    <th class="text-center" rowspan="2" ng-if="conditionReport.PersonType == 'Counter'">จุดขาย</th>
+                    <th class="text-center" rowspan="2" ng-if="conditionReport.PersonType == 'Sales'">พนักงาน</th>
+                    <th class="text-center" colspan="6">วันเดินทาง</th>
+                    <th class="text-center" colspan="6">วันอื่น</th>
+                    <th class="text-center" rowspan="2">ค่าคอม</th>
+                    <th class="text-center" rowspan="2" ng-if="conditionReport.PrePay == 'Yes'">ค่าใช้จ่าย</th>
+                    <th class="text-center" rowspan="2">รวม</th>
+                </tr>
+                <tr>
+                    <th class="text-right">ยอดขาย</th>
+                    <th class="text-right">ยอดคืน</th>
+                    <th class="text-right">ค่าปรับ</th>
+                    <th class="text-right">สุทธิ</th>
+                    <th class="text-right">ที่นั่งขาย</th>
+                    <th class="text-right">ที่นั่งคืน</th>
+                    <th class="text-right">ยอดขาย</th>
+                    <th class="text-right">ยอดคืน</th>
+                    <th class="text-right">ค่าปรับ</th>
+                    <th class="text-right">สุทธิ</th>
+                    <th class="text-right">ที่นั่งขาย</th>
+                    <th class="text-right">ที่นั่งคืน</th>
+                </tr>
+                <tr ng-repeat="item in dataReport.RevenueByVehicleTripDateList">
+                    <td ng-if="conditionReport.SummaryTypeDays">
+                        {{item.VehicleOperationDate | jsonDate:'dd/MM/yyyy'}}
+                    </td>
+                    <td ng-if="conditionReport.SummaryTypeTrips">
+                        {{item.RouteMainNumber}} - {{item.RouteNumber}} {{item.VehicleSeatPlanName}}
+                    </td>
+                    <td ng-if="conditionReport.PersonType == 'Counter'">
+                        {{item.StopPointName_TH}}
+                    </td>
+                    <td ng-if="conditionReport.PersonType == 'Sales'">
+                        {{item.FirstName + ' ' + item.LastName}}
+                    </td>
+                    <td align="right">{{item.TotalPrice | number:2}}</td>
+                    <td align="right">{{item.TotalPriceReturn | number:2}}</td>
+                    <td align="right">{{item.TicketReturnFee | number:2}}</td>
+                    <td align="right">{{(item.TotalPrice - item.TotalPriceReturn + item.TicketReturnFee) | number:2}}</td>
+                    <td align="right">{{item.TotalSeats | number}}</td>
+                    <td align="right">{{item.TotalReturnSeats | number}}</td>
+                    <td align="right">{{item.OtherTotalPrice | number:2}}</td>
+                    <td align="right">{{item.OtherTotalPriceReturn | number:2}}</td>
+                    <td align="right">{{item.OtherTicketReturnFee | number:2}}</td>
+                    <td align="right">{{(item.OtherTotalPrice - item.OtherTotalPriceReturn + item.OtherTicketReturnFee) | number:2}}</td>
+                    <td align="right">{{item.OtherTotalSeats | number}}</td>
+                    <td align="right">{{item.OtherTotalReturnSeats | number}}</td>
+                    <td align="right">{{item.SaleCommission | number:2}}</td>
+                    <td align="right" ng-if="conditionReport.PrePay == 'Yes'">{{item.VehicleOperationCostPrice | number:2}}</td>
+                    <td align="right">{{((item.TotalPrice - item.TotalPriceReturn) + (item.OtherTotalPrice - item.OtherTotalPriceReturn) - (item.SaleCommission) - (conditionReport.PrePay == 'Yes'?item.VehicleOperationCostPrice:0) + item.OtherTicketReturnFee + item.TicketReturnFee) | number:2}}</td>
+                </tr>
+                <tr ng-if="dataReport.RevenueByVehicleTripDateList.length == 0">
+                    <td align="center" colspan="{{15 + (conditionReport.PersonType!='No'?1:0) + (conditionReport.SummaryTypeDays?1:0) + (conditionReport.SummaryTypeTrips?1:0) - (conditionReport.PrePay == 'No'?1:0)}}">ไม่มีข้อมูล</td>
+                </tr>
+                <tr>
+                    <td align="right" colspan="{{3 + (conditionReport.PersonType!='No'?1:0) + (conditionReport.SummaryTypeDays?1:0) + (conditionReport.SummaryTypeTrips?1:0)}}"><strong>รวม</strong></td>
+                    <td align="right">{{(dataReport.RevenueByVehicleTripDateList | total:'TotalPrice') - (dataReport.RevenueByVehicleTripDateList | total:'TotalPriceReturn') + (dataReport.RevenueByVehicleTripDateList | total:'TicketReturnFee') | number:2}}</td>
+                    <td align="right" colspan="2">{{(dataReport.RevenueByVehicleTripDateList | total:'TotalSeats') - (dataReport.RevenueByVehicleTripDateList | total:'TotalReturnSeats') | number}} ที่นั่ง</td>
+                    <td align="right" colspan="3"></td>
+                    <td align="right">{{(dataReport.RevenueByVehicleTripDateList | total:'OtherTotalPrice') - (dataReport.RevenueByVehicleTripDateList | total:'OtherTotalPriceReturn') + (dataReport.RevenueByVehicleTripDateList | total:'OtherTicketReturnFee')  | number:2}}</td>
+                    <td align="right" colspan="2">{{(dataReport.RevenueByVehicleTripDateList | total:'OtherTotalSeats') - (dataReport.RevenueByVehicleTripDateList | total:'OtherTotalReturnSeats') | number}} ที่นั่ง</td>
+                    <td align="right">{{(dataReport.RevenueByVehicleTripDateList | total:'SaleCommission') | number:2}}</td>
+                    <td align="right" ng-if="conditionReport.PrePay == 'Yes'">{{(dataReport.RevenueByVehicleTripDateList | total:'VehicleOperationCostPrice') | number:2}}</td>
+                    <td align="right">
+                        {{(((dataReport.RevenueByVehicleTripDateList | total:'TotalPrice') - (dataReport.RevenueByVehicleTripDateList | total:'TotalPriceReturn')) + ((dataReport.RevenueByVehicleTripDateList | total:'OtherTotalPrice') - (dataReport.RevenueByVehicleTripDateList | total:'OtherTotalPriceReturn')) - (dataReport.RevenueByVehicleTripDateList | total:'SaleCommission') - (conditionReport.PrePay == 'Yes'?(dataReport.RevenueByVehicleTripDateList | total:'VehicleOperationCostPrice'):0) + (dataReport.RevenueByVehicleTripDateList | total:'TicketReturnFee') + (dataReport.RevenueByVehicleTripDateList | total:'OtherTicketReturnFee')) | number:2}}
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>

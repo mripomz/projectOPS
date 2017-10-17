@@ -1,0 +1,48 @@
+<div class="panel panel-primary" style="border-radius:0px;border-top-right-radius:4px;">
+	<div class="panel-heading text-right" style="border-top-left-radius:0px;padding:10px">
+		<h3 class="pull-left" style="color:#FFF;font-size:30px;">หมายเลขตัวถัง - {{vehicleDetail.ChassisNumber}} / ทะเบียนรถ - {{vehicleDetail.PlateNumber}}</h3>
+  		<button class="btn btn-default" ng-click="addNewVehicleInsurance()">เพิ่มประกันภัยรถยนต์</button>
+	</div>
+	<div class="panel-body">
+	    <div class="col-md-12 margin-top-10">
+			<div class="input-group pull-right" style="width: 200px; top: 2px;">
+                <div class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </div>
+                <input type="search" placeholder="ค้นหา..." class="form-control input-sm" ng-model="lswFilterOptionsInsurance.lswFilter">
+            </div>
+			<div class="navbar-form navbar-left">
+	        	<div lsw-paginate="lswPaginateOptionsInsurance" class="lsw-paginate-position" small="true" ng-model="mainInsurance.SearchResults">
+	        	</div>    
+	        </div>
+            <div class="input-group  pull-right" style="margin-right:2px;">
+                <button ng-click="filterInsuranceOption()" class="btn input-sm" ng-class="{'btn-primary' : !showInsuranceAll}">แสดงทั้งหมด</button>
+            </div>
+			<div lsw-table="lswTableOptionsInsurance" ng-model="mainInsurance.SearchResults">
+                <script type="text/ng-template" id="theadInsuranceTemplate.html">
+    				<th class="col-md-3 cursor-point" ng-click="sort('InsuranceName');">บริษัทประกันภัย</th>
+    				<th class="col-md-2 cursor-point" ng-click="sort('InsuranceNumber');">เลขทะเบียน</th>
+    				<th class="col-md-2 cursor-point" ng-click="sort('StartDate');">เริ่มต้นวันที่</th>
+    				<th class="col-md-2 cursor-point" ng-click="sort('EndDate');">สิ้นสุดวันที่</th>
+    				<th class="col-md-1 cursor-point" ng-click="sort('IsActive');">สถานะ</th>
+    				<th class="col"></th>
+                </script>
+                <script type="text/ng-template" id="tbodyInsuranceTemplate.html">
+                    <td>{{row.InsuranceName}}</td>
+    				<td>{{row.InsuranceNumber}}</td>
+    				<td>{{row.StartDate | date:'dd/MM/yyyy'}}</td>
+    				<td>{{row.EndDate | date:'dd/MM/yyyy'}}</td>
+    				<td>{{(row.IsActive)?'ใช้งาน':'ไม่ใช้งาน'}}</td>
+    				<td align="right">
+    					<button class="btn btn-warning btn-xs" ng-click="parent.editVehicleInsurance(row.VehicleInsuranceId);">
+    						<i class="glyphicon glyphicon-pencil"></i> แก้ไข
+    					</button>
+    					<button class="btn btn-danger btn-xs" message-en="Are you sure to delete this insurance?" message-th="ต้องการที่จะลบประกันภัยนี้ออกจากระบบ ใช่หรือไม่?" lsw-confirm-modal="parent.removeVehicleInsurance(row.VehicleInsuranceId)">
+    						<i class="glyphicon glyphicon-trash"></i> ลบ
+    					</button>
+    				</td>
+                </script>
+            </div>
+        </div>
+	</div>
+</div>

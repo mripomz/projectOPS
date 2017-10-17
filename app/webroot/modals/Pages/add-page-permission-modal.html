@@ -1,0 +1,33 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 650px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">จัดการสิทธิ์การเข้าใช้</h3>
+            </div>
+            <div class="modal-body" style="max-height:650px;overflow-y:auto;">
+            	<table class="table table-condensed">
+        			<tr>
+        				<th class="col-md-1">ลำดับ</th>
+        				<th class="col-md-2">ชื่อเรื่อง</th>
+        				<th class="col-md-3">ชื่อเมนู</th>
+        				<th class="col-md-5">รายละเอียด</th>
+        				<th class="col-md-1"></th>
+        			</tr>
+        			<tr ng-repeat="page in pageList.SearchResults">
+        				<td>{{$index+1}}</td>
+        				<td>{{page.PageTitleName}}</td>
+        				<td>{{page.MenuName}}</td>
+        				<td>{{page.Description}}</td>
+        				<td><button class="btn btn-primary btn-xs" ng-click="savePagePermission(page.PageControllerId)"><i class="fa fa-plus"></i> เพิ่ม</td>
+        			</tr>
+        			<tr>
+        				<td ng-if="pageList.SearchResults.length == 0" colspan="5" align="center">ไม่มีข้อมูล</td>
+        			</tr>
+        			<tr>
+        				<td align="center" colspan="5"><button ng-click="$hide()" class="btn btn-default">ปิด</button></td>
+        			</tr>
+        		</table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,262 @@
+<div class="col-md-12 no-padding">
+	<div class="col-md-7 no-padding">
+		<div class="col-md-12">
+			<h4><strong>ข้อมูลรถบริการ</strong></h4>
+			<div class="col-xs-12 no-padding choose-vehicle-layout">
+		        <h5 class="text-center"><strong>เลือกรถบริการสำหรับเที่ยวรถนี้</strong></h5>
+		        <hr/>
+		        <div class="col-sm-12">
+		             <div class="form-horizontal" ng-form="VehicleTripForm2">
+
+		                <div class="form-group">
+		                    <label class="col-sm-3 control-label">ผังรถ</label>
+		                    <div class="col-sm-9">
+		                        <select class="form-control" ng-model="globalVariable.chooseVehicleSeatPlan" name="chooseVehicleSeatPlan" ng-change="loadVehicleSeatPlan()" ng-options="o as o.VehicleSeatPlanName for o in VehicleSeatPlanList" disabled>
+		                            <option value="">กรุณาเลือกผังรถ</option>
+		                        </select>
+		                    </div>
+		                </div>
+
+		                <div class="form-group">
+		                    <label class="col-sm-3 control-label">รถบริการ</label>
+		                    <div class="col-sm-9">
+		                        <select class="form-control" ng-model="globalVariable.chooseVehicle" name="chooseVehicle" ng-change="loadVehicleDetail()" ng-options="o as o.PlateNumber+' - '+o.ChassisNumber for o in VehicleList" ng-disabled="globalVariable.chooseVehicleSeatPlan == null">
+		                            <option value="">กรุณาเลือกรถบริการ</option>
+		                        </select>
+		                    </div>
+		                </div>
+
+		                <div class="form-group">
+		                    <label class="col-sm-3 control-label">ทะเบียนรถ : </label>
+		                    <div class="col-sm-3 value-control">
+		                        {{VehicleDetail.PlateNumber || '-'}}
+		                    </div>
+		                    <label class="col-sm-3 control-label">จังหวัด : </label>
+		                    <div class="col-sm-3 value-control">
+		                        {{(ProvicesList.Provinces[(ProvicesList.Provinces | lswIndexOf: { ProvinceId: VehicleDetail.PlateProvince } : 'ProvinceId')].ProvinceName_TH) || '-'}}
+		                    </div>
+		                </div>
+
+		                <div class="form-group">
+		                    <label class="col-sm-3 control-label">ยี่ห้อรถ : </label>
+		                    <div class="col-sm-9 value-control">
+		                        {{VehicleDetail.Brand || '-'}}
+		                    </div>
+		                </div>
+
+		                <div class="form-group">
+		                    <label class="col-sm-3 control-label">เบอร์รถ : </label>
+		                    <div class="col-sm-9 value-control">
+		                        {{VehicleDetail.VehicleNumber || '-'}}
+		                    </div>
+		                </div>
+
+		                <div class="form-group">
+		                    <label class="col-sm-3 control-label">คันที่ : </label>
+		                    <div class="col-sm-4">
+		                        <input type="text" ng-model="vehicleRouteTrip.VehicleOperationNo" class="form-control" placeholder="คันที่">
+		                    </div>
+		                </div>
+
+		                <div class="form-group">
+		                    <label class="col-sm-3 control-label">การจัดเรียง : </label>
+		                    <div class="col-sm-4">
+		                        <input type="text" ng-model="vehicleRouteTrip.VehicleOperationOrder" class="form-control" placeholder="การจัดเรียง">
+		                    </div>
+		                    <div class="col-sm-2 control-label" style="padding-right: 0px;">
+		                        <input type="checkbox" ng-model="vehicleRouteTrip.IsSupplement" id="isSupport">
+		                    </div>
+		                    <label for="isSupport" class="col-sm-3 value-control">เที่ยวรถเสริม</label>
+		                </div>
+		                <div class="form-group">
+		                    <label class="col-sm-3 control-label">ค่าคิวรถโดยสาร : </label>
+		                    <div class="col-sm-9">
+		                        <input type="text" ng-model="vehicleRouteTrip.QueueCostAtOpenVehicleDate" class="form-control" placeholder="ค่าคิว" ng-disabled="((vehicleRouteTrip.VehicleOperationDate | lswDate:'MM/dd/yyyy HH:mm':'dd/MM/yyyy HH:mm') < (dateTimeNow | date:'dd/MM/yyyy HH:mm'))">
+		                        <span class="danger" ng-if="((vehicleRouteTrip.VehicleOperationDate | lswDate:'MM/dd/yyyy HH:mm':'dd/MM/yyyy HH:mm') < (dateTimeNow | date:'dd/MM/yyyy HH:mm'))">*ไม่สามารถแก้ไขได้เนื่องจากเที่ยวรถนี้ออกเดินทางไปแล้ว</span>
+		                    </div>
+		                </div>
+		            </div>
+		            <div class="col-sm-12 no-padding">
+			            <h5><strong>ชื่อผังรถ : {{VehicleSeatPlan.VehicleSeatPlanName || '-'}}</strong></h5><hr/>
+			            <div class="col-xs-7">
+			                <ul class="nav nav-tabs" tabindex="7" style="overflow: hidden; outline: none;">
+			                    <li  ng-repeat="floor in VehicleSeatFloorDetail track by $index" ng-class="{'active' : globalVariable.IsFloorManageActive == $index}">
+			                        <a ng-click="globalVariable.IsFloorManageActive = $index" style="height: 48px;line-height: 21px;text-align: center;padding: 4px 10px;"><i class="fa fa-gavel"></i> ชั้นที่ {{floor.VehicleSeatFloorLevel}}</a>
+			                    </li>
+			                </ul>
+			                <div class="tab-content" style="padding:0px;">
+			                    <div class="tab-pane" ng-class="{'active' : globalVariable.IsFloorManageActive == $index}" ng-repeat="floor in VehicleSeatFloorDetail track by $index">
+			                        <div class="panel panel-primary text-center" style="border-radius:0px;border-top-right-radius:4px;">
+			                            <div class="panel-heading text-left" style="border-top-left-radius:0px;padding:4px">
+			                                <h3 style="color:#FFF;font-size:30px;"> ผังชั้นที่ {{floor.VehicleSeatFloorLevel}}</h3>
+			                            </div>
+			                            <table style="margin:25px auto; border: 1px #ccc solid">
+			                                <tr>
+			                                    <td></td>
+			                                    <td ng-repeat="rowName in floor.NewList[0] track by $index">
+			                                        <h4  style="color:#3498db;font-size:30px;"><strong>{{SeatName[$index]}}</strong></h4>
+			                                    </td>
+			                                </tr>
+			                                <tr ng-repeat="seatEachLine in floor.NewList track by $index">
+			                                    <td>
+			                                        <div style="padding:10px;">
+			                                            <h4 style="color:#3498db;" ng-if="($index + 1) >= VehicleTypeDetail.VehicleTypeSeatStartRow">
+			                                                <strong>{{($index - VehicleTypeDetail.VehicleTypeSeatStartRow)+2}}</strong>
+			                                            </h4>
+			                                        </div>
+			                                    </td>
+			                                    <td ng-repeat="seat in seatEachLine track by $index">
+			                                        <div style="padding:10px;" ng-click="openModalSelectSeatType(seat.VehicleSeatName, seat.VehicleSeatId)">
+			                                            <div style="width:20px;font-size:20px;" ng-bind-html="showIconImage(seat.VehicleSeatTypeId, seat.VehicleStandardId, seat.IsBlockedOnline)" data-trigger="hover" data-title="{{seat.VehicleSeatName}}" bs-tooltip></div>
+			                                        </div>
+			                                    </td>
+			                                </tr>
+			                                <tr ng-show="floor.NewList.length == 0">
+			                                    <td align="center">กำลังโหลด...</td>
+			                                </tr>
+			                            </table>
+			                        </div>
+			                    </div>
+			                </div>
+			            </div>
+			            <div class="col-sm-5">
+			            	<div class="form-group">
+					            <label class="col-sm-4 control-label" data-title="พนักงานขับรถ 1" data-placement="right" bs-tooltip>พขร 1</label>
+					            <div class="col-sm-8">
+					                <input type="text" name="VehicleOperationDrive_1" ng-model="vehicleRouteTrip.VehicleOperationDrive_1" class="form-control" placeholder="พนักงานขับรถ 1" required>
+					            </div>
+					        </div>
+					        <div class="clearfix"></div>
+					        <div class="form-group">
+					            <label class="col-sm-4 control-label" data-title="พนักงานขับรถ 2" data-placement="right" bs-tooltip>พขร 2</label>
+					            <div class="col-sm-8">
+					                <input type="text" ng-model="vehicleRouteTrip.VehicleOperationDrive_2" class="form-control" placeholder="พนักงานขับรถ 2">
+					            </div>
+					        </div>
+			            </div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+	</div>
+	<div class="col-md-5 no-padding">
+		<div class="col-md-12">
+			<h4><strong>ประวัติการจัดเที่ยวรถ</strong></h4>
+			<hr/>
+			<table class="table">
+				<tr>
+					<th class="col-xs-4">เวลา</th>
+					<th class="col-xs-4">ผู้ทำรายการ</th>
+					<th class="col-xs-4 text-right">สถานะ</th>
+				</tr>
+				<tr ng-repeat="log in vehicleOperationLogList track by $index">
+					<td>{{log.CreatedDate | jsonDate:'MM/dd/yyyy HH:mm:ss'}}</td>
+					<td>{{log.CreatedBy || '-'}}</td>
+					<td align="right">{{log.VehicleOperationLogDesc || '-'}}</td>
+				</tr>
+				<tr ng-if="vehicleOperationLogList.length == 0">
+					<td align="center" colspan="4">ไม่มีข้อมูล</td>
+				</tr>
+			</table>
+		</div>
+		<div class="col-md-12">
+			<h4><strong>ชานชาลา</strong></h4>
+			<hr/>
+			<div class="col-sm-12 no-padding" ng-if="VehicleRouteStopPoint.length > 0">
+		        <div class="form-horizontal">
+		            <div class="form-group" ng-repeat="stoppoint in VehicleRouteStopPoint">
+		                <label class="col-sm-4 control-label">จุดจอด<br/><span style="font-size:14px">{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: stoppoint.StopPointId } : 'StopPointId')].StopPointName_TH}}</span></label>
+		                <div class="col-sm-8">
+		                    <input type="text" class="form-control" ng-model="stoppoint.VehicleOperationStopPointName" placeholder="จุดจอด">
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+		<div class="col-md-12">
+			<h4><strong>บันทึกค่าใช้จ่าย</strong></h4>
+			<hr/>
+			<table class="table">
+				<tr>
+					<th class="col-xs-4">ค่าใช้จ่าย</th>
+					<th class="col-xs-3 text-right">จำนวน</th>
+					<th class="col-xs-3 text-right">ราคา</th>
+					<th class="col-xs-2 text-right"></th>
+				</tr>
+				<tr ng-repeat="cost in vehicleOperationCostList track by $index">
+					<td>{{cost.VehicleOperationCostDesc || '-'}}</td>
+					<td align="right">{{cost.VehicleOperationCostUnit | number:0}}</td>
+					<td align="right">{{cost.VehicleOperationCostPrice | number:2}}</td>
+					<td align="right"><button class="btn btn-danger btn-xs" message-en="Are you sure to remove this cost?" message-th="คุณต้องการที่จะลบค่าใช้จ่ายนี้ ใช่หรือไม่?" lsw-confirm-modal="RemoveVehicleOperationCosts(cost.VehicleOperationCostId)">ลบ</button></td>
+				</tr>
+				<tr ng-if="vehicleOperationCostList.length == 0">
+					<td align="center" colspan="4">ไม่มีข้อมูล</td>
+				</tr>
+				<tr>
+					<td align="center" colspan="4">
+						<button class="btn btn-info" ng-click="AddVehicleOperationCosts()">เพิ่มรายการค่าใช้จ่าย</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="col-md-12">
+			<h4><strong>ค่าระวาง</strong></h4>
+			<hr/>
+			<table class="table">
+				<tr>
+					<th class="col-xs-4">ระวาง</th>
+					<th class="col-xs-3 text-right">จำนวน</th>
+					<th class="col-xs-3 text-right">ราคา</th>
+					<th class="col-xs-2 text-right"></th>
+				</tr>
+				<tr ng-repeat="freight in vehicleOperationFreightList track by $index">
+					<td>{{freight.VehicleOperationFreightDesc || '-'}}</td>
+					<td align="right">{{freight.VehicleOperationFreightUnit | number:0}}</td>
+					<td align="right">{{freight.VehicleOperationFreightPrice | number:2}}</td>
+					<td align="right"><button class="btn btn-danger btn-xs" message-en="Are you sure to remove this freight?" message-th="คุณต้องการที่จะลบค่าระวางนี้ ใช่หรือไม่?" lsw-confirm-modal="RemoveVehicleOperationFreights(freight.VehicleOperationFreightId)">ลบ</button></td>
+				</tr>
+				<tr ng-if="vehicleOperationFreightList.length == 0">
+					<td align="center" colspan="4">ไม่มีข้อมูล</td>
+				</tr>
+				<tr>
+					<td align="center" colspan="4">
+						<button class="btn btn-info" ng-click="AddVehicleOperationFreights()">เพิ่มค่าระวาง</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="col-md-12">
+			<h4><strong>บันทึกข้อความเที่ยวรถ</strong></h4>
+			<hr/>
+			<table class="table">
+				<tr>
+					<th class="col-xs-4">ข้อความ</th>
+					<th class="col-xs-4">ผู้บันทึก</th>
+					<th class="col-xs-3 text-right">วัน/เวลาบันทึก</th>
+					<th class="col-xs-1 text-right"></th>
+				</tr>
+				<tr ng-repeat="note in vehicleOperationNoteList track by $index">
+					<td>
+						<div data-animation="am-fade-and-scale" data-placement="center" bs-modal="{'title':'ข้อความ','content':note.VehicleOperationNoteDesc}">
+							<span data-title="คลิกเพื่อดูข้อความทั้งหมด" bs-tooltip>{{note.VehicleOperationNoteDesc | limitTo:20 || '-'}}{{note.VehicleOperationNoteDesc.length > 20?'...':''}}</span>
+						</div>
+					</td>
+					<td>{{note.CreatedBy || '-'}}</td>
+					<td align="right">{{note.CreatedDate | jsonDate:'dd/MM/yyyy'}}</td>
+					<td align="right"><button class="btn btn-danger btn-xs" message-en="Are you sure to remove this note?" message-th="คุณต้องการที่จะลบบันทึกข้อความนี้ ใช่หรือไม่?" lsw-confirm-modal="RemoveVehicleOperationNote(note.VehicleOperationNoteId)">ลบ</button></td>
+				</tr>
+				<tr ng-if="vehicleOperationNoteList.length == 0">
+					<td align="center" colspan="4">ไม่มีข้อมูล</td>
+				</tr>
+				<tr>
+					<td align="center" colspan="4">
+						<button class="btn btn-info" ng-click="AddVehicleOperationNotes()">เพิ่มบันทึก</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="col-sm-12 text-center clearfix margin-top-20">
+	    <button class="btn btn-primary" ng-click="updateRouteTrip(false);"><i class="glyphicon glyphicon-floppy-disk"></i> บันทึก</button>
+	</div>
+</div>

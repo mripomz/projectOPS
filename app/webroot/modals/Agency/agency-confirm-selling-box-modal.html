@@ -1,0 +1,292 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 90%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title pull-left">สรุปการทำรายการ</h3>
+                <button type="button" class="close pull-right" ng-click="$hide()">×</button>
+                <div class="clearfix"></div>
+            </div>
+            <div class="modal-body" style="max-height:650px;overflow-y:auto;">
+                <div class="form-horizontal">
+                    <div class="col-md-12 no-padding" ng-if="(pickupService.length > 0 || dropoffService.length > 0) && globalVariable.stepProcess == 0">
+                        <h3 class="text-center">ต้องการรถรับส่งผู้โดยสารหรือไม่</h3>
+                        <div class="col-md-12 text-center">
+                            <button class="btn btn-primary" ng-click="globalVariable.stepProcess = 1">ต้องการ</button>&nbsp;&nbsp;&nbsp;
+                            <button class="btn btn-danger" ng-click="globalVariable.stepProcess = 2;globalVariable.isChoosePickup = false;globalVariable.isChooseDropoff = false">ไม่ต้องการ</button>
+                        </div>
+                    </div>
+                    <div class="col-md-12 no-padding" ng-if="globalVariable.stepProcess == 1">
+                        <div class="col-md-12 no-padding fadeIn animated">
+                            <!-- PICKUP -->
+                            <div class="col-md-6" style="border-right: 1px solid #ccc">
+                                <div class="col-md-12 text-center">
+                                    <input type="checkbox" ng-model="globalVariable.isChoosePickup" id="pickupService" ng-disabled="pickupService.length == 0" ng-change="checkStepTwo()">
+                                    <label class="cursor-point" for="pickupService" style="font-size: 26px">บริการรถรับ (Pickup)</label>
+                                </div>
+                                <div class="clearfix"></div>
+                                <hr/>
+                                <div ng-if="globalVariable.isChoosePickup">
+                                    <div class="col-md-8 no-padding">
+                                        <div class="col-md-12 no-padding margin-bottom-10">
+                                            <label class="col-md-5 text-right" for="dropoffService">ค้นหาสถานที่ :</label>
+                                            <div class="col-md-7 no-padding">
+                                                <input type="text" placeholder="ชื่อสถานที่" class="form-control" data-animation="am-flip-x" ng-model="searchFilter.pickupSearch" ng-disabled="!globalVariable.isChoosePickup || pickupService.length == 0" bs-options="o as o.LocationName for o in locationList" bs-typeahead data-min-length="2">
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <ui-gmap-google-map center='maps.pickup.center' zoom='maps.pickup.zoom' options="{draggable : globalVariable.isChoosePickup, scrollwheel : globalVariable.isChoosePickup, clickableIcons:false}">
+                                            <ui-gmap-markers models="pickupMarkers" coords="'self'" icon="'icon'" click="onClick">
+                                                <ui-gmap-windows ng-show="show"><div ng-non-bindable>{{title}}</div></ui-gmap-windows>
+                                            </ui-gmap-markers>
+                                        </ui-gmap-google-map>
+                                        <div class="clearfix"></div><hr/>
+                                        <div class="margin-top-10">
+                                            <div class="col-md-5 no-padding text-center">
+                                                <i class="fa fa-home" aria-hidden="true"></i><br/>
+                                                {{locationList[(locationList | lswIndexOf: {LocationId: PickupPassengers.LocationId} : 'LocationId')].LocationName}}
+                                            </div>
+                                            <div class="col-md-2 no-padding text-center">
+                                                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-md-5 no-padding text-center">
+                                                <i class="fa fa-bus" aria-hidden="true"></i><br/>
+                                                {{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: {StopPointId: (pickupService[(pickupService | lswIndexOf: { PickupDropOffServiceId: PickupPassengers.PickupDropOffServiceId } : 'PickupDropOffServiceId')].StopPointId)} : 'StopPointId')].StopPointName_TH}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="margin-bottom-10">
+                                            <input type="text" ng-model="PickupPassengers.RoomNumber" placeholder="เลขห้องผู้โดยสาร" class="form-control" ng-disabled="!globalVariable.isChoosePickup || pickupService.length == 0">
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <table class="table table-bordered">
+                                            <tr class="primary">
+                                                <th class="text-center"><strong style="color:#FFF">เวลารับ</strong></th>
+                                            </tr>
+                                            <tr class="cursor-point" ng-repeat="item in pickupService" ng-click="(globalVariable.isChoosePickup && seatSelect.length <= (item.PickupDropOffServiceMaxLimit - item.PickupDropOffServiceUsages))?selectPickupDropOffService(item.PickupDropOffServiceId, 'pickUp'):''" ng-class="(PickupPassengers.PickupDropOffServiceId == item.PickupDropOffServiceId?'info':'')">
+                                                <td align="center">{{(item.TimeService | jsonDate:'HH:mm น.') + ' เหลือ ' + (item.PickupDropOffServiceMaxLimit - item.PickupDropOffServiceUsages) + ' ที่นั่ง'}}</td>
+                                            </tr>
+                                            <tr ng-if="pickupService.length == 0">
+                                                <td align="center">ไม่มีเที่ยวรถบริการ</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- DROPOFF -->
+                            <div class="col-md-6">
+                                <div class="col-md-12 text-center">
+                                    <input type="checkbox" ng-model="globalVariable.isChooseDropoff" id="dropoffService" ng-disabled="dropoffService.length == 0" ng-change="checkStepTwo()">
+                                    <label class="cursor-point" for="dropoffService" style="font-size: 26px">บริการรถส่ง (Drop Off)</label>
+                                </div>
+                                <div class="clearfix"></div>
+                                <hr/>
+                                <div ng-if="globalVariable.isChooseDropoff">
+                                    <div class="col-md-8 no-padding">
+                                        <div class="col-md-12 no-padding margin-bottom-10">
+                                            <label class="col-md-5 text-right" for="dropoffService">ค้นหาสถานที่ :</label>
+                                            <div class="col-md-7 no-padding">
+                                                <input type="text" placeholder="ชื่อสถานที่" class="form-control" data-animation="am-flip-x" ng-model="searchFilter.dropoffSearch" ng-disabled="!globalVariable.isChooseDropoff || dropoffService.length == 0" bs-options="o as o.LocationName for o in locationList" bs-typeahead data-min-length="2">
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <ui-gmap-google-map center='maps.dropoff.center' zoom='maps.dropoff.zoom' options="{draggable : globalVariable.isChooseDropoff, scrollwheel : globalVariable.isChooseDropoff, clickableIcons:false}">
+                                            <ui-gmap-markers models="dropoffMarkers" coords="'self'" icon="'icon'" click="onClick">
+                                                <ui-gmap-windows ng-show="show"><div ng-non-bindable>{{title}}</div></ui-gmap-windows>
+                                            </ui-gmap-markers>
+                                        </ui-gmap-google-map>
+                                        <div class="clearfix"></div><hr/>
+                                        <div class="margin-top-10">
+                                            <div class="col-md-5 no-padding text-center">
+                                                <i class="fa fa-bus" aria-hidden="true"></i><br/>
+                                                {{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: {StopPointId: (dropoffService[(dropoffService | lswIndexOf: { PickupDropOffServiceId: DropOffPassengers.PickupDropOffServiceId } : 'PickupDropOffServiceId')].StopPointId)} : 'StopPointId')].StopPointName_TH}}
+                                            </div>
+                                            <div class="col-md-2 no-padding text-center">
+                                                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="col-md-5 no-padding text-center">
+                                                <i class="fa fa-home" aria-hidden="true"></i><br/>
+                                                {{locationList[(locationList | lswIndexOf: {LocationId: DropOffPassengers.LocationId} : 'LocationId')].LocationName}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="margin-bottom-10">
+                                            <input type="text" ng-model="DropOffPassengers.RoomNumber" placeholder="เลขห้องผู้โดยสาร" class="form-control" ng-disabled="!globalVariable.isChooseDropoff || dropoffService.length == 0">
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <table class="table table-bordered">
+                                            <tr class="primary">
+                                                <th class="text-center"><strong style="color:#FFF">เวลารับ</strong></th>
+                                            </tr>
+                                            <tr class="cursor-point" ng-repeat="item in dropoffService" ng-click="(globalVariable.isChooseDropoff && seatSelect.length <= (item.PickupDropOffServiceMaxLimit - item.PickupDropOffServiceUsages))?selectPickupDropOffService(item.PickupDropOffServiceId, 'dropOff'):''" ng-class="(DropOffPassengers.PickupDropOffServiceId == item.PickupDropOffServiceId?'info':'')">
+                                                <td align="center">{{(item.TimeService | jsonDate:'HH:mm น.') + ' เหลือ ' + (item.PickupDropOffServiceMaxLimit - item.PickupDropOffServiceUsages) + ' ที่นั่ง'}}</td>
+                                            </tr>
+                                            <tr ng-if="dropoffService.length == 0">
+                                                <td align="center">ไม่มีเที่ยวรถบริการ</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="background-color:#fff !important; border-top:none;">
+                            <button class="btn btn-primary" ng-click="globalVariable.stepProcess = 2;" ng-disabled="!globalVariable.stepTwoFinish">ยืนยันทำรายการ</button>
+                            <button class="btn btn-danger" ng-click="globalVariable.stepProcess = 0;globalVariable.isChoosePickup = false;globalVariable.isChooseDropoff = false"">ไม่ต้องการ</button>
+                        </div>
+                    </div>
+                    <div class="col-md-12 no-padding" ng-if="globalVariable.stepProcess == 2 || (pickupService.length == 0 && dropoffService.length == 0)">
+                        <div ng-class="globalVariable.stepProcess == 2?'col-md-6':'col-md-12'">
+                            <h4><strong>ข้อมูลการทำรายการ</strong></h4><hr/>
+                        	<div class="form-group">
+                                <div class="col-md-3 text-right">
+                                    <strong>เส้นทางเดินรถ : </strong>
+                                </div>
+                                <div class="col-md-9 text-left">
+                                    {{globalVariable.currentRouteDetail.RouteName_TH}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 text-right">
+                                    <strong>เดินทางจาก : </strong>
+                                </div>
+                                <div class="col-md-3 text-left">
+                                    <span style="color:red"><strong>{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: VehicleOperationSeats.StopPointStartId } : 'StopPointId')].StopPointName_TH}}</strong></span>
+                                </div>
+                                <div class="col-md-3 text-right">
+                                    <strong>ไปยัง : </strong>
+                                </div>
+                                <div class="col-md-3 text-left">
+                                    <span style="color:red"><strong>{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: VehicleOperationSeats.StopPointEndId } : 'StopPointId')].StopPointName_TH}}</strong></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 text-right">
+                                    <strong>วันเดินทาง : </strong>
+                                </div>
+                                <div class="col-md-9 text-left">
+                                    <span style="color:red"><strong>{{dateSearchValue | date:'dd MMMM yyyy'}}</strong></span>
+                                </div>  
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 text-right">
+                                    <strong>เวลาออกเดินทาง : </strong>
+                                </div>
+                                <div class="col-md-9 text-left">
+                                    <span style="color:red">
+                                        <strong>
+                                    {{RouteProviceList[(RouteProviceList | lswIndexOf: { StopPointId: VehicleOperationSeats.StopPointStartId } : 'StopPointId')].Time | date:'HH:mm'}} น.
+                                        </strong>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 text-right">
+                                    <strong>ชื่อผู้ซื้อ/จอง : </strong>
+                                </div>
+                                <div class="col-md-9 text-left">
+                                    {{((PassengerDetail.PassengerFirstName == null || PassengerDetail.PassengerFirstName == '') && (PassengerDetail.PassengerLastName == null || PassengerDetail.PassengerLastName == ''))?'-':(PassengerDetail.PassengerFirstName + ' ' + (PassengerDetail.PassengerLastName || ''))}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 text-right">
+                                    <strong>ที่นั่ง</strong>
+                                </div>
+                                <div class="col-md-9 text-left">
+                                    <span ng-repeat="seat in seatSelect">{{($index==seatSelect.length-1)?seat.VehicleSeatName:seat.VehicleSeatName+', '}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 text-right">
+                                    <strong>เบอร์โทรศัพท์ : </strong>
+                                </div>
+                                <div class="col-md-9 text-left">
+                                    {{PassengerDetail.PassengerPhone}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 text-right margin-top-5">
+                                    <strong>เครดิต : </strong>
+                                </div>
+                                <div class="col-md-9 text-left">
+                                    <span class="success" style="font-size: 26px; font-weight: bolder; text-decoration: underline;">{{(AgencyCredit.AgencyCreditPoint || 0) | number:2}}</span> บาท
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 text-right margin-top-5">
+                                    <strong>ยอดชำระสุทธิ : </strong>
+                                </div>
+                                <div class="col-md-9 text-left">
+                                    <span class="primary" style="font-size: 26px; font-weight: bolder; text-decoration: underline;">{{calculateLastPrice() | number:2}}</span> บาท
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 text-right margin-top-10">
+                                    <strong>เครดิตคงเหลือ : </strong>
+                                </div>
+                                <div class="col-md-9 text-left">
+                                    <span class="danger" style="font-size: 30px; font-weight: bolder; text-decoration: underline;">{{(AgencyCredit.AgencyCreditPoint || 0) - calculateLastPrice() | number:2}}</span> บาท
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-if="globalVariable.stepProcess == 2" class="col-md-6">
+                            <h4><strong>ข้อมูลบริการรับส่งผู้โดยสาร</strong></h4><hr/>
+                            <table class="table table-bordered">
+                                <tbody ng-if="globalVariable.isChoosePickup">
+                                    <tr class="active"><!--FOR PICKUP-->
+                                        <th colspan="4">บริการรถรับ (Pickup)</th>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-3" align="right">รายละเอียด : </td>
+                                        <td colspan="3">
+                                            รับจาก <strong>{{locationList[(locationList | lswIndexOf: {LocationId: PickupPassengers.LocationId} : 'LocationId')].LocationName}}</strong> ไปส่งที่ 
+                                            <strong>{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: {StopPointId: (pickupService[(pickupService | lswIndexOf: { PickupDropOffServiceId: PickupPassengers.PickupDropOffServiceId } : 'PickupDropOffServiceId')].StopPointId)} : 'StopPointId')].StopPointName_TH}}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-3" align="right">เวลา : </td>
+                                        <td align="right">
+                                            <strong>{{(pickupService[(pickupService | lswIndexOf: { PickupDropOffServiceId: PickupPassengers.PickupDropOffServiceId } : 'PickupDropOffServiceId')].TimeService) | jsonDate:'HH:mm น.'}}</strong>
+                                        </td>
+                                        <td class="col-md-3" align="right">ระยะทาง : </td>
+                                        <td align="right">
+                                            <strong>{{PickupPassengers.DistanceKM | number:2}}</strong> กม.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-if="globalVariable.isChooseDropoff">
+                                    <tr class="active"><!--FOR DROP OFF-->
+                                        <th colspan="4">บริการรถส่ง (Drop Off)</th>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-3" align="right">รายละเอียด : </td>
+                                        <td colspan="3">
+                                            รับจาก <strong>{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: {StopPointId: (dropoffService[(dropoffService | lswIndexOf: { PickupDropOffServiceId: DropOffPassengers.PickupDropOffServiceId } : 'PickupDropOffServiceId')].StopPointId)} : 'StopPointId')].StopPointName_TH}}</strong> ไปส่งที่ 
+                                            <strong>{{locationList[(locationList | lswIndexOf: {LocationId: DropOffPassengers.LocationId} : 'LocationId')].LocationName}}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-3" align="right">เวลา : </td>
+                                        <td align="right">
+                                            <strong>{{(dropoffService[(dropoffService | lswIndexOf: { PickupDropOffServiceId: DropOffPassengers.PickupDropOffServiceId } : 'PickupDropOffServiceId')].TimeService) | jsonDate:'HH:mm น.'}}</strong>
+                                        </td>
+                                        <td class="col-md-3" align="right">ระยะทาง : </td>
+                                        <td align="right">
+                                            <strong>{{DropOffPassengers.DistanceKM | number:2}}</strong> กม.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="modal-footer" style="background-color:#fff !important; border-top:none;">
+                            <button class="btn btn-primary" ng-click="$hide();saveSellingBoxVehicleTrip()" scroll-on-click>ยืนยันทำรายการ</button>
+                            <button class="btn btn-danger" ng-click="$hide();">ยกเลิก</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>

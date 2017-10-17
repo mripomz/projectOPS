@@ -1,0 +1,55 @@
+<div class="modal" tabindex="-1" role="dialog" style="display: block; overflow: auto;">
+    <div class="modal-dialog" style="width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">จัดการส่วนลด</h3>
+            </div>
+            <div class="modal-body" style="overflow-y:auto;">
+            	<div class="alert alert-danger" ng-show="errorMsg.isError">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <div ng-bind-html="errorMsg.message | sanitize"></div>
+                </div>
+	            <form class="form-horizontal" role="form" name="Vehicle" novalidate>
+                    <div class="form-group">
+                        <label for="DiscountTypeName" class="col-sm-3 control-label">ประเภทส่วนลด<span class="error" ng-show="Vehicle.DiscountTypeName.$error.required || Vehicle.DiscountTypeName.$invalid">*</span></label>
+                        <div class="col-sm-9">
+                            <input autocomplete="off" type="text" class="form-control" name="DiscountTypeName" ng-model="DiscountTypeDetail.DiscountTypeName" placeholder="โปรดระบุประเภทส่วนลด" required/>
+                        </div>
+                    </div>
+	                <div class="form-group">
+	                	<label for="DiscountTypePrice" class="col-sm-3 control-label">ส่วนลด<span class="error" ng-show="Vehicle.DiscountTypePrice.$error.required || Vehicle.DiscountTypePrice.$invalid">*</span></label>
+	                	<div class="col-sm-9">
+	                		<input autocomplete="off" type="text" class="form-control" name="DiscountTypePrice" ng-model="DiscountTypeDetail.DiscountTypePrice" placeholder="ส่วนลด (บาท)" required  lsw-only-digits fcsa-number>
+	                	</div>
+	                </div>
+                    <div class="form-group">
+                        <label for="DiscountTypeCode" class="col-sm-3 control-label">รหัสส่วนลด</label>
+                        <div class="col-sm-9">
+                            <input autocomplete="off" type="text" class="form-control" name="DiscountTypeCode" ng-model="DiscountTypeDetail.DiscountTypeCode" placeholder="โค้ท/รหัสส่วนลด">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsPercentage" class="col-sm-3 control-label">คิดเป็นเปอร์เซ็นต์</label>
+                        <div class="col-sm-9">
+                            <input autocomplete="off" type="checkbox" name="IsPercentage" ng-model="DiscountTypeDetail.IsPercentage">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsActivated" class="col-sm-3 control-label">การใช้งาน</label>
+                        <div class="col-sm-9">
+                            <input autocomplete="off" type="checkbox" name="IsActivated" ng-model="DiscountTypeDetail.IsActivated">
+                        </div>
+                    </div>
+	                <div class="form-group margin-none">
+						<div class="col-sm-offset-3 col-sm-9">
+							<button ng-click="saveDiscountType()" class="btn btn-primary">บันทึก</button>
+							<button ng-click="$hide()" class="btn btn-default">ปิด</button>
+						</div>
+					</div>
+	            </form>
+            </div>
+        </div>
+    </div>
+</div>

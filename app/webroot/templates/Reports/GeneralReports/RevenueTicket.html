@@ -1,0 +1,225 @@
+<div class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">ประเภทรายงาน : </label>
+        <div class="col-sm-8">
+	        <select ng-model="reportType.RevenueTicket" class="form-control" ng-change="resetReport();setNewOptionforRevenueTicket();">
+	        	<option value="ReportForRevenueFromTicketSales">รายได้จากการขายตั๋ว</option>
+                <option value="ReportForTicketSalesDetail">แสดงรายการขายตั๋ว</option>
+                <option value="ReportForSalesSummaryTicket">สรุปยอดขาย(วันเดินทางเป็นหลัก)</option>
+                <option value="ReportForTicketDetail">แสดงรายละเอียดตั๋ว</option>
+                <option value="ReportForCancelTicket">การยกเลิกรายการขายตั๋ว</option>
+                <option value="ReportForTicketDiscount">แสดงรายการตั๋วที่มีส่วนลด</option>
+                <option value="ReportForReturnTicket">การคืนตั๋วขาย</option>
+                <option value="ReportForPrintDuplicateTicket">การพิมพ์ตั๋วซ้ำ</option>
+                <option value="ReportForDisclaimTicket">การสละสิทธิที่นั่ง</option>
+	        </select>
+        </div>
+        <div class="col-sm-1 text-right no-padding">
+            <button class="btn btn-primary btn-block" ng-disabled="globalVariable.currentReports == ''" ng-click="printDiv()"><i class="fa fa-print" aria-hidden="true"></i> พิมพ์</button>
+        </div>
+        <div class="col-sm-1 text-right no-padding-right">
+            <button class="btn btn-primary btn-block" ng-disabled="globalVariable.currentReports == ''" ng-click="generateExcel()"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel</button>
+        </div>
+    </div>
+    <hr/>
+    <div class="form-group" ng-if="(reportType.RevenueTicket == 'ReportForRevenueFromTicketSales' || reportType.RevenueTicket == 'ReportForTicketSalesDetail' || reportType.RevenueTicket == 'ReportForReturnTicket')">
+        <label class="col-sm-2 control-label">ประเภท : </label>
+        <div class="col-sm-10" ng-if="reportType.RevenueTicket == 'ReportForRevenueFromTicketSales'">
+            <select ng-model="conditionReport.ReportType" class="form-control" ng-change="resetReport();(conditionReport.ReportType == 'RevenueByProgress' || conditionReport.ReportType == 'RevenueByVehicleNumber'?(conditionReport.TypeSearch = 'Trip'):(conditionReport.TypeSearch = 'Transaction'));">
+                <option value="RevenueBySales">จำแนกตามผู้รับเงิน</option>
+				<option value="RevenueByVehicleTrip">จำแนกตามเที่ยวรถ</option>
+				<option value="RevenueByProgress">จำแนกตามการดำเนินงาน</option>
+				<option value="RevenueByCounterSales">จำแนกตามแผนกจำหน่ายตั๋ว</option>
+				<option value="RevenueByAdvanceSold">รายได้ขายตั๋วล่วงหน้า</option>
+				<option value="RevenueByAdvanceSold_Short">รายได้ขายตั๋วล่วงหน้า แสดงที่นั่ง (Thermal)</option>
+				<option value="RevenueByAdvanceSoldDisplayDetail_Short">รายได้ขายตั๋วล่วงหน้า แสดงเลขตั๋ว (Thermal)</option>
+				<option value="RevenueByTicketSeller_Short">รายได้ขายตั๋ว (Thermal)</option>
+				<option value="RevenueByPayeeAndTrip">รายได้ประจำวันจำแนกตามผู้รับเงินและเที่ยวรถ</option>
+				<option value="RevenueByVehicleNumber">รายได้จำแนกตามเบอร์รถ</option>
+				<option value="RevenueByCounter">รายได้จำแนกตามเคาเตอร์</option>
+            </select>
+        </div>
+        <div class="col-sm-10" ng-if="reportType.RevenueTicket == 'ReportForTicketSalesDetail'">
+            <select ng-model="conditionReport.ReportType" class="form-control" ng-change="resetReport();conditionReport.TypeSearch = 'Transaction';">
+                <option value="ReportTicketSales">รายงานแสดงการขายตั๋ว</option>
+                <option value="ReportTicketSales_Search">รายงานแสดงการขายตั๋วแบบค้นหา</option>
+            </select>
+        </div>
+        <div class="col-sm-10" ng-if="reportType.RevenueTicket == 'ReportForReturnTicket'">
+            <select ng-model="conditionReport.ReportType" class="form-control" ng-change="resetReport();conditionReport.TypeSearch = 'Transaction';">
+                <option value="ReportForDisplayReturnTicket">รายงานการคืนตั๋วขาย</option>
+                <option value="ReportForDisplayReturnTicket_Search">รายงานการคืนตั๋วขายแบบค้นหา</option>
+                <option value="ReportForDisplayReturnTicket_TripDays">รายงานคืนตั๋ววันเดินทาง</option>
+                <option value="ReportForDisplayReturnTicket_OtherDays">รายงานคืนตั๋วล่วงหน้า</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group" ng-if="reportType.RevenueTicket != 'ReportForSalesSummaryTicket'">
+        <label class="col-sm-2 control-label">ค้นหาจาก : </label>
+        <div class="col-sm-10">
+            <select ng-model="conditionReport.TypeSearch" class="form-control" ng-change="resetReport()">
+                <option value="Transaction" ng-if="conditionReport.ReportType != 'RevenueByProgress' && conditionReport.ReportType != 'RevenueByVehicleNumber'">วันทำรายการ</option>
+                <option value="Trip" ng-if="reportType.RevenueTicket != 'ReportForPrintDuplicateTicket' && reportType.RevenueTicket != 'ReportForDisclaimTicket' && conditionReport.ReportType != 'ReportTicketSales_Search' && conditionReport.ReportType != 'ReportForDisplayReturnTicket_Search' && conditionReport.ReportType != 'ReportForDisplayReturnTicket_TripDays' && conditionReport.ReportType != 'ReportForDisplayReturnTicket_OtherDays' && conditionReport.ReportType != 'RevenueByCounterSales' && conditionReport.ReportType != 'RevenueByAdvanceSold_Short' && conditionReport.ReportType != 'RevenueByAdvanceSoldDisplayDetail_Short' && conditionReport.ReportType != 'RevenueByPayeeAndTrip' && conditionReport.ReportType != 'RevenueByCounter'">วันเดินทาง</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">จากวันที่ : </label>
+        <div class="col-sm-4">
+            <div class="input-group">
+                <input type="text" name="dateStart" class="form-control" ng-model="conditionReport.DateStart" placeholder="จากวันที่" bs-datepicker data-date-type="string" data-model-date-format="MM/dd/yyyy" data-date-format="dd/MM/yyyy" data-autoclose="true" data-placement="bottom" ng-change="resetReport()">
+                <label for="dateStart" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+            </div>
+        </div>
+        <label class="col-sm-2 control-label">จนถึงวันที่ : </label>
+        <div class="col-sm-4">
+            <div class="input-group">
+                <input type="text" name="dateEnd" class="form-control" ng-model="conditionReport.DateEnd" placeholder="จากวันที่" bs-datepicker data-date-type="string" data-model-date-format="MM/dd/yyyy" data-date-format="dd/MM/yyyy" data-autoclose="true" data-placement="bottom" ng-change="resetReport()">
+                <label for="dateEnd" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group" ng-if="conditionReport.TypeSearch != 'Trip' && conditionReport.ReportType != 'RevenueByPayeeAndTrip' && conditionReport.ReportType != 'RevenueByVehicleNumber' && reportType.RevenueTicket != 'ReportForCancelTicket' && reportType.RevenueTicket != 'ReportForReturnTicket'">
+        <label class="col-sm-2 control-label">เวลา : </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" ng-model="conditionReport.TimeStart" id="timeStart" placeholder="เวลาเริ่มต้น" data-time-type="string" data-minute-step="1" bs-timepicker data-autoclose="true" ng-change="resetReport()">
+        </div>
+        <label class="col-sm-2 control-label">เวลา : </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" ng-model="conditionReport.TimeEnd" id="timeEnd" placeholder="เวลาเริ่มต้น" data-time-type="string" data-minute-step="1" bs-timepicker data-autoclose="true" ng-change="resetReport()">
+        </div>
+    </div>
+
+    <!-- Filter for ReportForSalesSummaryTicket -->
+    <div ng-if="reportType.RevenueTicket == 'ReportForSalesSummaryTicket' || reportType.RevenueTicket == 'ReportForTicketDetail'">
+        <div class="form-group" ng-if="reportType.RevenueTicket == 'ReportForSalesSummaryTicket'">
+            <label class="col-sm-2 control-label">สรุปตาม : </label>
+            <div class="col-sm-10 margin-top-5">
+                <input type="checkbox" ng-model="conditionReport.SummaryTypeDays" ng-change="resetReport()"> วัน
+                <input type="checkbox" ng-model="conditionReport.SummaryTypeTrips" ng-change="resetReport()"> เที่ยว
+            </div>
+        </div>
+        <div class="form-group" ng-if="reportType.RevenueTicket == 'ReportForSalesSummaryTicket'">
+            <label class="col-sm-2 control-label">บุคคล : </label>
+            <div class="col-sm-10 margin-top-5">
+                <input type="radio" ng-model="conditionReport.PersonType" value="No" ng-change="resetReport()"> ไม่เลือก
+                <input type="radio" ng-model="conditionReport.PersonType" value="Sales" ng-change="resetReport()"> คนขาย
+                <input type="radio" ng-model="conditionReport.PersonType" value="Counter" ng-change="resetReport()"> จุดขาย
+            </div>
+        </div>
+        <div class="form-group" ng-if="reportType.RevenueTicket == 'ReportForSalesSummaryTicket'">
+            <label class="col-sm-2 control-label">สำรองจ่าย : </label>
+            <div class="col-sm-10 margin-top-5">
+                <input type="radio" ng-model="conditionReport.PrePay" value="Yes" ng-change="resetReport()"> หัก
+                <input type="radio" ng-model="conditionReport.PrePay" value="No" ng-change="resetReport()"> ไม่หัก
+            </div>
+        </div>
+        <div class="form-group" ng-if="reportType.RevenueTicket == 'ReportForSalesSummaryTicket'">
+            <label class="col-sm-2 control-label">เส้นทาง : </label>
+            <div class="col-sm-10 margin-top-5">
+                <button type="button" class="btn btn-default" ng-model="conditionReport.Routes" data-multiple="1" data-animation="am-flip-x" bs-options="o.RouteId as (o.RouteMainNumber + ' - ' + o.RouteNumber + ' ' + o.RouteName_TH) for o in VehicleRoute" bs-select>
+                  Action <span class="caret"></span>
+                </button>
+            </div>
+        </div>
+        <div class="form-group" ng-if="reportType.RevenueTicket == 'ReportForTicketDetail'">
+            <label class="col-sm-2 control-label">รายงาน : </label>
+            <div class="col-sm-10 margin-top-5">
+                <input type="radio" ng-model="conditionReport.Conditions" value="1" ng-change="resetReport()"> เฉพาะตั๋วที่ต้นทางไม่ใช่จุดขายของผู้ขาย <br/>
+                <input type="radio" ng-model="conditionReport.Conditions" value="2" ng-change="resetReport()"> เฉพาะตั๋วที่ต้นทางเป็นจุดขายของผู้ขาย  <br/>
+                <input type="radio" ng-model="conditionReport.Conditions" value="3" ng-change="resetReport()"> ตั๋วทั้งหมด
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">เที่ยวขา : </label>
+            <div class="col-sm-10 margin-top-5">
+               <input type="radio" ng-model="conditionReport.RouteType" value="All" ng-change="resetReport()"> ทั้งหมด
+               <input type="radio" ng-model="conditionReport.RouteType" value="Down" ng-change="resetReport()"> ล่อง
+               <input type="radio" ng-model="conditionReport.RouteType" value="Up" ng-change="resetReport()"> ขึ้น
+            </div>
+        </div>
+    </div>
+    <!-- Filter for ReportForSalesSummaryTicket -->
+
+    <!-- Other Filter -->
+    <div class="form-group" ng-if="reportType.RevenueTicket == 'ReportForSalesSummaryTicket' || reportType.RevenueTicket == 'ReportForTicketDetail' || (reportType.RevenueTicket == 'ReportForRevenueFromTicketSales' && (conditionReport.ReportType == 'RevenueByAdvanceSold_Short' || conditionReport.ReportType == 'RevenueByAdvanceSoldDisplayDetail_Short' || conditionReport.ReportType == 'RevenueByTicketSeller_Short' || conditionReport.ReportType == 'RevenueByCounter'))">
+        <label class="col-sm-2 control-label">จุดขาย : </label>
+        <div class="col-sm-10">
+            <select ng-model="conditionReport.StopPoint" ng-options="o.StopPointId as o.StopPointName_TH for o in stopPointData.StopPointList" class="form-control" ng-change="loadEmployeeList();">
+                <option value="">ทั้งหมด</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group" ng-if="reportType.RevenueTicket == 'ReportForSalesSummaryTicket' || reportType.RevenueTicket == 'ReportForTicketDetail' || (reportType.RevenueTicket == 'ReportForRevenueFromTicketSales' && (conditionReport.ReportType == 'RevenueByAdvanceSold_Short' || conditionReport.ReportType == 'RevenueByAdvanceSoldDisplayDetail_Short' || conditionReport.ReportType == 'RevenueByTicketSeller_Short' || conditionReport.ReportType == 'RevenueByCounter'))">
+        <label class="col-sm-2 control-label">พนักงาน : </label>
+        <div class="col-sm-10">
+            <input class="form-control" readonly value="ไม่มีพนักงานขาย ณ จุดขายนี้" ng-if="salesList.length == 0">
+            <select ng-model="conditionReport.UserId" ng-options="o.UserId as o.FullName for o in salesList" ng-if="salesList.length > 0" class="form-control" ng-change="resetReport();">
+                <option value="">ทั้งหมด</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group" ng-if="reportType.RevenueTicket == 'ReportForSalesSummaryTicket' || (reportType.RevenueTicket == 'ReportForRevenueFromTicketSales' && (conditionReport.ReportType == 'RevenueByCounter'))">
+        <label class="col-sm-2 control-label">มาตรฐานรถ : </label>
+        <div class="col-sm-10">
+            <select ng-model="conditionReport.VehicleSeatPlanId" ng-options="o.VehicleSeatPlanId as o.VehicleSeatPlanName for o in vehicleSeatPlanList" class="form-control" ng-change="resetReport();">
+                <option value="">ทั้งหมด</option>
+            </select>
+        </div>
+    </div>
+    <!-- END Filter -->
+
+    <div class="form-group margin-top-20">
+        <div class="col-md-4 col-md-offset-4">
+            <button class="btn btn-block btn-primary" ng-click="generateReport(reportType.RevenueTicket)">แสดงรายงาน</button>
+        </div>
+    </div>
+</div>
+<hr/>
+<div class="col-md-12 no-padding reportZone margin-top-20">
+<!--Revenue From Ticket Sales-->
+    <!--GeneralReportForRevenueBySales-->
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/RevenueBySales.html'"></div>
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/RevenueByVehicleTrip.html'"></div>
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/RevenueByProgress.html'"></div>
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/RevenueByCounterSales.html'"></div>
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/RevenueByAdvanceSold.html'"></div>
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/RevenueByAdvanceSoldShort.html'"></div>
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/RevenueByAdvanceSoldDisplayDetailShort.html'"></div>
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/RevenueByTicketSellerShort.html'"></div>
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/RevenueByPayeeAndTrip.html'"></div>
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/RevenueByVehicleNumber.html'"></div>
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/RevenueByCounter.html'"></div>
+
+    <!--ReportForDisPlayReportTicketSales-->
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/ReportTicketSales.html'"></div>
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/ReportTicketSalesSearch.html'"></div>
+
+    <!--ReportForSalesSummaryTicket-->
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/ReportForSalesSummaryTicket.html'"></div>
+
+    <!--ReportForTicketDetail-->
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/ReportForTicketDetail.html'"></div>
+
+    <!--ReportForCancelTicket-->
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/ReportForCancelTicket.html'"></div>
+    
+    <!--ReportForTicketDiscount-->
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/ReportForTicketDiscount.html'"></div>
+
+    <!--ReportForReturnTicket-->
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/ReportForDisplayReturnTicket.html'"></div>
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/ReportForDisplayReturnTicket_Search.html'"></div>
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/ReportForDisplayReturnTicket_TripDays.html'"></div>
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/ReportForDisplayReturnTicket_OtherDays.html'"></div>
+    
+    <!--ReportForPrintDuplicateTicket-->
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/ReportForPrintDuplicateTicket.html'"></div>
+
+    <!--ReportForDisclaimTicket-->
+    <div ng-include="rootUrl + '../templates/Reports/GeneralReports/RevenueTicketElement/ReportForDisclaimTicket.html'"></div>
+<!--End Section-->
+
+</div>

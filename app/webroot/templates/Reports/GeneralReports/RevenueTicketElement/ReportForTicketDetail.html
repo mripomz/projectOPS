@@ -1,0 +1,56 @@
+<table id="ReportForTicketDetail" width="100%" ng-if="reportType.RevenueTicket == 'ReportForTicketDetail' && globalVariable.isShowReport">
+	<tr>
+        <th class="text-center">
+            รายงานแสดงรายละเอียดตั๋ว {{conditionReport.Conditions == 1?'เฉพาะตั๋วที่ต้นทางไม่ใช่จุดขายของผู้ขาย':(conditionReport.Conditions == 2?'เฉพาะตั๋วที่ต้นทางเป็นจุดขายของผู้ขาย':'ตั๋วทั้งหมด')}}<br/>
+            ระหว่างวันที่ {{conditionReport.DateStart | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} {{conditionReport.TimeStart + ' น.'}} - ถึงวันที่ {{conditionReport.DateEnd | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} {{conditionReport.TimeEnd + ' น.'}}
+        </th>
+    </tr>
+    <tr>
+        <td>ผู้ออก : {{SellingName}} วันที่ : {{dateTimeNow | date:'dd/MM/yyyy เวลา HH:mm:ss น.'}}</td>
+    </tr>
+    <tr>
+    	<td>
+    		<table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+                <tr>
+                    <th>รหัสตั๋ว</th>
+                    <th>เส้นทาง</th>
+                    <th>วันเวลาเดินทาง</th>
+                    <th>ที่นั่ง</th>
+                    <th class="text-right">ราคา</th>
+                    <th>วันที่ขายตั๋ว</th>
+                    <th>ผู้โดยสาร</th>
+                </tr>
+                <tbody ng-repeat="(key, value) in dataReport.TicketDetailList | groupBy:'FullName'">
+                    <tr class="active">
+                        <td colspan="7">{{key}}</td>
+                    </tr>
+                    <tr ng-repeat="item in value">
+                        <td>{{item.ReferenceCode}}</td>
+                        <td>{{item.RouteMainNumber + ' - ' + item.RouteNumber + ' ' + item.RouteName_TH}}</td>
+                        <td>{{item.VehicleOperationDate | jsonDate:'dd/MM/yyyy HH:mm'}} {{item.VehicleSeatPlanName}}</td>
+                        <td>{{item.VehicleSeatName}}</td>
+                        <td align="right">{{item.TotalPrice | number:2}}</td>
+                        <td>{{item.UpdatedDate | jsonDate:'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{item.PassengerFirstName + ' ' + item.PassengerLastName}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" align="right"><strong>รวม</strong></td>
+                        <td align="right">{{(value | total:'TotalSeats') | number}}</td>
+                        <td align="right">{{(value | total:'TotalPrice') | number:2}}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+                <tr ng-if="dataReport.TicketDetailList.length == 0">
+                    <td align="center" colspan="7">ไม่มีข้อมูล</td>
+                </tr>
+                <tr>
+                    <td colspan="3" align="right"><strong>รวมทั้งหมด</strong></td>
+                    <td align="right">{{dataReport.TicketDetailList | total:'TotalSeats'}}</td>
+                    <td align="right">{{dataReport.TicketDetailList | total:'TotalPrice' | number:2}}</td>
+                    <td colspan="2"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>

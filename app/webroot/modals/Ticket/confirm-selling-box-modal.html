@@ -1,0 +1,91 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 750px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">สรุปการทำรายการ</h3>
+            </div>
+            <div class="modal-body" style="max-height:650px;overflow-y:auto;">
+                <div class="form-horizontal">
+                	<div class="form-group">
+                        <div class="col-md-3 text-right">
+                            <strong>เส้นทางเดินรถ : </strong>
+                        </div>
+                        <div class="col-md-9 text-left">
+                            {{globalVariable.currentRouteDetail.RouteName_TH}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3 text-right">
+                            <strong>เดิททางจาก : </strong>
+                        </div>
+                        <div class="col-md-3 text-left">
+                            <span style="color:red"><strong>{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: VehicleOperationSeats.StopPointStartId } : 'StopPointId')].StopPointName_TH}}</strong></span>
+                        </div>
+                        <div class="col-md-3 text-right">
+                            <strong>ไปยัง : </strong>
+                        </div>
+                        <div class="col-md-3 text-left">
+                            <span style="color:red"><strong>{{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: VehicleOperationSeats.StopPointEndId } : 'StopPointId')].StopPointName_TH}}</strong></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3 text-right">
+                            <strong>วันเดินทาง : </strong>
+                        </div>
+                        <div class="col-md-9 text-left">
+                            <span style="color:red"><strong>{{dateSearchValue | date:'dd MMMM yyyy'}}</strong></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3 text-right">
+                            <strong>เวลาออกเดินทาง : </strong>
+                        </div>
+                        <div class="col-md-9 text-left">
+                            <span style="color:red">
+                                <strong>
+                            {{RouteProviceList[(RouteProviceList | lswIndexOf: { StopPointId: VehicleOperationSeats.StopPointStartId } : 'StopPointId')].Time | date:'HH:mm'}} น.
+                                </strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3 text-right">
+                            <strong>ชื่อผู้ซื้อ/จอง : </strong>
+                        </div>
+                        <div class="col-md-9 text-left">
+                            {{((PassengerDetail.PassengerFirstName == null || PassengerDetail.PassengerFirstName == '') && (PassengerDetail.PassengerLastName == null || PassengerDetail.PassengerLastName == ''))?'-':(PassengerDetail.PassengerFirstName + ' ' + (PassengerDetail.PassengerLastName || ''))}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3 text-right">
+                            <strong>ที่นั่ง</strong>
+                        </div>
+                        <div class="col-md-9 text-left">
+                            <span ng-repeat="seat in seatSelect">{{($index==seatSelect.length-1)?seat.VehicleSeatName:seat.VehicleSeatName+', '}}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3 text-right">
+                            <strong>เบอร์โทรศัพท์ : </strong>
+                        </div>
+                        <div class="col-md-9 text-left">
+                            {{PassengerDetail.PassengerPhone}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3 text-right">
+                            <strong>ยอดชำระสุทธิ : </strong>
+                        </div>
+                        <div class="col-md-9 text-left">
+                            <span style="font-size: 26px;color:#FF0000; font-weight: bolder; text-decoration: underline;">{{(calculateLastPrice() - (globalVariable.currentDiscount)) | number:2}}</span> บาท
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div class="modal-footer" style="background-color:#fff !important; border-top:none;">
+                <button class="btn btn-primary" ng-click="$hide();saveSellingBoxVehicleTrip()" scroll-on-click>ยืนยันทำรายการ</button>
+                <button class="btn btn-danger" ng-click="$hide();">ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>

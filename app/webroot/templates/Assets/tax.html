@@ -1,0 +1,94 @@
+<div class="panel panel-primary" style="border-radius:0px;border-top-right-radius:4px;">
+	<div class="panel-heading text-right" style="border-top-left-radius:0px;padding:10px">
+		<h3 class="pull-left" style="color:#FFF;font-size:30px;">หมายเลขตัวถัง - {{vehicleDetail.ChassisNumber}} / ทะเบียนรถ - {{vehicleDetail.PlateNumber}}</h3>
+  		<button class="btn btn-default" ng-click="editVehicleTax()" ng-disabled="taxDateDetail.VehicleDateTaxesId == '00000000-0000-0000-0000-000000000000'">เพิ่มภาษีรถยนต์</button>
+	</div>
+	<div class="panel-body">
+        <section class="row">
+            <h4 class="page-section-heading text-left no-padding">
+                <strong>ตั้งค่าเริ่มต้น</strong>
+                <span style="color:red" ng-show="taxDateDetail.VehicleDateTaxesId == '00000000-0000-0000-0000-000000000000'"> *โปรดทำการระบุวันครบกำหนดภาษี และ วันครบกำหนดตรวจสภาพกลางปี</span>
+            </h4>
+            <hr/>
+            <div class="col-md-12 margin-top-10">
+                <label class="col-sm-2 control-label">วันครบกำหนดภาษี</label>
+                <div class="col-sm-3">
+                    <input autocomplete="off" type="text" class="form-control" name="StartAnualTaxDueDate" ng-model="taxDateDetail.StartAnualTaxDueDate" bs-datepicker data-date-type="string" data-model-date-format="MM/dd/yyyy" data-date-format="dd/MM/yyyy" autoclose="true" placeholder="วันครบกำหนดภาษี" required/>
+                </div>
+                <label class="col-sm-3 control-label">เดือนที่ครบกำหนดตรวจสภาพกลางปี</label>
+                <div class="col-sm-2">
+                     <select  class="form-control"
+                        ng-model="taxDateDetail.StartHalfYearDueDate" 
+                        ng-options="x for x in months">
+                        <option value="">{{taxDateDetail.StartHalfYearDueDate | covertDBToMonth}}</option>
+                    </select>
+                </div>
+                {{selectedMonth}}
+                <button class="btn btn-primary" ng-click="updateVehicleTaxDate()" ng-disabled="!taxDateDetail.StartAnualTaxDueDate || !taxDateDetail.StartHalfYearDueDate || taxDateDetail.StartHalfYearDueDate == 'กรุณาเลือกเดือน'">บันทึก</button>
+            </div>  
+            <div class="clearfix"><br/><br/><br/></div>
+            <h4 class="page-section-heading text-left no-padding"><strong>รายการภาษีรถยนต์</strong></h4>
+            <hr/>  
+            <div class="col-md-12 margin-top-10">
+                <div class="input-group pull-right" style="width: 200px; top: 2px;">
+                    <div class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </div>
+                    <input type="search" placeholder="ค้นหา..." class="form-control input-sm" ng-model="lswFilterOptionsTax.lswFilter">
+                </div>
+                <div class="navbar-form navbar-left">
+                    <div lsw-paginate="lswPaginateOptionsTax" class="lsw-paginate-position" small="true" ng-model="mainTax.TaxList">
+                    </div>    
+                </div>
+                <div class="input-group  pull-right" style="margin-right:2px;">
+                    <button ng-click="filterTaxOption()" class="btn input-sm" ng-class="{'btn-primary' : !showTaxAll}">แสดงทั้งหมด</button>
+                </div>
+                <div lsw-table="lswTableOptionsTax" ng-model="mainTax.TaxList">
+                    <script type="text/ng-template" id="theadTaxTemplate.html">
+                        <th class="col-md-2 text-right cursor-point" ng-click="sort('AnnualVehicleAmount');">จำนวนเงินต่อภาษีรถ</th>
+                        <th class="col-md-2 text-center">หลักฐานการจ่ายเงิน</th>
+                        <th class="col-md-2 text-right cursor-point" ng-click="sort('HalfYearVehicleAmount');">ค่าใช้จ่ายตรวจสภาพกลางปี</th>
+                        <th class="col-md-2 text-center">หลักฐานการจ่ายเงิน</th>
+                        <th class="col-md-4"></th>
+                    </script>
+                    <script type="text/ng-template" id="tbodyTaxTemplate.html">
+                        <td class="text-right">{{row.AnnualVehicleAmount | currency:''}}</td>
+                        <td class="text-center">
+                            <span ng-if="!row.AnnualFileUploadId">ยังไม่ได้อัพโหลดหลักฐาน</span>
+                            <div class="text-center" ng-if="!!row.AnnualFileUploadId">
+                                <a ng-if="row.AnnualContentType == 'application/pdf'" ng-href="{{row.AnnualFileUrl}}" target="_blank" class="thumbnail text-center margin-auto">
+                                    <img ng-src="{{rootSiteUrl + 'img/pdfdoc.png'}}"/>
+                                </a>
+
+                                <a ng-if="row.AnnualContentType == 'image/jpeg' || row.AnnualContentType == 'image/png' || row.AnnualContentType == 'image/gif'"  ng-click="parent.openLightboxModal(row.AnnualFileUrl)" target="_blank" class="thumbnail thumbnail-show  text-center margin-auto">
+                                    <img ng-src="{{row.AnnualFileUrl}}">
+                                </a>
+                            </div>
+                        </td>
+                        <td class="text-right">{{row.HalfYearVehicleAmount | currency:''}}</td>
+                        <td class="text-center">
+                            <span ng-if="!row.HalfYearFileUploadId">ยังไม่ได้อัพโหลดหลักฐาน</span>
+                            <div class="text-center" ng-if="!!row.HalfYearFileUploadId">
+                                <a ng-if="row.HalfYearContentType == 'application/pdf'" ng-href="{{row.HalfYearFileUrl}}" target="_blank" class="thumbnail text-center margin-auto">
+                                    <img ng-src="{{rootSiteUrl + 'img/pdfdoc.png'}}"/>
+                                </a>
+
+                                <a ng-if="row.HalfYearContentType == 'image/jpeg' || row.HalfYearContentType == 'image/png' || row.HalfYearContentType == 'image/gif'"  ng-click="parent.openLightboxModal(row.HalfYearFileUrl)" target="_blank" class="thumbnail thumbnail-show text-center margin-auto">
+                                    <img ng-src="{{row.HalfYearFileUrl}}">
+                                </a>
+                            </div>
+                        </td>
+                        <td align="right">
+                            <button class="btn btn-warning btn-xs" ng-click="parent.editVehicleTax(row.VehicleTaxId);">
+                                <i class="glyphicon glyphicon-pencil"></i> แก้ไข
+                            </button>
+                            <button class="btn btn-danger btn-xs" message-en="Are you sure to delete this account?" message-th="ต้องการที่จะลบรายการภาษีออกจากระบบ ใช่หรือไม่?" lsw-confirm-modal="parent.RemoveVehicleTax(row.VehicleTaxId)">
+                                <i class="glyphicon glyphicon-trash"></i> ลบ
+                            </button>
+                        </td>
+                    </script>
+                </div>
+            </div>
+        </section>
+	</div>
+</div>

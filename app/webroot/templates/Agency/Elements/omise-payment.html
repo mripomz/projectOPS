@@ -1,0 +1,52 @@
+<html>
+<head>
+<script src="https://cdn.omise.co/omise.js"></script>
+<script src="http://code.jquery.com/jquery-1.12.1.min.js"></script>
+</head>
+
+<body>
+
+<form action="http://localhost:2879/Agencies/createCharge" method="post" id="checkout">
+  <div id="token_errors"></div>
+
+  <input type="hidden" name="omise_token">
+
+  <div>
+    Name<br>
+    <input type="text" data-omise="holder_name">
+  </div>
+  <div>
+    Number<br>
+    <input type="text" data-omise="number">
+  </div>
+  <div>
+    Date<br>
+    <input type="text" data-omise="expiration_month" size="4"> /
+    <input type="text" data-omise="expiration_year" size="8">
+  </div>
+  <div>
+    Security Code<br>
+    <input type="text" data-omise="security_code" size="8">
+  </div>
+
+  <input type="submit" id="create_token">
+</form>
+
+<!-- <form name="checkoutForm" method="POST" action="http://localhost:2879/Agencies/createCharge">
+  <script type="text/javascript" 
+    data-key="pkey_test_52jyu0r8o4307z0zz00"
+    data-image="http://bit.ly/customer_image"
+    data-frame-label="Merchant site name"
+    data-button-label="Pay now"
+    data-submit-label="Submit"
+    data-location="no"
+    data-amount="1"
+    data-currency="thb"
+    >
+  </script>
+  <!--the script will render <input type="hidden" name="omiseToken"> for you automatically-->
+
+
+<!-- data-key="YOUR_PUBLIC_KEY" -->
+</body>
+</html>

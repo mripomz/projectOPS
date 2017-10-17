@@ -1,0 +1,28 @@
+<div class="modal" tabindex="-1" role="dialog" style="z-index: 99999; display: block; overflow: auto;">
+    <div class="modal-dialog" style="width: 450px;">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#fff !important;">
+                <button type="button" class="close" ng-click="$hide();">
+                    &times;
+                </button>
+                <h4 class="modal-title">{{modal.title}}</h4>
+                <h5 ng-bind="confirmModalSubTitle"></h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <!--<i class="fa fa-exclamation-triangle" style="color: #ffb503; font-size:50px;"></i>-->
+                            <span class="fa fa-warning" style="color: #ffb503; font-size:50px;"></span>
+                        </div>
+                        <div class="col-lg-10" ng-bind-html="modal.content | sanitize"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color:#fff !important; border-top:none;">
+                <button class="btn btn-default" ng-click="$hide(); confirm(false); "><span class="fa fa-ban"></span>&nbsp;Cancel</button>
+                <button class="btn btn-success" ng-click="$hide(); confirm(true);  "><span class="fa fa-check"></span>&nbsp;Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 750px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">ยกเลิกการถอนเงิน</h3>
+            </div>
+            <div class="modal-body" style="max-height:650px;overflow-y:auto;">
+                <div class="form-horizontal">
+                	<div class="form-group">
+                        <div class="col-md-4 text-right">
+                            <strong>เหตุผลในการยกเลิก : </strong>
+                        </div>
+                        <div class="col-md-8 text-left">
+                            <textarea class="form-control" ng-model="cancelWithdrawal.Notes" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div class="modal-footer" style="background-color:#fff !important; border-top:none;">
+                <button class="btn btn-primary" ng-click="$hide();sendCancelWithdrawal();">ยกเลิกการถอนเงิน</button>
+                <button class="btn btn-danger" ng-click="$hide();">ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>

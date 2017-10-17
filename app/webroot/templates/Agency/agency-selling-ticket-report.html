@@ -1,0 +1,70 @@
+<div class="col-md-12 no-padding">
+	<h3><strong>ข้อมูลการจองและขาย</strong></h3>
+	<div class="col-md-12">
+		<div class="input-group pull-right" style="width: 200px; top: 2px;">
+	        <div class="input-group-addon">
+	            <i class="fa fa-search"></i>
+	        </div>
+	        <input type="search" placeholder="ค้นหา..." class="form-control input-sm" ng-model="lswFilterOptions.lswFilter">
+	    </div>
+		<div class="navbar-form navbar-left">
+	    	<div lsw-paginate="lswPaginateOptions" class="lsw-paginate-position" small="true" ng-model="SellingTicketList">
+	    	</div>    
+	    </div>
+		<div lsw-table="lswTableOptions" ng-model="SellingTicketList">
+		    <script type="text/ng-template" id="theadTemplate.html">
+				<th class="col-md-1 cursor-point" ng-click="sort('ReferenceCode');">รหัส</th>
+				<th class="col-md-1 cursor-point" ng-click="sort('VehicleSeatName');">ที่นั่ง</th>
+				<th class="col-md-2 cursor-point" ng-click="sort('StopPointStartId');">ขึ้น</th>
+				<th class="col-md-2 cursor-point" ng-click="sort('StopPointEndId');">ลง</th>
+				<th class="col-md-1 cursor-point text-right" ng-click="sort('TicketPrice');">ราคาจริงสุทธิ</th>
+				<th class="col-md-1 cursor-point text-right" ng-click="sort('TicketPrice');">ราคาหน้าตั๋ว</th>
+				<th class="col-md-1 cursor-point" ng-click="sort('Passenger.PassengerPhone');">โทร</th>
+				<th class="col-md-1 cursor-point" ng-click="sort('TicketStatus');">สถานะ</th>
+				<th class="col-md-2"></th>
+		    </script>
+		    <script type="text/ng-template" id="tbodyTemplate.html">
+		    	<td ng-class="{'danger font-color-white':(row.TicketStatus==1),'success font-color-white':(row.TicketStatus==2),'primary font-color-white':(row.TicketStatus==3),'warning':(row.TicketStatus==4)}">
+		    		{{row.ReferenceCode || '-'}}
+		    	</td>
+				<td ng-class="{'danger font-color-white':(row.TicketStatus==1),'success font-color-white':(row.TicketStatus==2),'primary font-color-white':(row.TicketStatus==3),'warning':(row.TicketStatus==4)}">
+					{{row.VehicleSeatName || '-'}}
+				</td>
+				<td ng-class="{'danger font-color-white':(row.TicketStatus==1),'success font-color-white':(row.TicketStatus==2),'primary font-color-white':(row.TicketStatus==3),'warning':(row.TicketStatus==4)}">
+					{{parent.stopPointData.StopPointList[(parent.stopPointData.StopPointList | lswIndexOf: { StopPointId: row.StopPointStartId } : 'StopPointId')].StopPointName_TH}}
+				</td>
+				<td ng-class="{'danger font-color-white':(row.TicketStatus==1),'success font-color-white':(row.TicketStatus==2),'primary font-color-white':(row.TicketStatus==3),'warning':(row.TicketStatus==4)}">
+					{{parent.stopPointData.StopPointList[(parent.stopPointData.StopPointList | lswIndexOf: { StopPointId: row.StopPointEndId } : 'StopPointId')].StopPointName_TH}}
+				</td>
+				<td ng-class="{'danger font-color-white':(row.TicketStatus==1),'success font-color-white':(row.TicketStatus==2),'primary font-color-white':(row.TicketStatus==3),'warning':(row.TicketStatus==4)}" align="right">
+					{{row.TicketPrice + row.AdminPriceDiff - row.DiscountPrice | number:2}}
+				</td>
+				<td ng-class="{'danger font-color-white':(row.TicketStatus==1),'success font-color-white':(row.TicketStatus==2),'primary font-color-white':(row.TicketStatus==3),'warning':(row.TicketStatus==4)}" align="right">
+					{{row.TicketPrice + row.AdminPriceDiff + row.AgencyPriceDiff - row.DiscountPrice | number:2}}
+				</td>
+				<td ng-class="{'danger font-color-white':(row.TicketStatus==1),'success font-color-white':(row.TicketStatus==2),'primary font-color-white':(row.TicketStatus==3),'warning':(row.TicketStatus==4)}">
+					{{row.Passenger.PassengerPhone || '-'}}
+				</td>
+				<td ng-class="{'danger font-color-white':(row.TicketStatus==1),'success font-color-white':(row.TicketStatus==2),'primary font-color-white':(row.TicketStatus==3),'warning':(row.TicketStatus==4)}">
+					{{(row.TicketStatus==1)?'จอง':(row.TicketStatus==2?'ขาย':(row.TicketStatus==3?'สละสิทธิ์':'คืนตั๋ว'))}}
+				</td>
+				<td ng-class="{'danger font-color-white':(row.TicketStatus==1),'success font-color-white':(row.TicketStatus==2),'primary font-color-white':(row.TicketStatus==3),'warning':(row.TicketStatus==4)}" align="right">
+					<button class="btn btn-default btn-xs" ng-click="parent.showMapsDirection(row);" ng-if="row.IsServicePickupDropOff == true" data-title="ใช้บริการรับส่งผู้โดยสาร" data-placement="top" bs-tooltip>
+						<i class="fa fa-bus" aria-hidden="true"></i>
+					</button>
+					<button class="btn btn-default btn-xs" ng-click="parent.editSeatFromSeatReport(row);" ng-disabled="!row.IsAgencyBooking || eachPassenger.UserId != userId || row.TicketStatus==4 || row.TicketStatus==3" data-title="จัดการตั๋วรถ" data-placement="top" bs-tooltip>
+						<i class="fa fa-cog" aria-hidden="true"></i>
+					</button>
+				</td>
+		    </script>
+		</div>
+	</div>
+	<div class="col-md-12 margin-top-20">
+		 <span class="success">
+            <i class="fa fa-square" aria-hidden="true"></i> 
+        </span> ชำระเงินแล้ว &nbsp;&nbsp;&nbsp;
+        <span class="warning">
+            <i class="fa fa-square" aria-hidden="true"></i> 
+        </span> ที่นั่งคืน &nbsp;&nbsp;&nbsp;
+	</div>
+</div>

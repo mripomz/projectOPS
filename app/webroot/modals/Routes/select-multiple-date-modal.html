@@ -1,0 +1,89 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 800px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">ระบุเวลา / วันที่ เปิดเที่ยวรถ</h3>
+            </div>
+            <div class="modal-body" style="min-height:500px;">
+            	<div class="col-md-12 form-horizontal">
+                    <div class="col-md-6 no-padding">
+                        <div class="form-group">
+                            <label class="col-sm-4 text-right">วันที่เริ่มต้น : </label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" ng-model="multipleDate.dateStart" id="dateStart" placeholder="วันที่เริ่มต้น" bs-datepicker data-date-type="string" data-model-date-format="MM/dd/yyyy" data-date-format="dd/MM/yyyy" data-autoclose="true" data-placement="bottom" ng-change="generateDateforMultipleDate()">
+                                    <label style="background-color: #eb9316;border-color: #eb9316;" for="dateStart" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 no-padding">
+                        <div class="form-group">
+                            <label class="col-sm-4 text-right">ถึงวันที่ : </label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" ng-model="multipleDate.dateEnd" id="dateEnd" placeholder="วันที่สิ้นสุด" bs-datepicker data-date-type="string" data-model-date-format="MM/dd/yyyy" data-date-format="dd/MM/yyyy" data-autoclose="true" data-placement="bottom" ng-change="generateDateforMultipleDate()">
+                                    <label style="background-color: #eb9316;border-color: #eb9316;" for="dateEnd" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 no-padding">
+                        <div class="form-group">
+                            <label class="col-sm-4 text-right">เวลา : </label>
+                            <div class="col-sm-8">
+                                <div class="input-group margin-top-5" ng-repeat="time in multipleDate.timeStart">
+                                    <input type="text" ng-model="time.time" name="timeStart" id="timeStart{{$index}}" class="form-control" placeholder="เวลาเดินทาง" data-time-format="HH:mm" data-minute-step="1" data-time-type="string" bs-timepicker required data-autoclose="true" ng-change="generateDateforMultipleDate()">
+                                    <label style="background-color: #eb9316;border-color: #eb9316;" for="timeStart{{$index}}" class="input-group-addon"><i class="fa fa-clock-o"></i></label>
+                                    <div style="background-color: #E74C3C; border-color: #E74C3C;" class="input-group-addon btn btn-danger" ng-disabled="multipleDate.timeStart.length == 1 && $index == 0" ng-click="removeTimeforMultipleDate($index)">ลบ</div>
+                                </div>
+                                <button class="btn btn-primary btn-xs" ng-click="addTimeToMultipleDate()"><i class="fa fa-plus-square"></i> เพิ่ม</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 no-padding">
+                        <label class="col-sm-4 text-right">ทุกวัน : </label>
+                        <div class="col-sm-8">
+                            <div class="col-md-6 no-padding">
+                                <input type="checkbox" ng-model="multipleDate.DayofWeek[1]" name="Monday" ng-change="generateDateforMultipleDate()"> วันจันทร์<br/>
+                                <input type="checkbox" ng-model="multipleDate.DayofWeek[2]" name="Tuesday" ng-change="generateDateforMultipleDate()"> วันอังคาร<br/>
+                                <input type="checkbox" ng-model="multipleDate.DayofWeek[3]" name="Wednesday" ng-change="generateDateforMultipleDate()"> วันพุธ<br/>
+                                <input type="checkbox" ng-model="multipleDate.DayofWeek[4]" name="Thursday" ng-change="generateDateforMultipleDate()"> วันพฤหัส<br/>
+                                <input type="checkbox" ng-model="multipleDate.DayofWeek[5]" name="Friday" ng-change="generateDateforMultipleDate()"> วันศุกร์
+                            </div>
+                            <div class="col-md-6 no-padding">
+                                <input type="checkbox" ng-model="multipleDate.DayofWeek[6]" name="Saturday" ng-change="generateDateforMultipleDate()"> วันเสาร์<br/>
+                                <input type="checkbox" ng-model="multipleDate.DayofWeek[0]" name="Sunday" ng-change="generateDateforMultipleDate()"> วันอาทิตย์
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <h3>รายการวันที่เปิดเที่ยวรถ</h3>
+                    <hr/>
+                    <div class="col-md-12 no-padding" style="height:200px;border:1px #ccc solid;border-radius:5px;overflow:auto">
+                        <div ng-repeat="(key,value) in multipleDate.dateList | groupBy:'monthName'" ng-init="value.isShow = false">
+                            <div class="col-md-12" ng-click="globalStatus.IsMonthActive = $index" style="border-bottom: 2px #3498DB solid; background-color: #C6E8FF;">
+                                <strong class="pull-left">{{key}}</strong>
+                                <strong class="pull-right"><i ng-class="{'fa fa-angle-down':(globalStatus.IsMonthActive == $index),'fa fa-angle-left':(globalStatus.IsMonthActive != $index)}" aria-hidden="true"></i></strong>
+                            </div>
+                            <div class="clearfix"></div>
+                            <ul class="list-group" ng-show="multipleDate.dateList.length > 0 && globalStatus.IsMonthActive == $index">
+                                <li class="list-group-item" ng-repeat="itemDate in multipleDate.dateList track by $index | orderBy:itemDate">
+                                    &nbsp;&nbsp;{{dateParse(itemDate.Date) | date:'EEEE ที่ dd MMMM yyyy เวลา HH:mm น.'}}
+                                </li>
+                            </ul>
+                        </div>
+                        
+                    </div>
+                    <div class="col-md-12 no-padding margin-top-20">
+                        <div class="col-md-6 col-md-offset-3 text-center">
+                            <button class="btn btn-primary" message-en="Are you sure to add date?" message-th="ต้องการเพิ่มเวลาและวันที่ ใช่หรือไม่?" lsw-confirm-modal="addMultipleDateToDateList()">ตกลง</button>
+                            <button class="btn btn-danger" ng-click="$hide()">ยกเลิก</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>

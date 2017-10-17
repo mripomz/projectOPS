@@ -1,0 +1,61 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 650px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">{{modal.TitleModal}}</h3>
+            </div>
+            <div class="modal-body" style="max-height:650px;overflow-y:auto;">
+            	<div class="alert alert-danger" ng-show="errorMsg.isError">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <div ng-bind-html="errorMsg.message | sanitize"></div>
+                </div>
+	            <form class="form-horizontal" role="form" name="pagesAdd" novalidate>
+	            	<div class="form-group">
+	                	<label for="PageName" class="col-sm-3 control-label">ชื่อเพจ <span class="error" ng-show="pagesAdd.PageName.$error.required">*</span></label>
+	                	<div class="col-sm-9">
+	                		<input autocomplete="off" type="text" class="form-control" name="PageName" ng-model="pagesController.PageName" placeholder="ชื่อเพจ" required maxlength="500"> 
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="PageTitleName" class="col-sm-3 control-label">ชื่อเพจที่แสดง<span class="error" ng-show="pagesAdd.PageTitleName.$error.required">*</span></label>
+	                	<div class="col-sm-9">
+	                		<input autocomplete="off" type="text" class="form-control" name="PageTitleName" ng-model="pagesController.PageTitleName" placeholder="ชื่อเพจที่แสดง" required maxlength="500">
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="Description" class="col-sm-3 control-label">รายละเอียด</label>
+	                	<div class="col-sm-9">
+	                		<input autocomplete="off" type="text" class="form-control" id="Description" ng-model="pagesController.Description" placeholder="รายละเอียด" maxlength="500">
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="MenuName" class="col-sm-3 control-label">ชื่อเมนู <span class="error" ng-show="pagesAdd.MenuName.$error.required">*</span></label>
+	                	<div class="col-sm-9">
+	                		<input autocomplete="off" type="text" class="form-control" name="MenuName" ng-model="pagesController.MenuName" placeholder="ชื่อเมนู" required maxlength="500">
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="ControllerName" class="col-sm-3 control-label">ชื่อส่วนควบคุม <span class="error" ng-show="pagesAdd.ControllerName.$error.required">*</span></label>
+	                	<div class="col-sm-9" >
+	                		<input autocomplete="off" type="text" class="form-control" name="ControllerName" ng-model="pagesController.ControllerName" placeholder="ชื่อส่วนควบคุม" maxlength="500"> 
+	                	</div>
+	                </div>
+	                <div class="form-group">
+	                	<label for="ActionName" class="col-sm-3 control-label">ชื่อส่วนดำเนินการ<span class="error" ng-show="pagesAdd.ActionName.$error.required">*</span></label>
+	                	<div class="col-sm-9">
+	                		<input autocomplete="off" type="text" class="form-control" name="ActionName" ng-model="pagesController.ActionName" placeholder="ชื่อส่วนดำเนินการ" maxlength="500">
+	                	</div>
+	                </div>
+	                <div class="form-group margin-none">
+						<div class="col-sm-offset-3 col-sm-9">
+							<button ng-click="savePage()" class="btn btn-primary">บันทึก</button>
+							<button ng-click="$hide()" class="btn btn-default">ปิด</button>
+						</div>
+					</div>
+	            </form>
+            </div>
+        </div>
+    </div>
+</div>

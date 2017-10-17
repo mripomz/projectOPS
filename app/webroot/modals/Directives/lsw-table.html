@@ -1,0 +1,80 @@
+<div ng-if="!!rows" ng-init="init()">
+    <table class="lsw-table {{config.tableClass}}">
+        <thead>
+            <tr ng-include="!!config.theadTemplate ? config.theadTemplate : 'lswTableHeadTemplate.html'" include-replace></tr>
+        </thead>
+        <tbody>
+            <tr class="lsw-table-group-title"
+                ng-if="!!config.groupBy && row[config.groupBy] && isNewGroup(row)"
+                ng-repeat-start="row in config.paginateOptions.list = (rows
+                                | orderBy:predicate:reverse
+                                | filter:config.filterOptions.lswFilter
+                                | filter:config.filterOptions.lswFilter.$
+                                | filter:config.filterOptions.selectFilter
+                                | filter:config.filterOptions.selectFilter.$)
+                                | startFrom: !!config.paginateOptions.startFrom ? config.paginateOptions.startFrom : 0
+                                | limitTo: !!config.paginateOptions.pageSize ? (config.paginateOptions.pageSize=='All'?config.paginateOptions.list.length:config.paginateOptions.pageSize) : rows.length">
+                <td>{{row[config.groupBy]}}</td>
+                <td ng-repeat="num in repeatColumns() track by $index"></td>
+            </tr>
+            <tr ng-repeat-end ng-include="!!config.tbodyTemplate ? config.tbodyTemplate : 'lswTableBodyTemplate.html'" include-replace></tr>
+        </tbody>
+        <tfoot ng-if="!!config.tfootTemplate || config.useFootTemplate">
+            <tr ng-include="!!config.tfootTemplate ? config.tfootTemplate : 'lswTableFootTemplate.html'" include-replace></tr>
+        </tfoot>
+    </table>
+
+    <div ng-if="!!config.paginateOptions.pageSize" style="margin-bottom:38px;"></div>
+
+    <div class="lsw-table-paginate-info footerBottom" ng-if="!!config.paginateOptions.pageSize">
+        <small>
+            โชว์ข้อมูล {{(config.paginateOptions.startFrom + (config.paginateOptions.list.length > 0 ? 1 : 0))}}
+            - {{(config.paginateOptions.pageSize=='All'?config.paginateOptions.list.length:config.paginateOptions.pageSize) + config.paginateOptions.startFrom > config.paginateOptions.list.length
+            ? config.paginateOptions.list.length : (config.paginateOptions.pageSize=='All'?config.paginateOptions.list.length:config.paginateOptions.pageSize) + config.paginateOptions.startFrom}}
+            จาก {{config.paginateOptions.list.length}}
+        </small>
+    </div>
+</div>
+<!-- Generated Head Template-->
+<script type="text/ng-template" id="lswTableHeadTemplate.html">
+    <tr>
+        <th ng-if="!config.theadTemplate"
+            ng-repeat="column in config.columns"
+            class="{{column.format}}"
+            ng-class="(!!column.column ? 'lsw-table-sort' : '')"
+            ng-click="sort(column.column)">
+            {{ !!column.label ? column.label : column.column }}
+        </th>
+    </tr>
+</script>
+
+<!-- Generated Body Template-->
+<script type="text/ng-template" id="lswTableBodyTemplate.html">
+    <tr>
+        <td ng-repeat="column in config.columns"
+            class="{{column.format}}">
+
+            <!-- Formatted Column -->
+            <span ng-if="!!column.format && !column.html">{{row[column.column] | metafilter:column.format}}</span>
+
+            <!-- HTML Column -->
+            <span ng-if="!!column.html && column.html"
+                  ng-bind-html="row[column.title] | metafilter:column.format"></span>
+
+            <!-- Text-Only Column -->
+            <span ng-if="!column.format">{{row[column.column]}}</span>
+        </td>
+    </tr>
+</script>
+
+<!-- Generated Foot Template-->
+<script type="text/ng-template" id="lswTableFootTemplate.html">
+    <tr>
+        <td ng-repeat="column in config.columns"
+            class="{{column.format}}">
+
+            <!-- Totaled Column -->
+            <span ng-if="column.total">{{rows | total: column.column | metafilter:column.format}}</span>
+        </td>
+    </tr>
+</script>

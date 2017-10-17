@@ -1,0 +1,147 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 750px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><strong>รหัสจอง - {{currentDetailTicket.ReferenceCode}}</strong></h3>
+            </div>
+            <div class="modal-body" style="max-height:650px;overflow-y:auto;">
+                <div class="form-horizontal">
+                    <h4><strong>รายละเอียดตั๋ว</strong></h4><hr/>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="col-md-3 text-right">
+                                <strong>รหัสจอง : </strong>
+                            </div>
+                            <div class="col-md-3 text-left">
+                                {{currentDetailTicket.ReferenceCode}}
+                            </div>
+                            <div class="col-md-3 text-right">
+                                <strong>สถานะ : </strong>
+                            </div>
+                            <div class="col-md-3 text-left">
+                                <span ng-class="{'danger':(currentDetailTicket.TicketStatus==1),'success':(currentDetailTicket.TicketStatus==2),'primary':(currentDetailTicket.TicketStatus==3),'warning':(currentDetailTicket.TicketStatus==4)}">
+                                    <strong>{{(currentDetailTicket.TicketStatus==1)?'จอง':(currentDetailTicket.TicketStatus==2?'ขายแล้ว':(currentDetailTicket.TicketStatus==3?'สละสิทธิ์':'คืนตั๋ว'))}}</strong>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3 text-right">
+                                <strong>ที่นั่ง : </strong>
+                            </div>
+                            <div class="col-md-9 text-left">
+                                {{currentDetailTicket.VehicleSeatName}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3 text-right">
+                                <strong>ขึ้น : </strong>
+                            </div>
+                            <div class="col-md-9 text-left">
+                                {{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: currentDetailTicket.StopPointStartId } : 'StopPointId')].StopPointName_TH}}
+                            </div>
+                            <div class="col-md-3 text-right">
+                                <strong>ลง : </strong>
+                            </div>
+                            <div class="col-md-9 text-left">
+                                {{stopPointData.StopPointList[(stopPointData.StopPointList | lswIndexOf: { StopPointId: currentDetailTicket.StopPointEndId } : 'StopPointId')].StopPointName_TH}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3 text-right">
+                                <strong>ผู้ซื้อตั๋ว : </strong>
+                            </div>
+                            <div class="col-md-3 text-left">
+                                {{(currentDetailTicket.Passenger.PassengerFirstName + ' ' + currentDetailTicket.Passenger.PassengerLastName) || '-'}}
+                            </div>
+                            <div class="col-md-3 text-right">
+                                <strong>โทร : </strong>
+                            </div>
+                            <div class="col-md-3 text-left">
+                                {{currentDetailTicket.Passenger.PassengerPhone|| '-'}}
+                            </div>
+                        </div>
+                    </div>
+                    <h4><strong>ค่าดำเนินการ</strong></h4><hr/>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="col-md-3 text-right">
+                                <strong>ราคา : </strong>
+                            </div>
+                            <div class="col-md-9 text-left">
+                                <span ng-if="currentDetailTicket.IsAgencyBooking">
+                                    {{(currentDetailTicket.TicketPrice + currentDetailTicket.AdminPriceDiff) || 0}} บาท
+                                </span>
+                                <span ng-if="!currentDetailTicket.IsAgencyBooking">
+                                    {{(currentDetailTicket.TicketPrice) || 0}} บาท
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3 text-right">
+                                <strong>ส่วนลด : </strong>
+                            </div>
+                            <div class="col-md-2 text-left">
+                                {{currentDetailTicket.DiscountPrice || 0}} บาท
+                            </div>
+                            <div class="col-md-3 text-right">
+                                <strong>ส่วนลด : </strong>
+                            </div>
+                            <div class="col-md-4 text-left">
+                                {{(DiscountTypeList[(DiscountTypeList | lswIndexOf: { DiscountTypeId: currentDetailTicket.DiscountTypeId } : 'DiscountTypeId')].DiscountTypeName) || 'ไม่มีส่วนลด'}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="text-center">
+                                <strong>ราคาสุทธิ : 
+                                    <span class="danger" style="font-size:40px;" ng-if="!currentDetailTicket.IsAgencyBooking">
+                                        {{currentDetailTicket.TicketPrice - currentDetailTicket.DiscountPrice}}
+                                    </span><span class="danger" style="font-size:40px;" ng-if="currentDetailTicket.IsAgencyBooking">
+                                        {{currentDetailTicket.TicketPrice + currentDetailTicket.AdminPriceDiff - currentDetailTicket.DiscountPrice}}
+                                    </span> บาท
+                                </strong>
+                            </div>
+                        </div>
+                    </div>
+                    <h4><strong>รายละเอียดผู้จอง</strong></h4><hr/>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="col-md-3 text-right">
+                                <strong>ผู้จอง : </strong>
+                            </div>
+                            <div class="col-md-9 text-left">
+                                {{currentDetailTicket.CreatedBy}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3 text-right">
+                                <strong>วันทำรายการ : </strong>
+                            </div>
+                            <div class="col-md-9 text-left">
+                                {{currentDetailTicket.CreatedDate | jsonDate:'dd/MM/yyyy'}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3 text-right">
+                                <strong>วันรับเงิน : </strong>
+                            </div>
+                            <div class="col-md-9 text-left">
+                                {{currentDetailTicket.TicketStatus == 2?(currentDetailTicket.UpdatedDate | jsonDate:'dd/MM/yyyy'):'-'}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3 text-right">
+                                <strong>ผู้รับเงิน : </strong>
+                            </div>
+                            <div class="col-md-9 text-left">
+                                {{currentDetailTicket.TicketStatus == 2?currentDetailTicket.UpdatedBy:'-'}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div class="modal-footer" style="background-color:#fff !important;text-align: center !important">
+                <button class="btn btn-default" ng-click="$hide();">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>

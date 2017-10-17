@@ -1,0 +1,166 @@
+<div class="modal" tabindex="-1" role="dialog" style="display: block; overflow: auto;">
+    <div class="modal-dialog" style="width: 90%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">จัดการ พ.ร.บ. รถยนต์</h3>
+            </div>
+            <div class="modal-body" style="overflow-y:auto;">
+            <div style="padding:10px;">
+            	<div class="alert alert-danger" ng-show="errorMsg.isError">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <div ng-bind-html="errorMsg.message | sanitize"></div>
+                </div>
+				<form class="form-horizontal" role="form" name="ActDetailform" novalidate enctype="multipart/form-data" data-file-upload="optionsAct" ng-class="{'fileupload-processing': processing() || loadingFiles}">
+				    <section class="row">
+				    	<h4 class="page-section-heading text-left no-padding"><strong>ประกันภัย</strong></h4>
+				    	<hr/>
+					    <div class="form-group">
+					    	<label for="" class="col-sm-2 control-label">บริษัทประกันภัย <span class="error" ng-show="ActDetailform.ActName.$error.required">*</span></label>
+					    	<div class="col-sm-10">
+					    		<input autocomplete="off"  type="text" class="form-control" name="ActName" ng-model="vehicleActDetail.ActName" placeholder="ชื่อบริษัทประกันภัย" required/>
+					    	</div>
+					    </div>
+					    <div class="form-group">
+					    	<label for="" class="col-sm-2 control-label">ทะเบียนเลขที่ <span class="error" ng-show="ActDetailform.ActNumber.$error.required">*</span></label>
+					    	<div class="col-sm-10">
+					    		<input autocomplete="off"  type="text" class="form-control" name="ActNumber" ng-model="vehicleActDetail.ActNumber" placeholder="ทะเบียนเลขที่" required/>
+					    	</div>
+					    </div>
+					    <div class="form-group">
+					    	<label for="" class="col-sm-2 control-label">สถานะการใช้งาน</label>
+					    	<div class="col-sm-10">
+					    		<input autocomplete="off" type="checkbox" name="IsActive" ng-model="vehicleActDetail.IsActive"/>
+					    	</div>
+					    </div>
+					</section>
+					<section class="row">
+						<h4 class="page-section-heading text-left no-padding"><strong>ข้อมูลกรมธรรม์</strong></h4>
+				    	<hr/>
+					    <div class="form-group">
+				    		<label class="col-sm-2 control-label">ระยะเวลาประกันภัย :</label>
+				    		<label class="col-sm-3 control-label">เริ่มต้นวันที่ <span class="error" ng-show="ActDetailform.StartDate.$error.required">*</span></label>
+					    	<div class="col-sm-2">
+					    		<input autocomplete="off"  type="text" class="form-control" name="StartDate" ng-model="vehicleActDetail.StartDate" bs-datepicker data-date-type="string" data-model-date-format="MM/dd/yyyy" data-date-format="dd/MM/yyyy" autoclose="true" data-placement="top" placeholder="วันที่เริ่มต้นประกันภัย" required/>
+					    	</div>
+					    	<label class="col-sm-3 control-label">สิ้นสุดวันที่ <span class="error" ng-show="ActDetailform.EndDate.$error.required">*</span></label>
+					    	<div class="col-sm-2">
+					    		<input autocomplete="off"  type="text" class="form-control" name="EndDate" ng-model="vehicleActDetail.EndDate" bs-datepicker data-date-type="string" data-model-date-format="MM/dd/yyyy" data-date-format="dd/MM/yyyy" autoclose="true" data-placement="top" placeholder="วันที่สิ้นสุดประกันภัย" required/>
+					    	</div>
+					    	<label class="col-sm-12 text-right" style="color:red" ng-show="DateCompare(vehicleInsuranceDetail.StartDate, vehicleInsuranceDetail.EndDate) && vehicleActDetail.StartDate != '' && vehicleActDetail.EndDate != ''">วันที่เริ่มต้นประกันภัยต้องมีค่าน้อยกว่าวันที่สิ้นสุดประกันภัย</label>
+					    </div>
+					</section>
+					<section class="row">
+				    	<h4 class="page-section-heading text-left no-padding"><strong>ราคา พ.ร.บ.</strong></h4>
+				    	<hr/>
+					<div class="form-group">
+					    	<label class="col-sm-2 control-label">รวมเงิน (บาท)<span class="error" ng-show="ActDetailform.TotalAmount.$error.required">*</span></label>
+					    	<div class="col-sm-10">
+					    		<input autocomplete="off" type="text" class="form-control" name="TotalAmount" ng-model="vehicleActDetail.TotalAmount" placeholder="ระบุจำนวนเงินที่ใช้จ่าย" required lsw-only-digits  fcsa-number/>
+					    	</div>
+				    </div>
+					</section>
+				    <section class="row">
+				    	<h4 class="page-section-heading text-left no-padding"><strong>อัพโหลดเอกสาร</strong></h4>
+				    	<hr/>
+				    	<label class="col-sm-2 control-label" ng-show="!!vehicleActDocDetail.PDFUrl">รายการเอกสาร</label>
+				    	<div class="col-sm-10" ng-show="!!vehicleActDocDetail.PDFUrl">
+				    		<table class="table table-striped files ng-cloak">
+				    			<tr>
+				    				<th width="100">เอกสาร</th>
+				    				<th class="text-left">ชื่อเอกสาร</th>
+				    				<th class="text-right"></th>
+				    			</tr>
+				    			<tr>
+				    				<td>
+				    					<a ng-if="vehicleActDocDetail.ContentType == 'application/pdf'" ng-href="{{vehicleActDocDetail.PDFUrl}}" target="_blank" class="thumbnail">
+		    								<img ng-src="{{rootSiteUrl + 'img/pdfdoc.png'}}"/>
+		    							</a>
+
+		    							<a ng-if="vehicleActDocDetail.ContentType == 'image/jpeg' || vehicleActDocDetail.ContentType == 'image/png' || vehicleActDocDetail.ContentType == 'image/gif'"  ng-click="openLightboxModal(vehicleActDocDetail.PDFUrl)" target="_blank" class="thumbnail thumbnail-show">
+				    						<img ng-src="{{vehicleActDocDetail.PDFUrl}}">
+				    					</a>
+		    						</td>
+				    				<td>{{vehicleActDocDetail.FileName}}</td>
+				    				<td>
+		    							<a class="btn btn-danger btn-xs" message-en="Are you sure to delete this image?" message-th="ต้องการที่จะลบรูปภาพนี้ออกจากระบบ ใช่หรือไม่?" lsw-confirm-modal="removeVehicleActDoc(vehicleActDocDetail.FileUploadId)">ลบ</a>
+				    				</td>
+				    			</tr>
+				    		</table>
+				    	</div>
+						
+						<label class="col-sm-2 control-label">&nbsp;</label>
+				        <table class="col-sm-10 table-striped files ng-cloak">
+				            <tr ng-repeat="file in queue" ng-class="{'processing': file.$processing()}">
+				                <td>
+				                    <p class="name" data-ng-switch data-on="!!file.url">
+				                        <span data-ng-switch-when="true" data-ng-switch data-on="!!file.thumbnailUrl">
+				                            <a data-ng-switch-when="true" ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}" data-gallery>{{file.name}}</a>
+				                            <a data-ng-switch-default ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}">{{file.name}}</a>
+				                        </span>
+				                        <span data-ng-switch-default>{{file.name}}</span>
+				                    </p>
+				                    <strong ng-show="file.error" class="error text-danger">{{file.error}}</strong>
+				                </td>
+				                <td>
+				                    <p class="size">{{file.size | formatFileSize}}</p>
+				                    <div class="progress progress-striped active fade" ng-class="{pending: 'in'}[file.$state()]" data-file-upload-progress="file.$progress()"><div class="progress-bar progress-bar-success" ng-style="{width: num + '%'}"></div></div>
+				                </td>
+				                <td>
+				                    <button type="button" class="btn btn-warning cancel" ng-click="file.$cancel()" ng-hide="!file.$cancel || file.$response().textStatus == 'success'">
+				                        <i class="glyphicon glyphicon-ban-circle"></i>
+				                        <span>ยกเลิก</span>
+				                    </button>
+				                    <button type="button" class="btn btn-danger destroy" ng-click="file.$destroy()" ng-hide="!file.$destroy()">
+				                        <i class="glyphicon glyphicon-trash"></i>
+				                        <span>ลบ</span>
+				                    </button>
+				                </td>
+				            </tr>
+				        </table>
+			    		<div class="col-sm-12 fileupload-buttonbar" ng-show="vehicleActDetail.FileUploadId == null || vehicleActDetail.FileUploadId == '00000000-0000-0000-0000-000000000000'">
+			    			<label class="col-sm-2 control-label">อัพโหลดไฟล์</label>
+				            <div class="col-sm-10">
+				                <!-- The fileinput-button span is used to style the file input field as button -->
+				                <div class="pull-left" style="margin-right:10px;">
+					                <span class="btn btn-success fileinput-button" ng-class="{disabled: currentProcess.fileInQueue}">
+					                    <i class="glyphicon glyphicon-plus"></i>
+					                    <span>เพิ่มไฟล์</span>
+					                    <input id="fileupload" type="file" name="files[]" ng-disabled="disabled">
+					                </span>
+				                </div>
+				                <div class="pull-left" style="margin-right:10px;" title="{{(!currentProcess.fileInQueue)?'โปรดเพิ่มไฟล์ก่อน':''}}">
+					                <button type="button" class="btn btn-primary start" ng-click="submit()" ng-disabled="!currentProcess.fileInQueue">
+					                    <i class="glyphicon glyphicon-upload"></i>
+					                    <span>อัพโหลดไฟล์</span>
+					                </button>
+				                </div>
+				                <div class="pull-left">
+					                <button type="button" class="btn btn-danger cancel" ng-click="cancel()">
+					                    <i class="glyphicon glyphicon-ban-circle"></i>
+					                    <span>ยกเลิก</span>
+					                </button>
+				                </div>
+				                <!-- The global file processing state -->
+				                <span class="fileupload-process"></span>
+				            </div>
+				            <!-- The global progress state -->
+				            <div class="col-lg-5 fade" ng-class="{in: active()}">
+				                <!-- The global progress bar -->
+				                <div class="progress progress-striped active" data-file-upload-progress="progress()"><div class="progress-bar progress-bar-success" ng-style="{width: num + '%'}"></div></div>
+				                <!-- The extended global progress state -->
+				                <div class="progress-extended">&nbsp;</div>
+				            </div>
+				        </div>
+				    </section>
+				    <div class="form-group margin-none text-center">
+						<button ng-click="updateVehicleAct()" class="btn btn-primary">บันทึก</button>
+						<button ng-click="$hide()" class="btn btn-default">ปิด</button>
+					</div>
+				</form>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>

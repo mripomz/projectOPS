@@ -1,0 +1,42 @@
+<div class="modal" tabindex="-1" role="dialog" style="z-index: 99999; display: block; overflow: auto;">
+    <div class="modal-dialog" style="width: 450px;">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#fff !important;">
+                <button type="button" class="close" ng-click="$hide();">
+                    &times;
+                </button>
+                <h4 class="modal-title">เที่ยวรถเสริม</h4>
+                <h5 ng-bind="confirmModalSubTitle"></h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <span class="fa fa-warning" style="color: #ffb503; font-size:50px;"></span>
+                        </div>
+                        <div class="col-lg-10">
+                            เที่ยวรถที่สร้างมีวันที่และเวลาซ้ำกับที่อยู่ในระบบ ดังนี้<br/>
+                            <div calss="text-left" ng-if="vehicleRouteTrip.dateDup.length > 0">
+                                <table class="table table-condensed">
+                                    <tr>
+                                        <th>วันที่</th>
+                                        <th>เวลา</th>
+                                    </tr>
+                                    <tr ng-repeat="date in vehicleRouteTrip.dateDup track by $index">
+                                        <td>{{date | date:'dd/MM/yyyy'}}</td>
+                                        <td>{{date | date:'H:mm'}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            ยืนยันที่จะสร้าง "เที่ยวรถเสริม" ใช่เหรือไม่<br/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color:#fff !important; border-top:none;">
+                <button class="btn btn-default" ng-click="$hide();"><span class="fa fa-ban"></span>&nbsp;Cancel</button>
+                <button class="btn btn-success" ng-click="$hide(); saveRouteTrip(true);  "><span class="fa fa-check"></span>&nbsp;Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>

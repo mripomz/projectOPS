@@ -1,0 +1,52 @@
+<table id="ReportForPrintDuplicateTicket" width="100%" ng-if="reportType.RevenueTicket == 'ReportForPrintDuplicateTicket' && globalVariable.isShowReport">
+    <tr>
+        <th class="text-center">
+            รายงานการพิมพ์ตั๋วซ้ำตามวันทำรายการ<br/>
+            ระหว่างวันที่ {{conditionReport.DateStart | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}} - ถึงวันที่ {{conditionReport.DateEnd | lswDate:'MM/DD/YYYY':'dd MMMM yyyy'}}
+        </th>
+    </tr>
+    <tr>
+        <td>ผู้ออก : {{SellingName}} วันที่ : {{dateTimeNow | date:'dd/MM/yyyy เวลา HH:mm:ss น.'}}</td>
+    </tr>
+    <tr>
+        <td>
+            <div class="reportZone">
+                <table class="table table-condensed table-bordered" style="margin-bottom:0px;">
+                    <tr>
+                        <th>รหัสการจอง</th>
+                        <th>ต้นทาง</th>
+                        <th>ปลายทาง</th>
+                        <th>วันเวลาเดินทาง</th>
+                        <th>มาตรฐานรถ</th>
+                        <th class="text-center">ที่นั่ง</th>
+                        <th>ผู้โดยสาร</th>
+                        <th>ผู้ขาย</th>
+                        <th>ผู้พิมพ์</th>
+                        <th class="text-center">ครั้งที่พิมพ์</th>
+                        <th>สาเหตุ</th>
+                        <th>เวลาพิมพ์</th>
+                    </tr>
+                    <tbody ng-repeat="(key, value) in dataReport.TicketPrintDuplicateList | groupBy:'ReferenceCode'">
+                        <tr ng-repeat="item in value">
+                            <td>{{item.ReferenceCode}}</td>
+                            <td>{{item.StopPointStart}}</td>
+                            <td>{{item.StopPointEnd}}</td>
+                            <td>{{item.VehicleOperationDate | jsonDate:'dd/MM/yyyy HH:mm'}}</td>
+                            <td>{{item.VehicleSeatPlanName}}</td>
+                            <td align="center">{{item.VehicleSeatName}}</td>
+                            <td>{{item.PassengerFirstName + ' ' + item.PassengerLastName}}</td>
+                            <td>{{item.UpdatedBy}}</td>
+                            <td>{{item.FirstName + ' ' + item.LastName}}</td>
+                            <td align="center">{{$index+1}}</td>
+                            <td>{{item.ReasonForRePrintTicket}}</td>
+                            <td>{{item.CreatedDate | jsonDate:'dd/MM/yyyy HH:mm'}}</td>
+                        </tr>
+                    </tbody>
+                    <tr ng-if="dataReport.TicketPrintDuplicateList.length == 0">
+                        <td colspan="12" align="center">ไม่มีข้อมูล</td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
+</table>
